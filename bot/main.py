@@ -7,9 +7,8 @@ import os
 import logging
 
 # Install all cogs
-sys.path.append('/.../cogs/')
-
-from .botstatus import botstatus
+sys.path.append('/.../cogs/botstatus')
+import botstatus
 
 
 # Configure the bot
