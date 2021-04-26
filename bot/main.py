@@ -12,11 +12,14 @@ bot = commands.Bot(command_prefix = "luci ")
 
 # Commands
 @bot.event
-async def on_ready() :
-	await bot.change_presence(
-		status = discord.Status.idle, 
-		activity = discord.CustomActivity("Always with you")
-	)
+async def on_ready():
+	try:
+		await bot.change_presence(
+			status = discord.Status.idle, 
+			activity = discord.CustomActivity(name = "Always with you")
+		)
+	except:
+		print("Cannot set activity")
 	print("Connected to discord")
 
 
