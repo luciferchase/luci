@@ -13,12 +13,14 @@ logging.basicConfig(level = logging.INFO)
 # Commands
 @bot.event
 async def on_ready():
+	log = logging.getLogger("on_ready")
 	try:
 		await bot.change_presence(
 			status = discord.Status.idle, 
 			activity = discord.CustomActivity(name = "Always with you")
 		)
 	except:
+		log.error("Cannot set activity")
 		print("Cannot set activity")
 	print("Connected to discord")
 
