@@ -2,11 +2,15 @@
 import discord
 from discord.ext import commands
 
+import sys
 import os
 import logging
 
 # Install all cogs
-from .cogs.botstatus import Botstatus
+sys.path.append('/.../cogs/')
+
+from .botstatus import botstatus
+
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
