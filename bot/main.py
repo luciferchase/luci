@@ -5,6 +5,9 @@ from discord.ext import commands
 import os
 import logging
 
+# Install all cogs
+from cogs/botstatus import Botstatus
+
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = commands.Bot(command_prefix = "luci ")
