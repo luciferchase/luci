@@ -3,11 +3,11 @@ import discord
 from discord.ext import commands
 
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import logging
 
 # Configure the bot
-load_dotenv()
+# load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = commands.Bot(command_prefix = "luci ")
 
