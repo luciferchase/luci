@@ -3,12 +3,12 @@ import discord
 from discord.ext import commands
 
 import os
-import logging
+# import logging
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = commands.Bot(command_prefix = "luci ")
-logging.basicConfig(level = logging.INFO)
+# logging.basicConfig(level = logging.INFO)
 
 # Commands
 @bot.event
