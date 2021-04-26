@@ -15,7 +15,7 @@ async def on_ready() :
 		status = discord.Status.idle, 
 		activity = discord.CustomActivity("Always with you")
 	)
-	print("")
+	print("Connected to discord")
 
 @bot.command()
 async def ping(ctx) :
