@@ -3,7 +3,6 @@ import discord
 from discord.ext import commands
 
 import os
-import logging
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
