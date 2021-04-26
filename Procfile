@@ -1,1 +1,1 @@
-worker: luci/main.py
+worker: python bot/main.py
