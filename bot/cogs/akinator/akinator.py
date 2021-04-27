@@ -136,11 +136,8 @@ class Akinator(commands.Cog):
 	Play Akinator in Discord!
 	"""
 
-	def __init__(self, bot: Red) -> None:
+	def __init__(self, bot) -> None:
 		self.bot = bot
-
-	async def red_delete_data_for_user(self, *, requester: str, user_id: int) -> None:
-		return
 
 	@commands.max_concurrency(1, commands.BucketType.channel)
 	@commands.bot_has_permissions(embed_links=True, add_reactions=True)
