@@ -1,10 +1,12 @@
 import discord
 from discord.ext import commands
+import logging
 
 class Core(commands.Cog):
 	"""Core commands"""	
 	def __init__(self, bot):
 		self.bot = bot
+		self.log = logging.getLogger("core")
 
 	@commands.Cog.listener()
 	async def on_ready(self):
@@ -16,11 +18,11 @@ class Core(commands.Cog):
 					name = "your heartbeats"
 					)
 				)
-			print("Activity set successfully")
+			log.info("Activity set successfully")
 		except:
-			print("Cannot set activity")
+			log.error("Cannot set activity")
 		
-		print("Connected to discord")
+		log.info("Connected to discord")
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):

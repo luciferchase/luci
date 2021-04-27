@@ -4,7 +4,6 @@ from akinator.async_aki import Akinator
 import discord
 from discord.ext import commands
 
-import logging
 import cogs.core.menus as menus
 
 
