@@ -7,7 +7,7 @@ import os
 import logging
 
 # Install all cogs
-from cogs.botstatus import Botstatus
+from cogs.botstatus import botstatus
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -16,7 +16,7 @@ bot = commands.Bot(command_prefix = "luci ")
 logging.basicConfig(level = logging.INFO)
 
 # Register Cogs
-bot.add_cog(Botstatus(bot))
+bot.add_cog(botstatus.Botstatus(bot))
 
 # Core Commands
 @bot.event
