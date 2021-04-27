@@ -1029,6 +1029,8 @@ class ConversationGames(commands.Cog):
 	async def truth(self, ctx, *, user: discord.Member):
 		"""Ask a truth question to users!"""
 		
+		question = random.choice(self.truths)
+
 		# Set author
 		author = ctx.message.author
 
@@ -1040,7 +1042,7 @@ class ConversationGames(commands.Cog):
 		# Build Embed
 		embed = discord.Embed(
 			title = f"{author.name} asked {user.name}",
-			description = random.choice(self.truths).format(name = random_member),
+			description = question.format(name = random_member),
 			color = 0xf34949							# red
 		)
 		await ctx.send(embed = embed)
@@ -1049,6 +1051,8 @@ class ConversationGames(commands.Cog):
 	@commands.bot_has_permissions(embed_links = True)
 	async def dare(self, ctx, *, user: discord.Member):
 		"""Dare someone!"""
+
+		question = random.choice(self.dares)
 
 		# Set author
 		author = ctx.message.author
@@ -1061,7 +1065,7 @@ class ConversationGames(commands.Cog):
 		# Build Embed
 		embed = discord.Embed(
 			title = f"{author.name} dared {user.name}",
-			description = random.choice(self.dares).format(name = random_member),
+			description = question.format(name = random_member),
 			color = 0xf34949					# Red
 		)							
 		await ctx.send(embed = embed)
