@@ -131,7 +131,7 @@ class AkiMenu(menus.Menu):
 			self.stop()
 
 
-class Akinator(commands.Cog):
+class Aki(commands.Cog):
 	"""
 	Play Akinator in Discord!
 	"""
