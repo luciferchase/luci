@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 import logging
-import cogs.aki.menus as menus
+import cogs.core.menus as menus
 
 
 class AkiMenu(menus.Menu):
@@ -160,7 +160,7 @@ class Aki(commands.Cog):
 		# Send emoji info
 		embed = discord.Embed(
 			title = "Akinator",
-			description = "Controls:\n \
+			description = "*Controls*:\n \
 			✅ : yes \n \
 			❎ : no \n \
 			❔ : i don't know \n \
@@ -171,7 +171,7 @@ class Aki(commands.Cog):
 			🗑️ : cancel",
 			color = 0xf34949
 		)
-		await ctx.send(embed = embed)
+		await ctx.send(embed = embed, delete_after = 20)
 
 		await ctx.trigger_typing()
 		aki = Akinator()
