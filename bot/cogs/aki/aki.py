@@ -169,7 +169,7 @@ class Aki(commands.Cog):
 			◀️ : back \n \
 			🏆 : win \n \
 			🗑️ : cancel",
-			color = self.color
+			color = 0xf34949
 		)
 		await ctx.send(embed = embed)
 
