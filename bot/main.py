@@ -7,7 +7,7 @@ import os
 import logging
 
 # Install all cogs
-from cogs.akinator import akinator
+from cogs.aki import aki
 from cogs.avatar import avatar
 from cogs.conversationgames import conversationgames
 from cogs.core import core
