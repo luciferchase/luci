@@ -22,7 +22,7 @@ class Core(commands.Cog):
 		except:
 			self.log.error("Cannot set activity")
 		
-		log.info("Connected to discord")
+		self.log.info("Connected to discord")
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
