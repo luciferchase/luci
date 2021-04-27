@@ -22,8 +22,8 @@ bot = commands.Bot(command_prefix = "luci ")
 logging.basicConfig(level = logging.DEBUG)
 
 # Register Cogs
-bot.add_cog(avatar.Avatar(bot))
-bot.add_cog(conversationgames.ConversationGames(bot))
+bot.add_cog(avatar.Avatar())
+bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
