@@ -690,7 +690,7 @@ truths = [
 	"What secret about yourself did you tell someone in confidence and then they told a lot of other people?",
 	"What terrible thing have you done that you lied to cover up?",
 	"Your house is burning down and you have to get out fast. You can take one thing with you, what would it be?",
-],
+]
 
 dares = [
 	"Set your crush's profile picture as your profile picture.",
