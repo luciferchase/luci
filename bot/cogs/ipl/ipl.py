@@ -6,14 +6,46 @@ import json
 from datetime import date, datetime
 import calendar
 
+config = {
+	"rate_limit": 1,
+	"matches": {
+		"last_requested": "2021-04-27",
+		"last_match_id": 1254078
+	},
+	"predict": {
+		"embed_id": 836433440421052417,
+		"channel_id": 756701639544668160,
+		"users": {
+			"707557256220115035": 20,
+			"650661454000947210": 20,
+			"707935222267904070": 0,
+			"708149141909274696": 10,
+			"713963160641601548": 30,
+			"735347909163352084": 10,
+			"708578251320066068": 0
+		}
+	}
+}
+
+image_url = {
+	"IPL Logo": "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg"
+	"Kolkata Knight Riders": "https://hdsportsnews.com/wp-content/uploads/2020/01/kolkata-knight-riders-kkr-2020-team-squad-players-live-score-time-table-point-table-schedule-auction-match-fixture-venue-highlight-1280x720.jpg",			
+	"Rajasthan Royals": "https://cdn5.newsnationtv.com/images/2021/02/22/royal-rajasthan-logo-70.jpg",			
+	"Royal Challengers Bangalore": "https://english.sakshi.com/sites/default/files/article_images/2020/11/8/RCB-Logo_571_855-1604821493.jpg",			
+	"Mumbai Indians": "https://static.india.com/wp-content/uploads/2017/03/mumbai.jpg?impolicy=Medium_Resize&w=1200&h=800",			
+	"Punjab Kings": "https://awaj.in/wp-content/uploads/2021/03/20210317_222651.jpg",			
+	"Sunrisers Hyderabad": "https://2.bp.blogspot.com/-6cAZUQMFCqc/WwKFUZrPPmI/AAAAAAAACcM/TryzryihpEkoOMd6htpE8LjIH1r02FWSgCLcBGAs/s1600/SRH.jpg",			
+	"Chennai Super Kings": "https://i.pinimg.com/originals/85/52/f8/8552f811e95b998d9505c43a9828c6d6.jpg",			
+	"Delhi Capitals": "https://d3pc1xvrcw35tl.cloudfront.net/ln/images/686x514/teamsinnerintrodc534x432-resize-534x432-a7542dd51f-d979030f10e79596_202009106828.jpeg"
+}
+
 
 class IPL(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 
-		with open("config.json", "r+") as config:
-			self.config_data = json.load(config)
+		self.config = config
 
 		self.api = "https://cricapi.com/api/"
 		self.api_key = os.getenv("CRIC_API_KEY")
@@ -26,55 +58,42 @@ class IPL(commands.Cog):
 		}
 		self.params_score = {
 			"apikey": self.api_key,
-			"unique_id": self.config_data["matches"]["last_match_id"] + 1
+			"unique_id": self.config["matches"]["last_match_id"] + 1
 		}
+
+		# Increment last match id for sunday double matches
 
 		if (calendar.day_name[date.today().weekday()] == "Sunday" \
 			and str(datetime.now().time())[:5] >= "19:30"):
 			self.params_score["unique_id"] += 1
-			self.config_data["matches"]["last_match_id"] += 1
+			self.config["matches"]["last_match_id"] += 1
 
-		if (str(date.today()) > self.config_data["matches"]["last_requested"]):
-			self.config_data["matches"]["last_requested"] = str(date.today())
-			self.config_data["matches"]["last_match_id"] += 1
-			self.config_data["rate_limit"] = 1
+		# If last requested is yesterday
 
-			with open("config.json", "w") as config:
-				json.dump(self.config_data, config, indent = 4)
+		if (str(date.today()) > self.config["matches"]["last_requested"]):
+			self.config["matches"]["last_requested"] = str(date.today())
+			self.config["matches"]["last_match_id"] += 1
+			self.config["rate_limit"] = 1
 
 			response = requests.get(
 				url = self.api + self.api_endpoint["matches"] + "?", 
 				params = self.params_match
 			)
 
-			with open("matches.json", "w") as matches:
-				json.dump(response.json(), matches, indent = 2)
+			self.matches = json.dump(response.json(), matches, indent = 2)
 
-		self.last_match_id = self.config_data["matches"]["last_match_id"]
+		self.last_match_id = self.config["matches"]["last_match_id"]
 
-		with open("matches.json", "r") as matches:
-			data = json.load(matches)
+		for match in data["matches"]:
+			if (match["unique_id"] == self.last_match_id):
+				self.last_match_details = match
+			elif (match["unique_id"] == self.last_match_id + 1):
+				self.upcoming_match_details = match
+			elif (match["unique_id"] == self.last_match_id + 2):
+				self.upcoming_match_details_2 = match
 
-			for match in data["matches"]:
-				if (match["unique_id"] == self.last_match_id):
-					self.last_match_details = match
-				elif (match["unique_id"] == self.last_match_id + 1):
-					self.upcoming_match_details = match
-				elif (match["unique_id"] == self.last_match_id + 2):
-					self.upcoming_match_details_2 = match
-
-		self.image_url = {
-			"Kolkata Knight Riders": "https://hdsportsnews.com/wp-content/uploads/2020/01/kolkata-knight-riders-kkr-2020-team-squad-players-live-score-time-table-point-table-schedule-auction-match-fixture-venue-highlight-1280x720.jpg",			
-			"Rajasthan Royals": "https://cdn5.newsnationtv.com/images/2021/02/22/royal-rajasthan-logo-70.jpg",			
-			"Royal Challengers Bangalore": "https://english.sakshi.com/sites/default/files/article_images/2020/11/8/RCB-Logo_571_855-1604821493.jpg",			
-			"Mumbai Indians": "https://static.india.com/wp-content/uploads/2017/03/mumbai.jpg?impolicy=Medium_Resize&w=1200&h=800",			
-			"Punjab Kings": "https://awaj.in/wp-content/uploads/2021/03/20210317_222651.jpg",			
-			"Sunrisers Hyderabad": "https://2.bp.blogspot.com/-6cAZUQMFCqc/WwKFUZrPPmI/AAAAAAAACcM/TryzryihpEkoOMd6htpE8LjIH1r02FWSgCLcBGAs/s1600/SRH.jpg",			
-			"Chennai Super Kings": "https://i.pinimg.com/originals/85/52/f8/8552f811e95b998d9505c43a9828c6d6.jpg",			
-			"Delhi Capitals": "https://d3pc1xvrcw35tl.cloudfront.net/ln/images/686x514/teamsinnerintrodc534x432-resize-534x432-a7542dd51f-d979030f10e79596_202009106828.jpeg"
-		}
-
-		self.ipl_logo = "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg"
+		self.image_url = image_url
+		self.ipl_logo = image_url["IPL Logo"]
 
 	@commands.bot_has_permissions(embed_links = True)
 	@commands.command()
@@ -113,21 +132,13 @@ class IPL(commands.Cog):
 		embed.set_thumbnail(url = self.ipl_logo)
 		await ctx.send(embed = embed)
 
-	@commands.bot_has_permissions(embed_links = True)
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def predict(self, ctx, match = 1):
-		""" Poll for today's match
-		"""
-
-		allowed_mentions = discord.AllowedMentions(everyone = True)
-		await ctx.send(content = "@everyone", allowed_mentions = allowed_mentions)
+	async def update_standings(self, ctx, match = 1):
 
 		if (match == 2):
 			self.upcoming_match_details = self.upcoming_match_details_2
 
-			channel = self.bot.get_channel(self.config_data["predict"]["channel_id"])
-			last_embed = await channel.fetch_message(self.config_data["predict"]["embed_id"])
+			channel = self.bot.get_channel(self.config["predict"]["channel_id"])
+			last_embed = await channel.fetch_message(self.config["predict"]["embed_id"])
 			emoji_a = []
 			emoji_b = []
 			winners = []
@@ -138,20 +149,30 @@ class IPL(commands.Cog):
 					elif (reaction.emoji == "🇧" and user.id != 829537216224165888):
 						emoji_b.append(str(user.id))
 
-			if (self.last_match_details["winner_team"] == self.last_match_details["team-1"]):
-				for user in emoji_a:
-					self.config_data["predict"]["users"][user] += 10
-					username = await self.bot.fetch_user(user)
-					winners.append(username)
-			else:
-				for user in emoji_b:
-					self.config_data["predict"]["users"][user] += 10
-					username = await self.bot.fetch_user(user)
-					winners.append(username)
+		if (self.last_match_details["winner_team"] == self.last_match_details["team-1"]):
+			for user in emoji_a:
+				self.config["predict"]["users"][user] += 10
+				username = await self.bot.fetch_user(user)
+				winners.append(username)
+		else:
+			for user in emoji_b:
+				self.config["predict"]["users"][user] += 10
+				username = await self.bot.fetch_user(user)
+				winners.append(username)
 
-			with open("config.json", "w") as config:
-				json.dump(self.config_data, config, indent = 4)
+		return winners
 
+	@commands.bot_has_permissions(embed_links = True)
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def predict(self, ctx, match = 1):
+		""" Poll for today's match
+		"""
+		allowed_mentions = discord.AllowedMentions(everyone = True)
+		await ctx.send(content = "@everyone", allowed_mentions = allowed_mentions)
+
+		winners = update_standings(ctx, match)
+		
 		embed = discord.Embed(
 			color = 0x19f0e2,						# Cyan
 			title = "Sattebaaz Championship",
@@ -166,44 +187,16 @@ class IPL(commands.Cog):
 		last_embed = await ctx.send(embed = embed)
 		await last_embed.add_reaction("🇦")
 		await last_embed.add_reaction("🇧")
-		self.config_data["predict"]["embed_id"] = last_embed.id
-		self.config_data["predict"]["channel_id"] = last_embed.channel.id
-
-		with open("config.json", "w") as config:
-			json.dump(self.config_data, config, indent = 4)
-
+		self.config["predict"]["embed_id"] = last_embed.id
+		self.config["predict"]["channel_id"] = last_embed.channel.id
+		
 	@commands.bot_has_permissions(embed_links = True)
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def points(self, ctx):
 		""" Update Standings for Sattebaaz Championship
 		"""
-
-		channel = self.bot.get_channel(self.config_data["predict"]["channel_id"])
-		last_embed = await channel.fetch_message(self.config_data["predict"]["embed_id"])
-		emoji_a = []
-		emoji_b = []
-		winners = []
-		for reaction in last_embed.reactions:
-			async for user in reaction.users():
-				if (reaction.emoji == "🇦" and user.id != 829537216224165888):
-					emoji_a.append(str(user.id))
-				elif (reaction.emoji == "🇧" and user.id != 829537216224165888):
-					emoji_b.append(str(user.id))
-
-		if (self.last_match_details["winner_team"] == self.last_match_details["team-1"]):
-			for user in emoji_a:
-				self.config_data["predict"]["users"][user] += 10
-				username = await self.bot.fetch_user(user)
-				winners.append(username)
-		else:
-			for user in emoji_b:
-				self.config_data["predict"]["users"][user] += 10
-				username = await self.bot.fetch_user(user)
-				winners.append(username)
-
-		with open("config.json", "w") as config:
-			json.dump(self.config_data, config, indent = 4)
+		winners = update_standings(ctx)
 
 		embed = discord.Embed(
 			color = 0x07f223,						# Green
@@ -226,9 +219,9 @@ class IPL(commands.Cog):
 		await ctx.send(embed = embed)
 
 		points = {}
-		for user in self.config_data["predict"]["users"]:
+		for user in self.config["predict"]["users"]:
 			username = await self.bot.fetch_user(user)
-			points[username] = self.config_data["predict"]["users"][user]
+			points[username] = self.config["predict"]["users"][user]
 
 		embed_string_name = ""
 		embed_string_points = ""
@@ -257,13 +250,10 @@ class IPL(commands.Cog):
 	async def standings(self, ctx):
 		""" See current standings of Sattebaaz Championship
 		"""
-		with open("config.json", "r+") as config:
-			config_data = json.load(config)
-
 		points = {}
-		for user in config_data["predict"]["users"]:
+		for user in self.config["predict"]["users"]:
 			username = await self.bot.fetch_user(user)
-			points[username] = config_data["predict"]["users"][user]
+			points[username] = self.config["predict"]["users"][user]
 
 		embed_string_name = ""
 		embed_string_points = ""
@@ -292,10 +282,7 @@ class IPL(commands.Cog):
 	async def score(self, ctx):
 		""" Get live score of present IPL match
 		"""
-		with open("config.json", "r") as config:
-			config_data = json.load(config)
-
-		if (config_data["rate_limit"] >= 95):
+		if (self.config["rate_limit"] >= 95):
 
 			embed = discord.Embed(
 				title = "Bruh...",
@@ -310,10 +297,8 @@ class IPL(commands.Cog):
 			return
 		
 		else:
-			config_data["rate_limit"] += 1
-			with open("config.json", "w") as config:
-				json.dump(config_data, config, indent = 2)
-
+			self.config["rate_limit"] += 1
+			
 		response = requests.get(
 			url = self.api + self.api_endpoint["score"] + "?", 
 			params = self.params_score
