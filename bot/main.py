@@ -9,6 +9,7 @@ import logging
 # Install all cogs
 from cogs.aki import aki
 from cogs.avatar import avatar
+from cogs.comics import comics
 from cogs.conversationgames import conversationgames
 from cogs.core import core
 from cogs.forward import forward
@@ -32,6 +33,7 @@ client = discord.Client(intents = intents)
 # Register Cogs
 bot.add_cog(aki.Aki(bot))
 bot.add_cog(avatar.Avatar())
+bot.add_cog(comics.Comics(bot))
 bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(core.Core(bot))
 bot.add_cog(forward.Forward(bot))

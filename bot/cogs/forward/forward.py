@@ -73,7 +73,7 @@ class Forward(commands.Cog):
 		await self._send_to(embed)
 
 	@commands.command()
-	@checks.admin()
+	@commands.is_owner()
 	async def dm(self, ctx: commands.Context, user_id: int, *, message: str):
 		"""DMs a person."""
 		destination = get(ctx.bot.get_all_members(), id=user_id)
@@ -85,7 +85,7 @@ class Forward(commands.Cog):
 		await destination.send(message)
 		await ctx.send(f"Sent message to {destination}.")
 
-	@checks.is_owner()
+	@commands.is_owner()
 	@commands.command()
 	@commands.guild_only()
 	@checks.bot_has_permissions(add_reactions=True)
@@ -95,7 +95,7 @@ class Forward(commands.Cog):
 		await ctx.tick()
 
 	@commands.group(autohelp=True, aliases=["forwarding"])
-	@checks.is_owner()
+	@commands.is_owner()
 	@commands.guild_only()
 	async def forwardset(self, ctx: commands.Context):
 		"""Various Forwarding settings."""
