@@ -23,7 +23,7 @@ logging.basicConfig(level = logging.DEBUG)
 
 # Register Cogs
 bot.add_cog(avatar.Avatar(bot))
-bot.add_cog(conversationgames.Conversationgames(bot))
+bot.add_cog(conversationgames.ConversationGames(bot))
 bot.add_cog(ipl.Ipl(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme(bot))
