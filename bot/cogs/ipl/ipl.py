@@ -12,7 +12,7 @@ class IPL(commands.Cog):
 		self.bot = bot
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 
-		with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/config.json", "r+") as config:
+		with open("config.json", "r+") as config:
 			self.config_data = json.load(config)
 
 		self.api = "https://cricapi.com/api/"
@@ -39,7 +39,7 @@ class IPL(commands.Cog):
 			self.config_data["matches"]["last_match_id"] += 1
 			self.config_data["rate_limit"] = 1
 
-			with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/config.json", "w") as config:
+			with open("config.json", "w") as config:
 				json.dump(self.config_data, config, indent = 4)
 
 			response = requests.get(
@@ -47,13 +47,12 @@ class IPL(commands.Cog):
 				params = self.params_match
 			)
 
-			with open(\
-				"C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/matches.json", "w") as matches:
+			with open("matches.json", "w") as matches:
 				json.dump(response.json(), matches, indent = 2)
 
 		self.last_match_id = self.config_data["matches"]["last_match_id"]
 
-		with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/matches.json", "r") as matches:
+		with open("matches.json", "r") as matches:
 			data = json.load(matches)
 
 			for match in data["matches"]:
@@ -150,7 +149,7 @@ class IPL(commands.Cog):
 					username = await self.bot.fetch_user(user)
 					winners.append(username)
 
-			with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/config.json", "w") as config:
+			with open("config.json", "w") as config:
 				json.dump(self.config_data, config, indent = 4)
 
 		embed = discord.Embed(
@@ -170,7 +169,7 @@ class IPL(commands.Cog):
 		self.config_data["predict"]["embed_id"] = last_embed.id
 		self.config_data["predict"]["channel_id"] = last_embed.channel.id
 
-		with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/config.json", "w") as config:
+		with open("config.json", "w") as config:
 			json.dump(self.config_data, config, indent = 4)
 
 	@commands.bot_has_permissions(embed_links = True)
@@ -203,7 +202,7 @@ class IPL(commands.Cog):
 				username = await self.bot.fetch_user(user)
 				winners.append(username)
 
-		with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/config.json", "w") as config:
+		with open("config.json", "w") as config:
 			json.dump(self.config_data, config, indent = 4)
 
 		embed = discord.Embed(
@@ -258,7 +257,7 @@ class IPL(commands.Cog):
 	async def standings(self, ctx):
 		""" See current standings of Sattebaaz Championship
 		"""
-		with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/config.json", "r+") as config:
+		with open("config.json", "r+") as config:
 			config_data = json.load(config)
 
 		points = {}
@@ -293,7 +292,7 @@ class IPL(commands.Cog):
 	async def score(self, ctx):
 		""" Get live score of present IPL match
 		"""
-		with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/config.json", "r") as config:
+		with open("config.json", "r") as config:
 			config_data = json.load(config)
 
 		if (config_data["rate_limit"] >= 95):
@@ -312,7 +311,7 @@ class IPL(commands.Cog):
 		
 		else:
 			config_data["rate_limit"] += 1
-			with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/ipl/config.json", "w") as config:
+			with open("config.json", "w") as config:
 				json.dump(config_data, config, indent = 2)
 
 		response = requests.get(
