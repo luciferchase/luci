@@ -1,6 +1,11 @@
 import discord
 from discord.ext import commands
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+
+from cogs.meme.meme import Meme
+
 class Core(commands.Cog):
 	"""Core commands"""	
 	def __init__(self, bot):
@@ -21,6 +26,14 @@ class Core(commands.Cog):
 			print("Cannot set activity")
 		
 		print("Connected to discord")
+
+		#initializing scheduler
+		scheduler = AsyncIOScheduler()
+
+		scheduler.add_job(Meme.meme, CronTrigger(second = "0, 30, 55")) 
+
+		#starting the scheduler
+		scheduler.start()
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
