@@ -32,7 +32,7 @@ class Math(commands.Cog):
 
 		if (expression == ""):
 			embed = discord.Embed(
-			color = 0xea1010,
+			color = 0xf34949,									# Red							
 			title = "Input A Expression"
 			)
 			await ctx.send(embed = embed)
@@ -52,7 +52,7 @@ class Math(commands.Cog):
 			log.error(response.text)
 
 		embed = discord.Embed(
-			color = 0xf34949,					
+			color = 0xf34949,									# Red					
 			title = response.text
 		)
 		embed.add_field(
