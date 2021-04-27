@@ -15,12 +15,12 @@ from cogs.meme import meme
 from cogs.photo import photo
 
 class Bot(commands.Bot):
+	# Core Commands
 	def __init__(self, command_prefix, case_insensitive = True,	self_bot = False):
-		commands.Bot.__init__(self, command_prefix = command_prefix, self_bot = self_bot)
+		bot = commands.Bot.__init__(self, command_prefix = command_prefix, self_bot = self_bot)
 		logging.basicConfig(level = logging.WARNING)
 
-	# Core Commands
-	@commands.event
+	@bot.event
 	async def on_ready():
 		try:
 			await bot.change_presence(
@@ -35,7 +35,7 @@ class Bot(commands.Bot):
 			print("Cannot set activity")
 		print("Connected to discord")
 
-	@commands.command()
+	@bot.command()
 	async def ping(ctx) :
 		await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
 
