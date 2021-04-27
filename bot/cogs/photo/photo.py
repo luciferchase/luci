@@ -16,6 +16,10 @@ class Photo(commands.Cog):
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 		self.cat_api = "https://api.thecatapi.com/v1/images/search"
 		self.fox_api = "https://randomfox.ca/floof/"
+		self.panda_api = "https://some-random-api.ml/img/panda"
+		self.red_panda_api = "https://some-random-api.ml/img/red_panda"
+		self.birb_api = "https://some-random-api.ml/img/birb"
+		self.koala_api = "https://some-random-api.ml/img/koala"
 
 		self.unsplash_client_id = os.getenv("UNSPLASH_API_KEY")
 	
@@ -165,4 +169,56 @@ class Photo(commands.Cog):
 			color = 0xf34949			# Red
 		)
 		embed.set_image(url = response["image"])
+		await ctx.send(embed = embed)
+
+	@commands.command()
+	async def panda(self, ctx):
+		""" Get a random panda pic
+		"""
+		response = requests.get(self.panda_api).json()
+
+		embed = discord.Embed(
+			title = "Here is a cute panda ❤",
+			color = 0xf34949			# Red
+		)
+		embed.set_image(url = response["link"])
+		await ctx.send(embed = embed)
+
+	@commands.command()
+	async def redpanda(self, ctx):
+		""" Get a random red panda pic
+		"""
+		response = requests.get(self.red_panda_api).json()
+
+		embed = discord.Embed(
+			title = "Here is a cute red panda ❤",
+			color = 0xf34949			# Red
+		)
+		embed.set_image(url = response["link"])
+		await ctx.send(embed = embed)
+
+	@commands.command()
+	async def birb(self, ctx):
+		""" Get a random bird pic
+		"""
+		response = requests.get(self.birb_api).json()
+
+		embed = discord.Embed(
+			title = "Here is a cute birb ❤",
+			color = 0xf34949			# Red
+		)
+		embed.set_image(url = response["link"])
+		await ctx.send(embed = embed)
+
+	@commands.command()
+	async def koala(self, ctx):
+		""" Get a random koala pic
+		"""
+		response = requests.get(self.koala_api).json()
+
+		embed = discord.Embed(
+			title = "Here is a cute koala ❤",
+			color = 0xf34949			# Red
+		)
+		embed.set_image(url = response["link"])
 		await ctx.send(embed = embed)
