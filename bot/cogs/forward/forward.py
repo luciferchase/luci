@@ -88,7 +88,7 @@ class Forward(commands.Cog):
 	@commands.is_owner()
 	@commands.command()
 	@commands.guild_only()
-	@checks.bot_has_permissions(add_reactions=True)
+	@commands.bot_has_permissions(add_reactions=True)
 	async def self(self, ctx: commands.Context, *, message: str):
 		"""Send yourself a DM. Owner command only."""
 		await ctx.author.send(message)
