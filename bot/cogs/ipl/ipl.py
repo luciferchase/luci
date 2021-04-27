@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+import os
 import requests
 import json
 from datetime import date, datetime
@@ -28,7 +29,7 @@ config = {
 }
 
 image_url = {
-	"IPL Logo": "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg"
+	"IPL Logo": "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg",
 	"Kolkata Knight Riders": "https://hdsportsnews.com/wp-content/uploads/2020/01/kolkata-knight-riders-kkr-2020-team-squad-players-live-score-time-table-point-table-schedule-auction-match-fixture-venue-highlight-1280x720.jpg",			
 	"Rajasthan Royals": "https://cdn5.newsnationtv.com/images/2021/02/22/royal-rajasthan-logo-70.jpg",			
 	"Royal Challengers Bangalore": "https://english.sakshi.com/sites/default/files/article_images/2020/11/8/RCB-Logo_571_855-1604821493.jpg",			
@@ -39,6 +40,9 @@ image_url = {
 	"Delhi Capitals": "https://d3pc1xvrcw35tl.cloudfront.net/ln/images/686x514/teamsinnerintrodc534x432-resize-534x432-a7542dd51f-d979030f10e79596_202009106828.jpeg"
 }
 
+response = requests.get(url = "https://cricapi.com/api/matches?apikey=" + os.getenv("CRIC_API_KEY"))
+matches = json.dump(response.json(), matches, indent = 2)
+
 
 class IPL(commands.Cog):
 	def __init__(self, bot):
@@ -46,6 +50,8 @@ class IPL(commands.Cog):
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 
 		self.config = config
+		self.matches = matches
+		self.config["rate_limit"] += 1
 
 		self.api = "https://cricapi.com/api/"
 		self.api_key = os.getenv("CRIC_API_KEY")
@@ -79,12 +85,11 @@ class IPL(commands.Cog):
 				url = self.api + self.api_endpoint["matches"] + "?", 
 				params = self.params_match
 			)
-
 			self.matches = json.dump(response.json(), matches, indent = 2)
 
 		self.last_match_id = self.config["matches"]["last_match_id"]
 
-		for match in data["matches"]:
+		for match in self.matches["matches"]:
 			if (match["unique_id"] == self.last_match_id):
 				self.last_match_details = match
 			elif (match["unique_id"] == self.last_match_id + 1):
