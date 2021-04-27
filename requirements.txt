@@ -2,4 +2,3 @@ discord.py
 requests
 TagScriptEngine
 pyparsing
-akinator
