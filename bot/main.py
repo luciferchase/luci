@@ -21,6 +21,11 @@ bot = commands.Bot(command_prefix = "luci ")
 
 logging.basicConfig(level = logging.WARNING)
 
+# Get Members intent
+intents = discord.Intents.default()
+intents.members = True
+client = discord.Client(intents = intents)
+
 # Register Cogs
 bot.add_cog(avatar.Avatar())
 bot.add_cog(conversationgames.ConversationGames())
@@ -44,6 +49,16 @@ async def on_ready():
 	except:
 		print("Cannot set activity")
 	print("Connected to discord")
+
+@client.event
+async def on_message_join(member):
+	channel = client.get_channel(836214172089319477)
+	embed = discord.Embed(
+		title = f"Welcome @{member.name}", 
+		description = f"Ayeeeee! Welcome to {member.guild.name} 😁😁"
+	) 
+	embed.set_thumbnail(url = member.avatar_url) 
+	await channel.send(embed = embed)
 
 @bot.command()
 async def ping(ctx) :
