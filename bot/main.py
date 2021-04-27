@@ -20,7 +20,7 @@ class Bot(commands.Bot):
 		logging.basicConfig(level = logging.WARNING)
 
 	# Core Commands
-	@bot.event
+	@commands.event
 	async def on_ready():
 		try:
 			await bot.change_presence(
@@ -35,7 +35,7 @@ class Bot(commands.Bot):
 			print("Cannot set activity")
 		print("Connected to discord")
 
-	@bot.command()
+	@commands.command()
 	async def ping(ctx) :
 		await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
 
