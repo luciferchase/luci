@@ -56,4 +56,5 @@ class Core(bot):
 
 if __name__ == '__main__':
 	Core(bot)
-	bot.run(BOT_TOKEN)
+
+bot.run(BOT_TOKEN)
