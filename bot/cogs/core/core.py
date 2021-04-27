@@ -18,9 +18,9 @@ class Core(commands.Cog):
 					name = "your heartbeats"
 					)
 				)
-			log.info("Activity set successfully")
+			self.log.info("Activity set successfully")
 		except:
-			log.error("Cannot set activity")
+			self.log.error("Cannot set activity")
 		
 		log.info("Connected to discord")
 
