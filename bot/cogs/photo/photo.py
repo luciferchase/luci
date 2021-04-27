@@ -1,10 +1,11 @@
 import discord
 from discord.ext import commands
 
-import requests
-import json
 from datetime import date, datetime
+import json
 import logging
+import os
+import requests
 
 
 class Photo(commands.Cog):
@@ -16,9 +17,7 @@ class Photo(commands.Cog):
 		self.cat_api = "https://api.thecatapi.com/v1/images/search"
 		self.fox_api = "https://randomfox.ca/floof/"
 
-		with open("C:/Users/udit2/Codes/Python Code/cogsbylucifer/photo/config.json", "r") as config:
-			config_data = json.load(config)
-			self.unsplash_client_id = config_data["unsplash_api_key"]
+		self.unsplash_client_id = os.getenv("UNSPLASH_API_KEY")
 	
 	@commands.command()
 	async def photo(self, ctx, *query):

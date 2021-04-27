@@ -16,15 +16,16 @@ class IPL(commands.Cog):
 			self.config_data = json.load(config)
 
 		self.api = "https://cricapi.com/api/"
+		self.api_key = os.getenv("CRIC_API_KEY")
 		self.api_endpoint = {
 			"matches": "matches",
 			"score": "cricketScore"
 		}
 		self.params_match = {
-			"apikey": self.config_data["api_key"],
+			"apikey": self.api_key,
 		}
 		self.params_score = {
-			"apikey": self.config_data["api_key"],
+			"apikey": self.api_key,
 			"unique_id": self.config_data["matches"]["last_match_id"] + 1
 		}
 
