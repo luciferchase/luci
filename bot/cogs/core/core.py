@@ -36,6 +36,6 @@ class Core(commands.Cog):
 
 	@commands.command()
 	async def ping(self, ctx) :
-		await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
+		await ctx.send(f"🏓 Pong with {str(round(self.bot.latency, 3))}")
 
 		
