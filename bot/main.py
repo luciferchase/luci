@@ -7,7 +7,7 @@ import os
 import logging
 
 # Install all cogs
-from cogs.botstatus import botstatus
+from cogs.botstatus import Botstatus
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
