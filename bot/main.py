@@ -7,9 +7,10 @@ import os
 import logging
 
 # Install all cogs
-from cogs.core import core
+from cogs.akinator import akinator
 from cogs.avatar import avatar
 from cogs.conversationgames import conversationgames
+from cogs.core import core
 from cogs.ipl import ipl
 from cogs.math import math
 from cogs.meme import meme
@@ -28,10 +29,10 @@ intents.members = True
 client = discord.Client(intents = intents)
 
 # Register Cogs
-bot.add_cog(core.Core(bot))
 bot.add_cog(akinator.Akinator(bot))
 bot.add_cog(avatar.Avatar())
 bot.add_cog(conversationgames.ConversationGames())
+bot.add_cog(core.Core(bot))
 bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
