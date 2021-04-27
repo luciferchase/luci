@@ -3,3 +3,4 @@ requests
 TagScriptEngine
 pyparsing
 akinator.py
+APScheduler
