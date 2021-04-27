@@ -7,7 +7,13 @@ import os
 import logging
 
 # Install all cogs
-from cogs.botstatus import botstatus
+from cogs.avatar import avatar
+from cogs.conversationgames import conversationgames
+from cogs.ipl import ipl
+from cogs.math import math
+from cogs.meme import meme
+from cogs.photo import photo
+
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -16,7 +22,12 @@ bot = commands.Bot(command_prefix = "luci ")
 logging.basicConfig(level = logging.INFO)
 
 # Register Cogs
-bot.add_cog(botstatus.Botstatus(bot))
+bot.add_cog(avatar.Avatar(bot))
+bot.add_cog(conversationgames.Conversationgames(bot))
+bot.add_cog(ipl.Ipl(bot))
+bot.add_cog(math.Math(bot))
+bot.add_cog(meme.Meme(bot))
+bot.add_cog(photo.Photo(bot))
 
 # Core Commands
 @bot.event
