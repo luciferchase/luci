@@ -4,8 +4,5 @@ TagScriptEngine
 pyparsing
 akinator.py
 APScheduler
-io
-re
 aiohttp
 bs4
-typing
