@@ -1005,9 +1005,11 @@ class ConversationGames(commands.Cog):
 	async def wouldyourather(self, ctx):
 		"""Would you rather?"""
 
-		embed = discord.Embed()
-		embed.title = "Would you rather.."
-		embed.description = random.choice(self.wyr)
+		embed = discord.Embed(
+			title = "Would you rather..",
+			description = random.choice(self.wyr),
+			color = 0xf34949								# Red
+		)
 		await ctx.send(embed = embed)
 
 	@commands.command(aliases = ["nhie"])
@@ -1015,9 +1017,11 @@ class ConversationGames(commands.Cog):
 	async def neverhaveiever(self, ctx):
 		"""Never have I"""
 
-		embed = discord.Embed()
-		embed.title = "Never have I ever.."
-		embed.description = random.choice(self.nhie)
+		embed = discord.Embed(
+			title = "Never have I ever..",
+			description = random.choice(self.nhie),
+			color = 0xf34949								# Red
+		)
 		await ctx.send(embed = embed)
 
 	@commands.command()
@@ -1030,13 +1034,15 @@ class ConversationGames(commands.Cog):
 
 		# Get and pick random user
 		member_list = len(ctx.guild.members)
-		random_number = randint(0, member_list - 1)
+		random_number = random.randint(0, member_list - 1)
 		random_member = ctx.guild.members[random_number].mention
 
 		# Build Embed
-		embed = discord.Embed()
-		embed.title = f"{author.name} asked {user.name}"
-		embed.description = random.choice(self.truths).format(name = random_member)
+		embed = discord.Embed(
+			title = f"{author.name} asked {user.name}",
+			description = random.choice(self.truths).format(name = random_member),
+			color = 0xf34949							# red
+		)
 		await ctx.send(embed = embed)
 
 	@commands.command()
@@ -1049,11 +1055,13 @@ class ConversationGames(commands.Cog):
 
 		# Get and pick random user
 		member_list = len(ctx.guild.members)
-		random_number = randint(0, member_list - 1)
+		random_number = random.randint(0, member_list - 1)
 		random_member = ctx.guild.members[random_number].mention
 
 		# Build Embed
-		embed = discord.Embed()
-		embed.title = f"{author.name} dared {user.name}"
-		embed.description = random.choice(self.dares).format(name = random_member)
+		embed = discord.Embed(
+			title = f"{author.name} dared {user.name}",
+			description = random.choice(self.dares).format(name = random_member),
+			color = 0xf34949					# Red
+		)							
 		await ctx.send(embed = embed)
