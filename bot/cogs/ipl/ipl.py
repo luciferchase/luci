@@ -41,7 +41,7 @@ image_url = {
 }
 
 response = requests.get(url = "https://cricapi.com/api/matches?apikey=" + os.getenv("CRIC_API_KEY"))
-matches = json.dump(response.json(), matches, indent = 2)
+matches = json.dumps(response.json(), indent = 2)
 
 
 class IPL(commands.Cog):
@@ -85,7 +85,7 @@ class IPL(commands.Cog):
 				url = self.api + self.api_endpoint["matches"] + "?", 
 				params = self.params_match
 			)
-			self.matches = json.dump(response.json(), matches, indent = 2)
+			self.matches = json.dumps(response.json(), indent = 2)
 
 		self.last_match_id = self.config["matches"]["last_match_id"]
 
