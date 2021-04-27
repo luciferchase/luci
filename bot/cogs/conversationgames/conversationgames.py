@@ -73,8 +73,8 @@ class ConversationGames(commands.Cog):
 		random_number = randint(0, member_list - 1)
 		random_member = ctx.guild.members[random_number].mention
 
-	# Build Embed
-	embed = discord.Embed()
-	embed.title = f"{author.name} dared {user.name}"
-	embed.description = random.choice(questions).format(name = random_member)
-	await ctx.send(embed = embed)
+		# Build Embed
+		embed = discord.Embed()
+		embed.title = f"{author.name} dared {user.name}"
+		embed.description = random.choice(questions).format(name = random_member)
+		await ctx.send(embed = embed)

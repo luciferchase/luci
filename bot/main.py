@@ -19,7 +19,7 @@ from cogs.photo import photo
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = commands.Bot(command_prefix = "luci ")
 
-logging.basicConfig(level = logging.INFO)
+logging.basicConfig(level = logging.DEBUG)
 
 # Register Cogs
 bot.add_cog(avatar.Avatar(bot))
