@@ -29,6 +29,7 @@ client = discord.Client(intents = intents)
 
 # Register Cogs
 bot.add_cog(core.Core(bot))
+bot.add_cog(akinator.Akinator(bot))
 bot.add_cog(avatar.Avatar())
 bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(ipl.IPL(bot))

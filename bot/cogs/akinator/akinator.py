@@ -5,9 +5,11 @@ import discord
 from discord.ext import commands
 
 import logging
+import menus
 
-class AkiMenu(commands.Cog):
-	def __init__(self, game: Akinator, color: 0xf34949):
+
+class AkiMenu(menus.Menu):
+	def __init__(self, game = Akinator, color = 0xf34949):
 		self.aki = game
 		self.color = color
 		self.num = 1
@@ -129,18 +131,13 @@ class AkiMenu(commands.Cog):
 			self.stop()
 
 
-class Aki(commands.Cog):
+class Akinator(commands.Cog):
 	"""
 	Play Akinator in Discord!
 	"""
 
 	def __init__(self, bot: Red) -> None:
 		self.bot = bot
-		self.config = Config.get_conf(
-			self,
-			identifier=8237578807127857,
-			force_registration=True,
-		)
 
 	async def red_delete_data_for_user(self, *, requester: str, user_id: int) -> None:
 		return
@@ -173,5 +170,5 @@ class Aki(commands.Cog):
 		except Exception:
 			await ctx.send("I encountered an error while connecting to the Akinator servers.")
 		else:
-			menu = AkiMenu(aki, await ctx.embed_color())
+			menu = AkiMenu(aki)
 			await menu.start(ctx)
