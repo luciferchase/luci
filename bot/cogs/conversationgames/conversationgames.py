@@ -1015,10 +1015,10 @@ class ConversationGames(commands.Cog):
 	@commands.command(aliases = ["nhie"])
 	@commands.bot_has_permissions(embed_links = True)
 	async def neverhaveiever(self, ctx):
-		"""Never have I"""
+		"""Never have I ever"""
 
 		embed = discord.Embed(
-			title = "Never have I ever..",
+			title = "Never have I ever...",
 			description = random.choice(self.nhie),
 			color = 0xf34949								# Red
 		)

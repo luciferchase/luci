@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 import logging
-import cogs.akinator.menus as menus
+import cogs.aki.menus as menus
 
 
 class AkiMenu(menus.Menu):
@@ -37,19 +37,19 @@ class AkiMenu(menus.Menu):
 		await self.answer("idk")
 		await self.send_current_question()
 
-	@menus.button("📉")
+	@menus.button("🤔")
 	async def probably(self, payload: discord.RawReactionActionEvent):
 		self.num += 1
 		await self.answer("probably")
 		await self.send_current_question()
 
-	@menus.button("📈")
+	@menus.button("🤷‍♂️")
 	async def probably_not(self, payload: discord.RawReactionActionEvent):
 		self.num += 1
 		await self.answer("probably not")
 		await self.send_current_question()
 
-	@menus.button("🔙")
+	@menus.button("◀️")
 	async def back(self, payload: discord.RawReactionActionEvent):
 		try:
 			await self.aki.back()
@@ -71,14 +71,14 @@ class AkiMenu(menus.Menu):
 		await self.cancel()
 
 	def current_question_embed(self):
-		e = discord.Embed(
-			color=self.color,
-			title=f"Question #{self.num}",
-			description=self.aki.question,
+		embed = discord.Embed(
+			color = self.color,
+			title = f"Question #{self.num}",
+			description = self.aki.question,
 		)
 		if self.aki.progression > 0:
-			e.set_footer(text=f"{round(self.aki.progression, 2)}% guessed")
-		return e
+			embed.set_footer(text = f"{round(self.aki.progression, 2)}% guessed")
+		return embed
 
 	async def win(self):
 		winner = await self.aki.win()
@@ -150,19 +150,37 @@ class Aki(commands.Cog):
 		> ✅ : yes
 		> ❎ : no
 		> ❔ : i don't know
-		> 📉 : probably
-		> 📈 : probably not
-		> 🔙 : back
+		> 🤔 : probably
+		> 🤷‍♂️ : probably not
+		> ◀️ : back
 		> 🏆 : win
 		> 🗑️ : cancel
 		"""
+		
+		# Send emoji info
+		embed = discord.Embed(
+			title = "Akinator",
+			description = "Controls:\n \
+			✅ : yes \n \
+			❎ : no \n \
+			❔ : i don't know \n \
+			🤔 : probably \n \
+			🤷‍♂️ : probably not \n \
+			◀️ : back \n \
+			🏆 : win \n \
+			🗑️ : cancel",
+			color = self.color
+		)
+		await ctx.send(embed = embed)
+
 		await ctx.trigger_typing()
 		aki = Akinator()
 		try:
 			await aki.start_game(language=language.replace(" ", "_"))
 		except akinator.InvalidLanguageError:
 			await ctx.send(
-				"Invalid language. Refer here to view valid languages.\n<https://github.com/NinjaSnail1080/akinator.py#functions>"
+				"Invalid language. Refer here to view valid languages.\
+				\n<https://github.com/NinjaSnail1080/akinator.py#functions>"
 			)
 		except Exception:
 			await ctx.send("I encountered an error while connecting to the Akinator servers.")
