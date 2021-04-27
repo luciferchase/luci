@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 
 import logging
-import menus
+import menus.menus as menus
 
 
 class AkiMenu(menus.Menu):
