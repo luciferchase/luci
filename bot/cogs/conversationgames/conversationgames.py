@@ -731,7 +731,7 @@ dares = [
 	"I’ll give you a person's contact information and send a romantic message to that person.",
 ]
 
-nhir = [
+nhie = [
 	"...watched the Ghostbusters remake.",
 	"...wanted to be one of the Kardashians.",
 	"...dressed as the opposite sex.",
