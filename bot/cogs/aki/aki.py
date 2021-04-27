@@ -160,7 +160,7 @@ class Aki(commands.Cog):
 		# Send emoji info
 		embed = discord.Embed(
 			title = "Akinator",
-			description = "*Controls*:\n \
+			description = "**Controls**:\n \
 			✅ : yes \n \
 			❎ : no \n \
 			❔ : i don't know \n \
