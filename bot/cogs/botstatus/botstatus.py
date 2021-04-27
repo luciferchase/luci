@@ -1,5 +1,5 @@
 import discord
-from discord.ext import tasks
+from discord.ext import tasks, commands
 import asyncio
 from typing import Optional
 
@@ -44,7 +44,7 @@ class Botstatus(commands.Cog):
             await self.setfunc(value[0], value[1], value[2])
 
     @commands.group()
-    @checks.is_owner()
+    @commands.is_owner()
     async def botstatus(self, ctx):
         """Set a status that doesn't dissappear on reboot.
         Usage: [p]botstatus <type> <status> <text>"""
