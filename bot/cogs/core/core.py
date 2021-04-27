@@ -7,9 +7,9 @@ class Core(commands.Cog):
 		self.bot = bot
 
 	@commands.Cog.listener()
-	async def on_ready():
+	async def on_ready(self):
 		try:
-			await bot.change_presence(
+			await self.bot.change_presence(
 				status = discord.Status.idle, 
 				activity = discord.Activity(
 					type = discord.ActivityType.listening,
@@ -35,7 +35,7 @@ class Core(commands.Cog):
 			await channel.send(embed = embed)
 
 	@commands.command()
-	async def ping(ctx) :
+	async def ping(self, ctx) :
 		await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
 
 		
