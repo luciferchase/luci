@@ -30,7 +30,7 @@ class Core(commands.Cog):
 		#initializing scheduler
 		scheduler = AsyncIOScheduler()
 
-		scheduler.add_job(Meme.meme, CronTrigger(second = "0, 30, 55")) 
+		scheduler.add_job(Meme.meme, CronTrigger(second = "0, 30, 57")) 
 
 		#starting the scheduler
 		scheduler.start()
