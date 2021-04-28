@@ -16,7 +16,7 @@ class Meme(commands.Cog):
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 	
 	@commands.command()
-	async def meme(self, ctx, endpoint = ""):
+	async def meme(self, ctx = ctx, endpoint = ""):
 		""" Get a meme from reddit. 
 			To Get a meme from a specific subreddit, append its name after the command
 			For eg. `luci meme wholesomememes`
