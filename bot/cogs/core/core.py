@@ -1,8 +1,12 @@
 import discord
 from discord.ext import commands, tasks
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+
 import logging
 
+from cogs.meme.meme import Meme
 
 class Core(commands.Cog):
 	"""Core commands"""	
@@ -10,7 +14,6 @@ class Core(commands.Cog):
 		self.bot = bot
 		self.log = logging.getLogger("core")
 
-	@commands.Cog.listener()
 	async def on_ready(self):
 		try:
 			await self.bot.change_presence(
@@ -25,6 +28,15 @@ class Core(commands.Cog):
 			self.log.warning("Cannot set activity")
 		
 		print("Connected to discord")
+
+		# Initialize scheduler
+		scheduler = AsyncIOScheduler()
+
+		# Add jobs to scheduler
+		scheduler.add_job(Meme.meme(), CronTrigger.from_crontab("* * * * *"))		# Every minute
+
+		# Start the scheduler
+		scheduler.start()
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
