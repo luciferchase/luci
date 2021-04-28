@@ -57,9 +57,3 @@ class Scheduler(commands.Cog):
 	@tasks.loop(seconds = 30)
 	async def scheduled(self):
 		Meme.meme()
-
-	@scheduled.before_loop
-	async def before_printer(self):
-		print('waiting...')
-		await self.bot.wait_until_ready()
-		
