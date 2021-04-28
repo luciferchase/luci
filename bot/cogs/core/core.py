@@ -14,6 +14,7 @@ class Core(commands.Cog):
 		self.bot = bot
 		self.log = logging.getLogger("core")
 
+	@commands.event()	
 	async def on_ready(self):
 		try:
 			await self.bot.change_presence(
