@@ -8,6 +8,7 @@ from apscheduler.triggers.cron import CronTrigger
 import sys
 import os
 import logging
+import requests
 
 # Install all cogs
 from cogs.aki import aki
@@ -40,10 +41,20 @@ bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
 bot.add_cog(photo.Photo())
 
-# # Scheduled events
-# async def schedule_meme():
-# 	await meme.Meme().meme()
+# Scheduled events
 
+# Until I find a better way, had to use this ugly hack
+async def schedule_meme(ctx = commands.Context):
+	response = requests.get("https://meme-api.herokuapp.com/gimme/dankmemes").json()
+
+	embed = discord.Embed(
+		color = 0x06f9f5,							# Blue-ish
+		title = response["title"],
+		url = response["postLink"]
+	)
+	embed.set_image(url = response["url"])
+	embed.set_footer(text = f'👍 {response["ups"]}')
+	await ctx.send(embed = embed)
 
 # Core Commands
 @bot.event	
@@ -78,7 +89,7 @@ async def on_ready():
 	scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
 	# Add jobs to scheduler
-	scheduler.add_job(await meme.Meme().meme, CronTrigger.from_crontab("* * * * *"))		# Every minute
+	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("* * * * *"))		# Every minute
 
 	# Start the scheduler
 	scheduler.start()
