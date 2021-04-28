@@ -6,27 +6,7 @@ import requests
 import json
 from datetime import date, datetime
 import calendar
-
-config = {
-	"rate_limit": 1,
-	"matches": {
-		"last_requested": "2021-04-27",
-		"last_match_id": 1254078
-	},
-	"predict": {
-		"embed_id": 836433440421052417,
-		"channel_id": 756701639544668160,
-		"users": {
-			"707557256220115035": 20,
-			"650661454000947210": 20,
-			"707935222267904070": 0,
-			"708149141909274696": 10,
-			"713963160641601548": 30,
-			"735347909163352084": 10,
-			"708578251320066068": 0
-		}
-	}
-}
+import psycopg2
 
 image_url = {
 	"IPL Logo": "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg",
@@ -48,6 +28,22 @@ class IPL(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
+
+		DATABASE_URL = os.environ['DATABASE_URL']
+
+		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
+		cursor = dbcon.cursor()
+
+		query = """CREATE TABLE CONFIG IF NOT EXISTS(
+				RATE_LIMIT 		INT 	NOT NULL,
+				LAST_SYNCED		TEXT	NOT NULL,
+				LAST_MATCH_ID	INT 	NOT NULL,
+				EMBED_ID		BIGINT 	NOT NULL,
+				CHANNEL_ID 		BIGINT 	NOT NULL)
+				"""
+		cursor.execute(query)
+
+
 
 		self.config = config
 		self.matches = matches
