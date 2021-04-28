@@ -23,6 +23,9 @@ class Meme(commands.Cog):
 
 	@commands.command()
 	async def meme(self, ctx, endpoint = ""):
+		await meme_code(self, commands.Context, endpoint)
+
+	async def meme_code(self, ctx, endpoint = ""):
 		""" Get a meme from reddit. 
 			To Get a meme from a specific subreddit, append its name after the command
 			For eg. `luci meme wholesomememes`
@@ -67,10 +70,10 @@ class Meme(commands.Cog):
 	# Scheduled tasks
 	@tasks.loop(seconds = 30)
 	async def scheduled(self):
-		await meme(self, commands.Context)
+		await meme_code(self, commands.Context)
 
 	@scheduled.before_loop
 	async def before_printer(self):
-		print('waiting...')
+		print("waiting...")
 		await self.bot.wait_until_ready()
 	
