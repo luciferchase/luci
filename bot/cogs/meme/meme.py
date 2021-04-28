@@ -65,13 +65,13 @@ class Meme(commands.Cog):
 			To Get a meme from a specific subreddit, append its name after the command
 			For eg. `luci meme wholesomememes`
 		"""
-		embed = meme_code(endpoint)
+		embed = self.meme_code(endpoint)
 		await ctx.send(embed = embed)
 
 	# Schedule meme to run every 30 seconds
 	@tasks.loop(seconds = 30, count = 5)
 	async def scheduler(self, ctx = commands.Context):
-		embed = meme_code()
+		embed = self.meme_code()
 		await ctx.send(embed = embed)
 
 	# Wait until the bot is ready
