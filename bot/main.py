@@ -43,7 +43,7 @@ bot.add_cog(photo.Photo())
 # Scheduled events
 async def schedule_meme():
 	meme_class = meme.Meme()
-	await meme_class.meme(commands.Context)
+	await meme_class.meme()
 
 
 # Core Commands
