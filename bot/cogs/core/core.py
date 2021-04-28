@@ -30,7 +30,17 @@ class Core(commands.Cog):
 		print("Connected to discord")
 
 		# Initialize scheduler
-		scheduler = AsyncIOScheduler()
+		schedule_log = logging.getLogger("apscheduler")
+		schedule_log.setLevel(logging.WARNING)
+
+		job_defaults = {
+			"coalesce": True,  # Multiple missed triggers within the grace time will only fire once
+			"max_instances": 5,  # This is probably way too high, should likely only be one
+			"misfire_grace_time": 15,  # 15 seconds ain't much, but it's honest work
+			"replace_existing": True,  # Very important for persistent data
+		}
+
+		scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
 		# Add jobs to scheduler
 		scheduler.add_job(Meme.meme, CronTrigger.from_crontab("* * * * *"))		# Every minute
