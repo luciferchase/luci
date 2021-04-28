@@ -40,9 +40,9 @@ bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
 bot.add_cog(photo.Photo())
 
-# Scheduled events
-async def schedule_meme():
-	await meme.Meme().meme()
+# # Scheduled events
+# async def schedule_meme():
+# 	await meme.Meme().meme()
 
 
 # Core Commands
@@ -78,7 +78,7 @@ async def on_ready():
 	scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
 	# Add jobs to scheduler
-	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("* * * * *"))		# Every minute
+	scheduler.add_job(meme.Meme().meme, CronTrigger.from_crontab("* * * * *"))		# Every minute
 
 	# Start the scheduler
 	scheduler.start()
