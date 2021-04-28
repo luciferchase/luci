@@ -70,7 +70,7 @@ class Meme(commands.Cog):
 
 	# Schedule meme to run every 30 seconds
 	@tasks.loop(seconds = 30, count = 5)
-	async def scheduler(self, ctx):
+	async def scheduler(self, ctx = commands.Context):
 		embed = meme_code()
 		await ctx.send(embed = embed)
 
