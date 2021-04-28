@@ -13,7 +13,7 @@ class Meme(commands.Cog):
 	
 	def __init__(self):
 		self.log = logging.getLogger("red.cogsbylucifer.photo")
-		self.dog_api = "https://api.thedogapi.com/v1/images/search"z
+		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 	
 	@commands.command()
 	async def meme(self, ctx, endpoint = ""):
