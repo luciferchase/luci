@@ -54,7 +54,7 @@ async def schedule_meme(ctx = commands.Context):
 	)
 	embed.set_image(url = response["url"])
 	embed.set_footer(text = f'👍 {response["ups"]}')
-	await ctx.send(embed = embed)
+	await bot.ctx.send(embed = embed)
 
 # Core Commands
 @bot.event	
