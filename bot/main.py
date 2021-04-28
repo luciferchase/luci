@@ -90,7 +90,7 @@ async def on_ready():
 	scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
 	# Add jobs to scheduler
-	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("* * * * *"))		# Every minute
+	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("00 * * * *"))		# Every Hour
 
 	# Start the scheduler
 	scheduler.start()
