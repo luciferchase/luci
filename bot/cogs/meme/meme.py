@@ -18,10 +18,9 @@ class Meme(commands.Cog):
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 
 		# Run Schdelued Tasks
-		print("Running scheduled memes every 30 seconds")
-		self.meme.start()
+		print("Running Scheduled Tasks")
+		self.scheduled.start()
 
-	@tasks.loop(seconds = 30)
 	@commands.command()
 	async def meme(self, ctx, endpoint = ""):
 		""" Get a meme from reddit. 
@@ -65,7 +64,13 @@ class Meme(commands.Cog):
 		embed.set_footer(text = f'👍 {response["ups"]}')
 		await ctx.send(embed = embed)
 
-	@meme.before_loop
-	async def before_meme(self):
-		print("waiting...")
+	# Scheduled tasks
+	@tasks.loop(seconds = 30)
+	async def scheduled(self):
+		await meme(self, commands.Context)
+
+	@scheduled.before_loop
+	async def before_printer(self):
+		print('waiting...')
 		await self.bot.wait_until_ready()
+	
