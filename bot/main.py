@@ -11,7 +11,7 @@ from cogs.aki import aki
 from cogs.avatar import avatar
 from cogs.comics import comics
 from cogs.conversationgames import conversationgames
-from cogs.core import core, scheduler
+from cogs.core import core
 from cogs.forward import forward
 from cogs.ipl import ipl
 from cogs.math import math
