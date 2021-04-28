@@ -3,6 +3,9 @@ from discord.ext import commands, tasks
 
 import logging
 
+from cogs.meme.meme import Meme
+
+
 class Core(commands.Cog):
 	"""Core commands"""	
 	def __init__(self, bot):
@@ -41,4 +44,22 @@ class Core(commands.Cog):
 	async def ping(self, ctx) :
 		await ctx.send(f"🏓 Pong with {str(round(self.bot.latency, 3))}")
 
+
+class Scheduler(commands.Cog):
+	"""Schedule vairous commands"""
+
+	def __init__(self):
+		# Run Schdelued Tasks
+		print("Running Scheduled Tasks")
+		self.scheduled.start()
+
+	# Scheduled tasks
+	@tasks.loop(seconds = 30)
+	async def scheduled(self):
+		Meme.meme()
+
+	@scheduled.before_loop
+	async def before_printer(self):
+		print('waiting...')
+		await self.bot.wait_until_ready()
 		
