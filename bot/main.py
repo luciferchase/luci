@@ -41,7 +41,7 @@ bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
 bot.add_cog(photo.Photo())
-bot.add_cog(core.Scheduler())
+bot.add_cog(core.Scheduler(bot))
 
 # Run the bot
 bot.run(BOT_TOKEN)

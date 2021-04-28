@@ -48,7 +48,9 @@ class Core(commands.Cog):
 class Scheduler(commands.Cog):
 	"""Schedule vairous commands"""
 
-	def __init__(self):
+	def __init__(self, bot):
+		self.bot = bot
+		
 		# Run Schdelued Tasks
 		print("Running Scheduled Tasks")
 		self.scheduled.start()
@@ -57,3 +59,9 @@ class Scheduler(commands.Cog):
 	@tasks.loop(seconds = 30)
 	async def scheduled(self):
 		Meme.meme()
+
+	@scheduled.before_loop
+	async def before_printer(self):
+		print('waiting...')
+		await self.bot.wait_until_ready()
+		
