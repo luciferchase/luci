@@ -11,7 +11,7 @@ class Meme(commands.Cog):
 	""" Get memes.
 	"""
 	
-	def __init__(self):
+	def __init__(self, bot):
 		self.bot = bot
 
 		self.log = logging.getLogger("red.cogsbylucifer.photo")
