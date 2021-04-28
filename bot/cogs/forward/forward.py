@@ -76,12 +76,10 @@ class Forward(commands.Cog):
 	@commands.is_owner()
 	async def dm(self, ctx: commands.Context, user_id: int, *, message: str):
 		"""DMs a person."""
-		destination = get(ctx.bot.get_all_members(), id=user_id)
+		destination = get(ctx.bot.get_all_members(), id = user_id)
+		await ctx.send(ctx.bot.get_all_members())
 		if not destination:
-			return await ctx.send(
-				"Invalid ID or user not found. \
-				You can only send messages to people I share a server with."
-			)
+			return await ctx.send("Invalid ID or user not found. You can only send messages to people I share a server with.")
 		await destination.send(message)
 		await ctx.send(f"Sent message to {destination}.")
 

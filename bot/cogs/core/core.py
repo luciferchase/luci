@@ -1,6 +1,8 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import logging
+
+from cogs.meme.meme import Meme
 
 class Core(commands.Cog):
 	"""Core commands"""	
@@ -18,11 +20,17 @@ class Core(commands.Cog):
 					name = "your heartbeats"
 					)
 				)
-			self.log.info("Activity set successfully")
+			print("Activity set successfully")
 		except:
-			self.log.error("Cannot set activity")
+			self.log.warning("Cannot set activity")
 		
-		self.log.info("Connected to discord")
+		print("Connected to discord")
+
+	# Run scheduled tasks
+	@tasks.loop(seconds = 30)
+	async def scheduled(self):
+		Meme.meme()
+
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
