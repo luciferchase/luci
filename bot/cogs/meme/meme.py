@@ -12,8 +12,24 @@ class Meme(commands.Cog):
 	"""
 	
 	def __init__(self):
+		self.bot = bot
+
 		self.log = logging.getLogger("red.cogsbylucifer.photo")
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
+
+		# Run Schdelued Tasks
+		print("Running Scheduled Tasks")
+		self.scheduled.start()
+
+	# Scheduled tasks
+	@tasks.loop(seconds = 30)
+	async def scheduled(self):
+		await meme(self, commands.Context)
+
+	@scheduled.before_loop
+	async def before_printer(self):
+		print('waiting...')
+		await self.bot.wait_until_ready()
 	
 	@commands.command()
 	async def meme(self, ctx, endpoint = ""):
