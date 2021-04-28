@@ -23,7 +23,7 @@ from cogs.photo import photo
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = commands.Bot(command_prefix = "luci ")
 
-logging.basicConfig(level = logging.DEBUG)
+logging.basicConfig(level = logging.WARNING)
 
 # Get Members intent
 intents = discord.Intents.default()

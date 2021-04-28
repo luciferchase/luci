@@ -50,7 +50,7 @@ class Scheduler(commands.Cog):
 
 	def __init__(self, bot):
 		self.bot = bot
-		
+
 		# Run Schdelued Tasks
 		print("Running Scheduled Tasks")
 		self.scheduled.start()
@@ -58,7 +58,7 @@ class Scheduler(commands.Cog):
 	# Scheduled tasks
 	@tasks.loop(seconds = 30)
 	async def scheduled(self):
-		Meme.meme()
+		await Meme.meme()
 
 	@scheduled.before_loop
 	async def before_printer(self):
