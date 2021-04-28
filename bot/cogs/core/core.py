@@ -57,7 +57,7 @@ class Scheduler(commands.Cog):
 
 	# Scheduled tasks
 	@tasks.loop(seconds = 30)
-	async def scheduled(self):
+	async def scheduled(self, ctx):
 		await Meme.meme(self, ctx)
 
 	@scheduled.before_loop
