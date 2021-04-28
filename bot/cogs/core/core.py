@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands, tasks
 
+import logging
+
 class Core(commands.Cog):
 	"""Core commands"""	
 	def __init__(self, bot):
