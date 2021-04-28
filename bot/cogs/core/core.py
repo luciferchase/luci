@@ -50,7 +50,6 @@ class Scheduler(commands.Cog):
 
 	def __init__(self, bot):
 		self.bot = bot
-		self.ctx = ctx
 
 		# Run Schdelued Tasks
 		print("Running Scheduled Tasks")
