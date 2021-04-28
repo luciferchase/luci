@@ -1,8 +1,5 @@
 import discord
 from discord.ext import commands, tasks
-import logging
-
-from cogs.meme.meme import Meme
 
 class Core(commands.Cog):
 	"""Core commands"""	
@@ -25,12 +22,6 @@ class Core(commands.Cog):
 			self.log.warning("Cannot set activity")
 		
 		print("Connected to discord")
-
-	# Run scheduled tasks
-	@tasks.loop(seconds = 30)
-	async def scheduled(self):
-		Meme.meme()
-
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):

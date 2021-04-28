@@ -11,7 +11,7 @@ from cogs.aki import aki
 from cogs.avatar import avatar
 from cogs.comics import comics
 from cogs.conversationgames import conversationgames
-from cogs.core import core
+from cogs.core import core, scheduler
 from cogs.forward import forward
 from cogs.ipl import ipl
 from cogs.math import math
@@ -41,6 +41,7 @@ bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
 bot.add_cog(photo.Photo())
+bot.add_cog(core.Scheduler(bot))
 
 # Run the bot
 bot.run(BOT_TOKEN)
