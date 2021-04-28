@@ -44,7 +44,8 @@ bot.add_cog(photo.Photo())
 # Scheduled events
 
 # Until I find a better way, had to use this ugly hack
-async def schedule_meme(ctx = commands.Context):
+async def schedule_meme():
+	channel = bot.get_channel(836214172089319477)
 	response = requests.get("https://meme-api.herokuapp.com/gimme/dankmemes").json()
 
 	embed = discord.Embed(
@@ -54,7 +55,7 @@ async def schedule_meme(ctx = commands.Context):
 	)
 	embed.set_image(url = response["url"])
 	embed.set_footer(text = f'👍 {response["ups"]}')
-	await bot.ctx.send(embed = embed)
+	await channel.send(embed = embed)
 
 # Core Commands
 @bot.event	
