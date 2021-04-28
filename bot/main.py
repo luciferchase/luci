@@ -39,7 +39,7 @@ bot.add_cog(core.Core(bot))
 bot.add_cog(forward.Forward(bot))
 bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
-bot.add_cog(meme.Meme(bot))
+bot.add_cog(meme.Meme())
 bot.add_cog(photo.Photo())
 
 # Run the bot
