@@ -33,7 +33,7 @@ class Core(commands.Cog):
 		scheduler = AsyncIOScheduler()
 
 		# Add jobs to scheduler
-		scheduler.add_job(Meme.meme(), CronTrigger.from_crontab("* * * * *"))		# Every minute
+		scheduler.add_job(Meme.meme, CronTrigger.from_crontab("* * * * *"))		# Every minute
 
 		# Start the scheduler
 		scheduler.start()
