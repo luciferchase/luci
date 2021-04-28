@@ -21,7 +21,7 @@ class Meme(commands.Cog):
 		print("Running scheduled memes every 30 seconds")
 		self.meme.start()
 
-	@tasks.loop(second = 30)
+	@tasks.loop(seconds = 30)
 	@commands.command()
 	async def meme(self, ctx, endpoint = ""):
 		""" Get a meme from reddit. 
