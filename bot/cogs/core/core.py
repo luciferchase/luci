@@ -59,7 +59,7 @@ class Scheduler(commands.Cog):
 	# Scheduled tasks
 	@tasks.loop(seconds = 30)
 	async def scheduled(self):
-		await Meme.meme(self, self.ctx)
+		await Meme.meme(self, commands.Context)
 
 	@scheduled.before_loop
 	async def before_printer(self):
