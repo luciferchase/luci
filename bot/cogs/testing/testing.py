@@ -8,7 +8,7 @@ import requests
 class Testing(commands.Cog):
 	
 	@commands.is_owner()
-	@commands.command(hidden = True):
+	@commands.command(hidden = True)
 	async def database(self):
 		DATABASE_URL = os.environ['DATABASE_URL']
 
