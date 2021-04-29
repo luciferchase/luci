@@ -140,8 +140,13 @@ async def sql(ctx, *query):
 	cursor = dbcon.cursor()
 
 	query = " ".join(query)
-	cursor.execute(query)
-
+	print("Executing query: ", query)
+	try:
+		cursor.execute(query)
+		await ctx.send("Query executed successfully")
+	except:
+		log.error(f"{query} not executed successfully")
+		await ctx.send("Query not executed. Check logs.")
 
 
 

@@ -57,14 +57,15 @@ class IPL(commands.Cog):
 				MATCH_STARTED	BOOLEAN NOT NULL)"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
-			
+		
+		await ctx.send("All tables created successfully")	
 		print("All tables created successfully")
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def insert(self, ctx):
 		print(self.config)
-	
+
 		if (date.today() > self.config[1]):
 			params = {
 				"apikey": os.environ("CRIC_API_KEY")
