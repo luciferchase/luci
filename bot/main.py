@@ -9,6 +9,7 @@ import sys
 import os
 import logging
 import requests
+import psycopg2
 
 # Install all cogs
 from cogs.aki import aki
@@ -125,9 +126,23 @@ async def on_member_join(member):
 		embed.set_thumbnail(url = member.avatar_url) 
 		await channel.send(embed = embed)
 
-@commands.command()
+@bot.command()
 async def ping(ctx) :
 	await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
+
+
+@bot.is_owner()
+@bot.command(hidden = True)
+async def sql(ctx, *query):
+	DATABASE_URL = os.environ["DATABASE_URL"]
+
+	dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
+	cursor = dbcon.cursor()
+
+	query = " ".join(query)
+	cursor.execute(query)
+
+
 
 
 # Run the bot
