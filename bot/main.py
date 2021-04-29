@@ -83,14 +83,53 @@ async def on_ready():
 
 	log = logging.getLogger("on_ready")
 
+	DATABASE_URL = os.environ["DATABASE_URL"]
+
+	dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
+	cursor = dbcon.cursor()
+
 	try:
-		await bot.change_presence(
-			status = discord.Status.idle, 
-			activity = discord.Activity(
+		cursor.execute("SELECT * FROM BOTSTATUS")
+		data = cursor.fetchall()
+	except:
+		data = []
+
+	if (len(data) != 0):
+		data = data[0]
+
+		if (data[0] == "o"):
+			status_class = discord.Status.online
+		elif (data[0] == "i"):
+			status_class = discord.Status.idle
+		elif (data[0] == "d"):
+			status_class = discord.Status.dnd
+
+		if (data[1] == "p"):
+			activity_type = discord.Game(name = data[2])
+		elif (data[1] == "l"):
+			activity_type = discord.Activity(
 				type = discord.ActivityType.listening,
-				name = "your heartbeats"
+				name = data[2]
 				)
+		elif (data[1] == "w"):
+			activity_type = discord.Activity(
+				type = discord.ActivityType.watching,
+				name = data[2]
+				)
+		elif (data[1] == "c"):
+			activity_type = discord.Activity(
+				type = discord.ActivityType.competing,
+				name = data[2]
+				)
+	else:
+		status_class = discord.Status.idle
+		activity_type = discord.Activity(
+			type = discord.ActivityType.watching,
+			name = "your cute smile"
 			)
+	
+	try:
+		await bot.change_presence(status = status_class, activity = activity_type)
 		print("Activity set successfully")
 	except:
 		log.warning("Cannot set activity")

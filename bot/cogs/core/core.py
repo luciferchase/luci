@@ -53,11 +53,11 @@ class Core(commands.Cog):
 		text = " ".join(text)
 
 		if (status[0] == "o"):
-			status = discord.Status.online
+			status_class = discord.Status.online
 		elif (status[0] == "i"):
-			status = discord.Status.idle
+			status_class = discord.Status.idle
 		elif (status[0] == "d"):
-			status = discord.Status.dnd
+			status_class = discord.Status.dnd
 
 		if (activity[0] == "p"):
 			activity_type = discord.Game(name = text)
@@ -78,7 +78,7 @@ class Core(commands.Cog):
 					)
 		try:
 			await self.bot.change_presence(
-				status = status, 
+				status = status_class, 
 				activity = activity_type
 				)
 			print("Activity set successfully")
@@ -86,3 +86,20 @@ class Core(commands.Cog):
 		except:
 			log.warning("Cannot set activity")
 			await ctx.send("Cannot set activity")
+
+		DATABASE_URL = os.environ["DATABASE_URL"]
+
+		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
+		cursor = dbcon.cursor()
+
+		query = """CREATE DATABASE IF NOT EXISTS BOTSTATUS(
+				STATUS		TEXT	NOT NULL,
+				ACTIVITY 	TEXT,
+				NAME 		TEXT)"""
+		cursor.execute(query)
+		dbcon.commit()
+
+		query = f"""INSERT INTO BOTSTATUS VALUES
+				({status}, {activity}, {text}"""
+		cursor.execute(query)
+		dbcon.commit()
