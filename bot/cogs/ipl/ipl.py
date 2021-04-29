@@ -41,17 +41,15 @@ class IPL(commands.Cog):
 			"apikey": os.getenv("CRIC_API_KEY"),
 			"unique_id": self.config[2] + 1
 		}
-		print(str(date.today()))
-		return
 		
 		if (str(date.today()) > self.config[1]):
 			self.config[0] = 1
-			self.config[1] = "2021-04-29"
+			self.config[1] = str(date.today())
 			self.config[2] += 1
 
 			query = f"""UPDATE CONFIG SET
 						RATE_LIMIT = RATE_LIMIT + 1,
-						LAST_SYNCED = '',
+						LAST_SYNCED = '{str(date.today())}',
 						LAST_MATCH_ID = LAST_MATCH_ID + 1
 						"""
 			self.cursor.execute(query)
