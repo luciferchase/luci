@@ -26,12 +26,12 @@ class IPL(commands.Cog):
 
 		self.api_matches = "https://cricapi.com/api/matches"
 		self.params_matches = {
-			"apikey": os.environ("CRIC_API_KEY")
+			"apikey": os.getenv("CRIC_API_KEY")
 		}
 
 		self.api_score = "https://cricapi.com/api/cricketScore"
 		self.params_score = {
-			"apikey": os.environ("CRIC_API_KEY"),
+			"apikey": os.getenv("CRIC_API_KEY"),
 			"unique_id": self.config[2]
 		}
 		
