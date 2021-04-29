@@ -60,7 +60,7 @@ class Core(commands.Cog):
 		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		cursor = dbcon.cursor()
 
-		query = """CREATE DATABASE IF NOT EXISTS BOTSTATUS(
+		query = """CREATE TABLE IF NOT EXISTS BOTSTATUS(
 				STATUS		TEXT	NOT NULL,
 				ACTIVITY 	TEXT,
 				NAME 		TEXT)"""
