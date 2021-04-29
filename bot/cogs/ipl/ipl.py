@@ -18,10 +18,10 @@ class IPL(commands.Cog):
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
-		self.cursor.execute("DELETE FROM CONFIG")
+		# self.cursor.execute("DELETE FROM CONFIG")
 
 		query = """INSERT INTO CONFIG VALUES
-				(1, '2021-04-28', 1254079, 0, 0)"""
+				(1, '2021-04-28', 1254079, 837294724020830238, 836214172089319477)"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
 
@@ -50,7 +50,7 @@ class IPL(commands.Cog):
 			query = f"""UPDATE CONFIG SET
 						RATE_LIMIT = RATE_LIMIT + 1,
 						LAST_SYNCED = '{str(date.today())}',
-						LAST_MATCH_ID = 1254080
+						LAST_MATCH_ID = LAST_MATCH_ID + 1
 						"""
 			self.cursor.execute(query)
 			self.dbcon.commit()
@@ -396,7 +396,38 @@ class IPL(commands.Cog):
 	async def standings(self, ctx):
 		""" See current standings of Sattebaaz Championship
 		"""
-		await fetch_standings()
+		self.cursor.execute("SELECT * FROM STANDINGS")
+		data = self.cursor.fetchall()
+
+		current_standings = {}
+
+		for user in data:
+			username = await self.bot.fetch_user(user[0])
+			current_standings[username] = user[1]
+
+		embed_string_name = ""
+		embed_string_points = ""
+		for user in current_standings:
+			embed_string_name += f"\n{user}\n"
+			embed_string_points += f"\n : \t {current_standings[user]}\n"
+
+		embed = discord.Embed(
+			color = 0x07f223,							# Green
+			title = "Sattebaaz Championship",
+		)
+		embed.add_field(
+			name = "Current Standings",
+			value = f"```\n{embed_string_name}```",
+			inline = True
+		)
+		embed.add_field(
+			name = "Points",
+			value = f"```\n{embed_string_points}```",
+			inline = True
+		)
+		embed.set_thumbnail(url = self.ipl_logo)
+		await ctx.send(embed = embed)
+
 
 	@commands.command()
 	async def score(self, ctx):
