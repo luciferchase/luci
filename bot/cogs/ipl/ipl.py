@@ -46,7 +46,7 @@ class IPL(commands.Cog):
 		
 		if (str(date.today()) > self.config[1]):
 			self.config[0] = 1
-			self.config[1] = 
+			self.config[1] = "2021-04-29"
 			self.config[2] += 1
 
 			query = f"""UPDATE CONFIG SET
