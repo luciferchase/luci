@@ -9,7 +9,9 @@ from datetime import datetime, date
 class IPL(commands.Cog):
 	"""View details of matches and play Sattebaaz Championship"""
 
-	def __init__(self):
+	def __init__(self, bot):
+		self.bot = bot
+		
 		DATABASE_URL = os.environ["DATABASE_URL"]
 
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
