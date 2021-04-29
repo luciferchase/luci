@@ -50,7 +50,7 @@ class IPL(commands.Cog):
 			query = f"""UPDATE CONFIG SET
 						RATE_LIMIT = RATE_LIMIT + 1,
 						LAST_SYNCED = '{str(date.today())}',
-						LAST_MATCH_ID = LAST_MATCH_ID + 1
+						LAST_MATCH_ID = 1254080
 						"""
 			self.cursor.execute(query)
 			self.dbcon.commit()
@@ -68,11 +68,11 @@ class IPL(commands.Cog):
 					'{self.last_match_details['winner_team']}')"""
 			self.cursor.execute(query)
 
+			self.cursor.execute("DELETE FROM UPCOMING_MATCH")
+
 			for match in response["matches"]:
 				if (match["unique_id"] == self.config[2] + 1):
 					self.upcoming_match_details = match
-
-					self.cursor.execute("DELETE FROM UPCOMING_MATCH")
 
 					print(self.upcoming_match_details)
 
@@ -422,7 +422,7 @@ class IPL(commands.Cog):
 			query = """UPDATE CONFIG
 						SET RATE_LIMIT = RATE_LIMIT + 1"""
 			
-		response = requests.get(self.api_score, params = params_score)
+		response = requests.get(self.api_score, params = self.params_score)
 		data = response.json()
 
 		if (data["matchStarted"] == False):
