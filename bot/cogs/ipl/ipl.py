@@ -200,40 +200,9 @@ class IPL(commands.Cog):
 		embed.set_image(url = self.image_url[self.last_match_details[3]])
 		embed.set_thumbnail(url = self.ipl_logo)
 		await ctx.send(embed = embed)
-
+		
 	async def fetch_standings(self, ctx):
-		self.cursor.execute("SELECT * FROM STANDINGS")
-		data = self.cursor.fetchall()
-
-		current_standings = {}
-
-		for user in data:
-			username = await self.bot.fetch_user(user[0])
-			current_standings[username] = user[1]
-
-		embed_string_name = ""
-		embed_string_points = ""
-		for user in current_standings:
-			embed_string_name += f"\n{user}\n"
-			embed_string_points += f"\n : \t {current_standings[user]}\n"
-
-		embed = discord.Embed(
-			color = 0x07f223,							# Green
-			title = "Sattebaaz Championship",
-		)
-		embed.add_field(
-			name = "Current Standings",
-			value = f"```\n{embed_string_name}```",
-			inline = True
-		)
-		embed.add_field(
-			name = "Points",
-			value = f"```\n{embed_string_points}```",
-			inline = True
-		)
-		embed.set_thumbnail(url = self.ipl_logo)
-		await ctx.send(embed = embed)
-
+		
 	@commands.bot_has_permissions(embed_links = True)
 	@commands.is_owner()
 	@commands.command(hidden = True)
@@ -280,7 +249,37 @@ class IPL(commands.Cog):
 					username = await self.bot.fetch_user(user)
 					winners.append(username)
 
-		await fetch_standings()
+		self.cursor.execute("SELECT * FROM STANDINGS")
+		data = self.cursor.fetchall()
+
+		current_standings = {}
+
+		for user in data:
+			username = await self.bot.fetch_user(user[0])
+			current_standings[username] = user[1]
+
+		embed_string_name = ""
+		embed_string_points = ""
+		for user in current_standings:
+			embed_string_name += f"\n{user}\n"
+			embed_string_points += f"\n : \t {current_standings[user]}\n"
+
+		embed = discord.Embed(
+			color = 0x07f223,							# Green
+			title = "Sattebaaz Championship",
+		)
+		embed.add_field(
+			name = "Current Standings",
+			value = f"```\n{embed_string_name}```",
+			inline = True
+		)
+		embed.add_field(
+			name = "Points",
+			value = f"```\n{embed_string_points}```",
+			inline = True
+		)
+		embed.set_thumbnail(url = self.ipl_logo)
+		await ctx.send(embed = embed)
 
 		embed = discord.Embed(
 			color = 0x19f0e2,						# Cyan
@@ -363,7 +362,37 @@ class IPL(commands.Cog):
 		embed.set_thumbnail(url = self.ipl_logo)
 		await ctx.send(embed = embed)
 
-		await fetch_standings()
+		self.cursor.execute("SELECT * FROM STANDINGS")
+		data = self.cursor.fetchall()
+
+		current_standings = {}
+
+		for user in data:
+			username = await self.bot.fetch_user(user[0])
+			current_standings[username] = user[1]
+
+		embed_string_name = ""
+		embed_string_points = ""
+		for user in current_standings:
+			embed_string_name += f"\n{user}\n"
+			embed_string_points += f"\n : \t {current_standings[user]}\n"
+
+		embed = discord.Embed(
+			color = 0x07f223,							# Green
+			title = "Sattebaaz Championship",
+		)
+		embed.add_field(
+			name = "Current Standings",
+			value = f"```\n{embed_string_name}```",
+			inline = True
+		)
+		embed.add_field(
+			name = "Points",
+			value = f"```\n{embed_string_points}```",
+			inline = True
+		)
+		embed.set_thumbnail(url = self.ipl_logo)
+		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def standings(self, ctx):
@@ -375,7 +404,7 @@ class IPL(commands.Cog):
 	async def score(self, ctx):
 		""" Get live score of present IPL match
 		"""
-		if (self.config_data[0] >= 95):
+		if (self.config[0] >= 95):
 			response_dog = requests.get(self.dog_api).json()[0]
 
 			embed = discord.Embed(
