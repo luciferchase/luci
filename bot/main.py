@@ -18,7 +18,7 @@ from cogs.comics import comics
 from cogs.core import core
 from cogs.conversationgames import conversationgames
 from cogs.forward import forward
-from cogs.ipl import ipl
+# from cogs.ipl import ipl
 from cogs.math import math
 from cogs.meme import meme
 from cogs.photo import photo
@@ -39,7 +39,7 @@ bot.add_cog(comics.Comics(bot))
 bot.add_cog(core.Core(bot))
 bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(forward.Forward(bot))
-bot.add_cog(ipl.IPL(bot))
+# bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
 bot.add_cog(photo.Photo())
@@ -73,7 +73,6 @@ async def schedule_wallpaper():
 	await wallpaper.add_reaction("❤️")
 	await wallpaper.add_reaction("👍")
 	await wallpaper.add_reaction("👎")
-
 
 # Core Commands
 @bot.event	
