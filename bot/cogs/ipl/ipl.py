@@ -20,7 +20,7 @@ class IPL(commands.Cog):
 
 		self.cursor.execute("DELETE FROM CONFIG")
 		query = """INSERT INTO CONFIG(RATE_LIMIT, LAST_SYNCED, LAST_MATCH_ID, EMBED_ID, CHANNEL_ID) VALUES
-				(1, "2021-04-28", 1254079, 837294724020830238, 836214172089319477)"""
+				(1, '2021-04-28', 1254079, 837294724020830238, 836214172089319477)"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
 
