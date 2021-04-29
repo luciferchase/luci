@@ -18,13 +18,6 @@ class IPL(commands.Cog):
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
-		self.cursor.execute("DELETE FROM CONFIG")
-
-		query = """INSERT INTO CONFIG VALUES
-				(1, '2021-04-28', 1254079, 837294724020830238, 836214172089319477)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-
 		self.cursor.execute("SELECT * FROM CONFIG")
 		self.config = list(self.cursor.fetchall()[0])
 		
@@ -34,12 +27,6 @@ class IPL(commands.Cog):
 		self.api_matches = "https://cricapi.com/api/matches"
 		self.params_matches = {
 			"apikey": os.getenv("CRIC_API_KEY")
-		}
-
-		self.api_score = "https://cricapi.com/api/cricketScore"
-		self.params_score = {
-			"apikey": os.getenv("CRIC_API_KEY"),
-			"unique_id": self.config[2] + 1
 		}
 		
 		if (str(date.today()) > self.config[1]):
@@ -228,8 +215,8 @@ class IPL(commands.Cog):
 								SET POINTS = POINTS + 10
 								WHERE USER_ID = {}""".format(user.id)
 					self.cursor.execute(query)
-					self.dbcon.commit()
 					
+					self.dbcon.commit()
 					username = await self.bot.fetch_user(user)
 					winners.append(username)
 
@@ -419,6 +406,12 @@ class IPL(commands.Cog):
 	async def score(self, ctx):
 		""" Get live score of present IPL match
 		"""
+		api_score = "https://cricapi.com/api/cricketScore"
+		params_score = {
+			"apikey": os.getenv("CRIC_API_KEY"),
+			"unique_id": self.config[2] + 1
+		}
+
 		if (self.config[0] >= 95):
 			response_dog = requests.get(self.dog_api).json()[0]
 
@@ -439,7 +432,7 @@ class IPL(commands.Cog):
 			query = """UPDATE CONFIG
 						SET RATE_LIMIT = RATE_LIMIT + 1"""
 			
-		response = requests.get(self.api_score, params = self.params_score)
+		response = requests.get(api_score, params = params_score)
 		data = response.json()
 
 		if (data["matchStarted"] == False):
