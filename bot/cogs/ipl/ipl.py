@@ -43,7 +43,7 @@ class IPL(commands.Cog):
 			query = f"""UPDATE CONFIG SET
 						RATE_LIMIT = {self.config[0]},
 						LAST_SYNCED = {self.config[1]},
-						LAST_MATCH_ID = {self.config[2]},
+						LAST_MATCH_ID = {self.config[2]}
 						"""
 			self.cursor.execute(query)
 			self.dbcon.commit()
