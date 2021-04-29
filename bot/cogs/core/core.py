@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 
-import json
 import logging
 import os
 import psycopg2
@@ -36,7 +35,7 @@ class Core(commands.Cog):
 
 		try:
 			data = cursor.fetchall()
-			print(json.dumps(data, indent = 2))
+			print(data)
 		except:
 			pass
 

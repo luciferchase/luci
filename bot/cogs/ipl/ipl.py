@@ -319,7 +319,7 @@ class IPL(commands.Cog):
 		)
 		embed.add_field(
 			name = "Last match was won by ...",
-			value = self.last_match_details["winner_team"],
+			value = self.last_match_details[3],
 			inline = False
 		)
 		embed.add_field(
