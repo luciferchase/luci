@@ -77,6 +77,8 @@ async def schedule_wallpaper():
 # Core Commands
 @bot.event	
 async def on_ready():
+	print("Connected to discord")
+
 	log = logging.getLogger("on_ready")
 
 	try:
@@ -91,8 +93,6 @@ async def on_ready():
 	except:
 		log.warning("Cannot set activity")
 	
-	print("Connected to discord")
-
 	# Initialize scheduler
 	schedule_log = logging.getLogger("apscheduler")
 	schedule_log.setLevel(logging.WARNING)

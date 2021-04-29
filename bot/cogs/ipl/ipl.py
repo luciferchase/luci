@@ -10,7 +10,7 @@ class IPL(commands.Cog):
 	
 	@commands.is_owner()
 	@commands.command(hidden = True)
-	async def database(self):
+	async def database(self, ctx):
 		DATABASE_URL = os.environ['DATABASE_URL']
 
 		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
