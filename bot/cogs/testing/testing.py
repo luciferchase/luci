@@ -15,16 +15,13 @@ class Testing(commands.Cog):
 		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		cursor = dbcon.cursor()
 
-		cursor.execute("""ALTER TABLE CONFIG ALTER COLUMN LAST_SYNCED TYPE TEXT""")
-		cursor.execute("DELETE FROM CONFIG")
-
-
-		query = """INSERT INTO CONFIG VALUES
-				(0, '2021-04-28', 1254079, 0, 0)"""
+		query = """INSERT INTO STANDINGS VALUES
+				(707557256220115035, 30),
+				(650661454000947210, 30)"""
 		cursor.execute(query)
 		dbcon.commit()
 
-		query = """SELECT * FROM CONFIG"""
+		query = """SELECT * FROM STANDINGS"""
 		cursor.execute(query)
 
 		data = cursor.fetchall()

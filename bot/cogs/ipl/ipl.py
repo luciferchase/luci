@@ -24,17 +24,6 @@ class IPL(commands.Cog):
 		self.cursor.execute("SELECT * FROM STANDINGS")
 		self.standings = self.cursor.fetchall()
 
-		self.cursor.execute("SELECT * FROM LAST_MATCH")
-		self.last_match_details = self.cursor.fetchall()[0]
-
-		self.cursor.execute("SELECT * FROM UPCOMING_MATCH")
-		data = self.cursor.fetchall()
-
-		self.upcoming_match_details = data[0]
-		self.upcoming_match_details_2 = False
-		if (len(data) == 2):
-			self.upcoming_match_details_2 = data[1]
-
 		self.api_matches = "https://cricapi.com/api/matches"
 		self.params_matches = {
 			"apikey": os.environ("CRIC_API_KEY")
@@ -45,7 +34,7 @@ class IPL(commands.Cog):
 			"apikey": os.environ("CRIC_API_KEY"),
 			"unique_id": self.config[2]
 		}
-	
+		
 		if (date.today() > self.config[1]):
 			self.config[0] = 1
 			self.config[1] = date.today()
@@ -82,8 +71,7 @@ class IPL(commands.Cog):
 							{self.upcoming_match_details["team-1"]}, {self.upcoming_match_details["team-2"]}, \
 							{self.upcoming_match_details["match_started"]})"""
 					cursor.execute(query)
-					dbcon.commit()
-						
+					dbcon.commit()	
 			
 				elif (match["unique_id"] == self.config[2] + 2):
 
@@ -100,7 +88,19 @@ class IPL(commands.Cog):
 							({self.upcoming_match_details_2["unique_id"]}, \
 							{self.upcoming_match_details_2["team-1"]}, {self.upcoming_match_details_2["team-2"]}, \
 							{self.upcoming_match_details_2["match_started"]})"""
+					cursor.execute(query)
+					self.dbcon.commit()
 
+		self.cursor.execute("SELECT * FROM LAST_MATCH")
+		self.last_match_details = self.cursor.fetchall()[0]
+
+		self.cursor.execute("SELECT * FROM UPCOMING_MATCH")
+		data = self.cursor.fetchall()
+
+		self.upcoming_match_details = data[0]
+		self.upcoming_match_details_2 = False
+		if (len(data) == 2):
+			self.upcoming_match_details_2 = data[1]
 
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 
