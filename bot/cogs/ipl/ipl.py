@@ -92,6 +92,9 @@ class IPL(commands.Cog):
 
 					self.upcoming_match_details_2 = match
 
+					print(self.upcoming_match_details_2)
+					return
+
 					query = f"""INSERT INTO UPCOMING_MATCH VALUES
 							({self.upcoming_match_details_2['unique_id']}, \
 							'{self.upcoming_match_details_2['team-1']}', '{self.upcoming_match_details_2['team-2']}', \
