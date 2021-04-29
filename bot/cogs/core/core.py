@@ -41,12 +41,14 @@ class Core(commands.Cog):
 			pass
 
 	@commands.is_owner()
-	@commands.command(hidden = True)
+	@commands.command(hidden = True, aliases = ["status", "bs"])
 	async def botstatus(self, ctx, *query):
 		"""Set botstatus `luci <status> <activity> <text>`
 		`status` can be: online[o], idle[i], dnd[d]
 		`activity` can be : playing[p], listening[l], watching[w], competing[c]
 		"""
+		log = logging.getLogger("botstatus")
+
 		status, activity, *text = query
 		text = " ".join(text)
 
