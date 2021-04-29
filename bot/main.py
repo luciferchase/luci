@@ -35,6 +35,7 @@ logging.basicConfig(level = logging.WARNING)
 bot.add_cog(aki.Aki(bot))
 bot.add_cog(avatar.Avatar())
 bot.add_cog(comics.Comics(bot))
+bot.add_cog(core.Core(bot))
 bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(forward.Forward(bot))
 bot.add_cog(ipl.IPL(bot))
@@ -59,8 +60,6 @@ async def schedule_meme():
 	await channel.send(embed = embed)
 
 async def schedule_wallpaper():
-	""" Get Bing's daily wallpaper of the day
-	"""
 	channel = bot.get_channel(836214172089319477)
 	api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-IN"
 
@@ -125,35 +124,6 @@ async def on_member_join(member):
 		) 
 		embed.set_thumbnail(url = member.avatar_url) 
 		await channel.send(embed = embed)
-
-@bot.command()
-async def ping(ctx) :
-	await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
-
-
-@commands.is_owner()
-@bot.command(hidden = True)
-async def sql(ctx, *query):
-	log = logging.getLogger("sql")
-
-	DATABASE_URL = os.environ["DATABASE_URL"]
-
-	dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
-	cursor = dbcon.cursor()
-
-	query = " ".join(query)
-	print("Executing query: ", query)
-	try:
-		cursor.execute(query)
-		await ctx.send("Query executed successfully")
-
-		data = cursor.fetchall()
-		print(data)
-	except:
-		log.error(f"{query} not executed successfully")
-		await ctx.send("Query not executed. Check logs.")
-
-
 
 # Run the bot
 bot.run(BOT_TOKEN)
