@@ -27,8 +27,11 @@ class Core(commands.Cog):
 		print("Executing query:", query)
 		try:
 			cursor.execute(query)
-			dbcon.commit()
 			await ctx.send("Query executed successfully")
+			try:
+				dbcon.commit()
+			except:
+				pass
 		except:
 			log.error(f"{query} not executed successfully")
 			await ctx.send("Query not executed. Check logs.")
@@ -51,6 +54,23 @@ class Core(commands.Cog):
 
 		status, activity, *text = query
 		text = " ".join(text)
+
+		DATABASE_URL = os.environ["DATABASE_URL"]
+
+		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
+		cursor = dbcon.cursor()
+
+		query = """CREATE DATABASE IF NOT EXISTS BOTSTATUS(
+				STATUS		TEXT	NOT NULL,
+				ACTIVITY 	TEXT,
+				NAME 		TEXT)"""
+		cursor.execute(query)
+		dbcon.commit()
+
+		query = f"""INSERT INTO BOTSTATUS VALUES
+				({status}, {activity}, {text}"""
+		cursor.execute(query)
+		dbcon.commit()
 
 		if (status[0] == "o"):
 			status_class = discord.Status.online
@@ -86,20 +106,3 @@ class Core(commands.Cog):
 		except:
 			log.warning("Cannot set activity")
 			await ctx.send("Cannot set activity")
-
-		DATABASE_URL = os.environ["DATABASE_URL"]
-
-		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
-		cursor = dbcon.cursor()
-
-		query = """CREATE DATABASE IF NOT EXISTS BOTSTATUS(
-				STATUS		TEXT	NOT NULL,
-				ACTIVITY 	TEXT,
-				NAME 		TEXT)"""
-		cursor.execute(query)
-		dbcon.commit()
-
-		query = f"""INSERT INTO BOTSTATUS VALUES
-				({status}, {activity}, {text}"""
-		cursor.execute(query)
-		dbcon.commit()
