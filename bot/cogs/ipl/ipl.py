@@ -64,8 +64,8 @@ class IPL(commands.Cog):
 
 			query = f"""INSERT INTO LAST_MATCH VALUES
 					({self.last_match_details['unique_id']}, \
-					{self.last_match_details['team-1']}, {self.last_match_details['team-2']}, \
-					{self.last_match_details['winner_team']})"""
+					'{self.last_match_details['team-1']}', '{self.last_match_details['team-2']}', \
+					'{self.last_match_details['winner_team']}')"""
 			self.cursor.execute(query)
 
 			for match in response["matches"]:
@@ -76,7 +76,7 @@ class IPL(commands.Cog):
 
 					query = f"""INSERT INTO UPCOMING_MATCH VALUES
 							({self.upcoming_match_details['unique_id']}, \
-							{self.upcoming_match_details['team-1']}, {self.upcoming_match_details['team-2']}, \
+							'{self.upcoming_match_details['team-1']}', '{self.upcoming_match_details['team-2']}', \
 							{self.upcoming_match_details['match_started']})"""
 					self.cursor.execute(query)
 					self.dbcon.commit()	
@@ -94,7 +94,7 @@ class IPL(commands.Cog):
 
 					query = f"""INSERT INTO UPCOMING_MATCH VALUES
 							({self.upcoming_match_details_2['unique_id']}, \
-							{self.upcoming_match_details_2['team-1']}, {self.upcoming_match_details_2['team-2']}, \
+							'{self.upcoming_match_details_2['team-1']}', '{self.upcoming_match_details_2['team-2']}', \
 							{self.upcoming_match_details_2['match_started']})"""
 					self.cursor.execute(query)
 					self.dbcon.commit()
