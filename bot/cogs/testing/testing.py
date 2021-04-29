@@ -15,20 +15,23 @@ class Testing(commands.Cog):
 		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		cursor = dbcon.cursor()
 
-		# cursor.execute("DELETE FROM CONFIG")
+		cursor.execute("DELETE FROM CONFIG")
 
-		# query = """INSERT INTO CONFIG VALUES
-		# 		(1, '2021-04-28', 1254079, 0, 0)"""
-		# cursor.execute(query)
-		# dbcon.commit()
+		query = """INSERT INTO CONFIG VALUES
+				(1, '2021-04-28', 1254079, 0, 0)"""
+		cursor.execute(query)
+		dbcon.commit()
 
-		cursor.execute("SELECT * FROM LAST_MATCH")
-		data = cursor.fetchall()
-		await ctx.send(data)
+		cursor.execute("SELECT * FROM CONFIG")
+		await ctx.send(cursor.fetchall())
 
-		cursor.execute("SELECT * FROM UPCOMING_MATCH")
-		data = cursor.fetchall()
-		await ctx.send(data)
+		# cursor.execute("SELECT * FROM LAST_MATCH")
+		# data = cursor.fetchall()
+		# await ctx.send(data)
+
+		# cursor.execute("SELECT * FROM UPCOMING_MATCH")
+		# data = cursor.fetchall()
+		# await ctx.send(data)
 	
 		print(data)
 		print(len(data))

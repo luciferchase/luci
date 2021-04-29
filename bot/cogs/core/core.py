@@ -25,9 +25,10 @@ class Core(commands.Cog):
 		cursor = dbcon.cursor()
 
 		query = " ".join(query)
-		print("Executing query: ", query)
+		print("Executing query:", query)
 		try:
 			cursor.execute(query)
+			dbcon.commit()
 			await ctx.send("Query executed successfully")
 		except:
 			log.error(f"{query} not executed successfully")

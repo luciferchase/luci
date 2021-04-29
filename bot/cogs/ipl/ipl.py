@@ -52,9 +52,6 @@ class IPL(commands.Cog):
 			self.last_match_details = [match for match in response["matches"] \
 			if match["unique_id"] == self.config[2]]
 
-			print(last_match_details)
-			return
-
 			self.cursor.execute("DELETE FROM LAST_MATCH")
 
 			query = f"""INSERT INTO LAST_MATCH VALUES
