@@ -56,19 +56,16 @@ class IPL(commands.Cog):
 			self.dbcon.commit()
 
 			response = requests.get(self.api_matches, params = self.params_matches).json()
+			
 			self.last_match_details = [match for match in response["matches"] \
-			if match["unique_id"] == self.config[2]]
-			print(self.last_match_details)
-
-			if (len(self.last_match_details) == 0):
-				return
+			if match["unique_id"] == self.config[2]][0]
 
 			self.cursor.execute("DELETE FROM LAST_MATCH")
 
 			query = f"""INSERT INTO LAST_MATCH VALUES
-					({self.last_match_details[0]}, \
-					{self.last_match_details[1]}, {self.last_match_details[2]}, \
-					{self.last_match_details[3]})"""
+					({self.last_match_details['unique_id']}, \
+					{self.last_match_details['team-1']}, {self.last_match_details['team-2']}, \
+					{self.last_match_details['winner_team']})"""
 			self.cursor.execute(query)
 
 			for match in response["matches"]:
@@ -78,9 +75,9 @@ class IPL(commands.Cog):
 					self.cursor.execute("DELETE FROM UPCOMING_MATCH")
 
 					query = f"""INSERT INTO UPCOMING_MATCH VALUES
-							({self.upcoming_match_details[0]}, \
-							{self.upcoming_match_details[1]}, {self.upcoming_match_details[2]}, \
-							{self.upcoming_match_details[3]})"""
+							({self.upcoming_match_details['unique_id']}, \
+							{self.upcoming_match_details['team-1']}, {self.upcoming_match_details['team-2']}, \
+							{self.upcoming_match_details['match_started']})"""
 					self.cursor.execute(query)
 					self.dbcon.commit()	
 			
@@ -96,9 +93,9 @@ class IPL(commands.Cog):
 					self.upcoming_match_details_2 = match
 
 					query = f"""INSERT INTO UPCOMING_MATCH VALUES
-							({self.upcoming_match_details_2[0]}, \
-							{self.upcoming_match_details_2[1]}, {self.upcoming_match_details_2[2]}, \
-							{self.upcoming_match_details_2[3]})"""
+							({self.upcoming_match_details_2['unique_id']}, \
+							{self.upcoming_match_details_2['team-1']}, {self.upcoming_match_details_2['team-2']}, \
+							{self.upcoming_match_details_2['match_started']})"""
 					self.cursor.execute(query)
 					self.dbcon.commit()
 
