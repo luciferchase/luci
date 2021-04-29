@@ -28,7 +28,7 @@ class IPL(commands.Cog):
 
 		query = """CREATE TABLE IF NOT EXISTS CONFIG(
 				RATE_LIMIT 		INT 	NOT NULL,
-				LAST_SYNCED		TEXT	NOT NULL,
+				LAST_SYNCED		DATE	NOT NULL,
 				LAST_MATCH_ID	INT 	NOT NULL,
 				EMBED_ID		BIGINT 	NOT NULL,
 				CHANNEL_ID 		BIGINT 	NOT NULL)
@@ -40,15 +40,22 @@ class IPL(commands.Cog):
 				POINTS			INT 	NOT NULL)"""
 		self.cursor.execute(query)
 
-		query = """CREATE TABLE IF NOT EXISTS MATCHES(
+		query = """CREATE TABLE IF NOT EXISTS LAST_MATCH(
 				UNIQUE_ID		INT 	NOT NULL,
 				TEAM_1			TEXT	NOT NULL,
 				TEAM_2			TEXT 	NOT NULL,
-				WINNER_TEAM		TEXT,
+				WINNER_TEAM		TEXT	NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
+		query = """CREATE TABLE IF NOT EXISTS UPCOMING_MATCH(
+				UNIQUE_ID		INT 	NOT NULL,
+				TEAM_1			TEXT	NOT NULL,
+				TEAM_2			TEXT 	NOT NULL,
 				MATCH_STARTED	BOOLEAN NOT NULL)"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
-		
+			
 		print("All tables created successfully")
 
 	@commands.is_owner()
@@ -60,4 +67,3 @@ class IPL(commands.Cog):
 			}
 			response = requests.get(self.api_matches, params = params).json()["matches"]
 
-	
