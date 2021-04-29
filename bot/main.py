@@ -131,7 +131,7 @@ async def ping(ctx) :
 	await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
 
 
-@bot.is_owner()
+@commands.is_owner()
 @bot.command(hidden = True)
 async def sql(ctx, *query):
 	DATABASE_URL = os.environ["DATABASE_URL"]
