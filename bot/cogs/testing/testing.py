@@ -20,7 +20,7 @@ class Testing(commands.Cog):
 
 
 		query = """INSERT INTO CONFIG VALUES
-				(0, "2021-04-28", 1254079, 0, 0)"""
+				(0, '2021-04-28', 1254079, 0, 0)"""
 		cursor.execute(query)
 		dbcon.commit()
 

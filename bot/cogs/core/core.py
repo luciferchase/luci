@@ -3,6 +3,7 @@ from discord.ext import commands
 
 import json
 import logging
+import os
 
 class Core(commands.Cog):
 	def __init__(self, bot):
