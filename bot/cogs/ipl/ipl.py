@@ -67,15 +67,18 @@ class IPL(commands.Cog):
 			self.cursor.execute(query)
 			self.dbcon.commit()
 
-			self.upcoming_match_details_2 = [match for match in response["matches"] \
-			if match["unique_id"] == self.config[2] + 2][0]
+			self.upcoming_match_details_2 = False
 
-			query = f"""INSERT INTO UPCOMING_MATCH VALUES
-					({self.upcoming_match_details_2['unique_id']}, \
-					'{self.upcoming_match_details_2['team-1']}', '{self.upcoming_match_details_2['team-2']}', \
-					'{self.upcoming_match_details_2['matchStarted']}')"""
-			self.cursor.execute(query)
-			self.dbcon.commit()
+			self.upcoming_match_details_2 = [match for match in response["matches"] \
+			if match["unique_id"] == self.config[2] + 2 and match["date"][:10] == str(date.today())][0]
+
+			if (self.upcoming_match_details_2):
+				query = f"""INSERT INTO UPCOMING_MATCH VALUES
+						({self.upcoming_match_details_2['unique_id']}, \
+						'{self.upcoming_match_details_2['team-1']}', '{self.upcoming_match_details_2['team-2']}', \
+						'{self.upcoming_match_details_2['matchStarted']}')"""
+				self.cursor.execute(query)
+				self.dbcon.commit()
 
 		self.cursor.execute("SELECT * FROM LAST_MATCH")
 		self.last_match_details = self.cursor.fetchall()[0]
@@ -84,7 +87,10 @@ class IPL(commands.Cog):
 		data = self.cursor.fetchall()
 
 		self.upcoming_match_details = data[0]
-		self.upcoming_match_details_2 = data[1]
+		if (len(data) > 1):
+			self.upcoming_match_details_2 = data[1]
+		else:
+			self.upcoming_match_details_2 = False
 
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 
@@ -99,43 +105,6 @@ class IPL(commands.Cog):
 			"Delhi Capitals": "https://d3pc1xvrcw35tl.cloudfront.net/ln/images/686x514/teamsinnerintrodc534x432-resize-534x432-a7542dd51f-d979030f10e79596_202009106828.jpeg"
 		}
 		self.ipl_logo = "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg"
-
-
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def database(self, ctx):
-
-		query = """CREATE TABLE IF NOT EXISTS CONFIG(
-				RATE_LIMIT 		INT 	NOT NULL,
-				LAST_SYNCED		DATE	NOT NULL,
-				LAST_MATCH_ID	INT 	NOT NULL,
-				EMBED_ID		BIGINT 	NOT NULL,
-				CHANNEL_ID 		BIGINT 	NOT NULL)
-				"""
-		self.cursor.execute(query)
-
-		query = """CREATE TABLE IF NOT EXISTS STANDINGS(
-				USER_ID			BIGINT 	NOT NULL,
-				POINTS			INT 	NOT NULL)"""
-		self.cursor.execute(query)
-
-		query = """CREATE TABLE IF NOT EXISTS LAST_MATCH(
-				UNIQUE_ID		INT 	NOT NULL,
-				TEAM_1			TEXT	NOT NULL,
-				TEAM_2			TEXT 	NOT NULL,
-				WINNER_TEAM		TEXT	NOT NULL)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-
-		query = """CREATE TABLE IF NOT EXISTS UPCOMING_MATCH(
-				UNIQUE_ID		INT 	NOT NULL,
-				TEAM_1			TEXT	NOT NULL,
-				TEAM_2			TEXT 	NOT NULL,
-				MATCH_STARTED	BOOLEAN NOT NULL)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-		
-		await ctx.send("All tables created successfully")	
 
 	@commands.bot_has_permissions(embed_links = True)
 	@commands.command()
@@ -411,10 +380,55 @@ class IPL(commands.Cog):
 			"apikey": os.getenv("CRIC_API_KEY"),
 			"unique_id": self.config[2] + 1
 		}
+		
+		if (self.upcoming_match_details_2 and str(datetime.datetime.now())[11:] > "19:30:00"):
+			params_score["unique_id"] += 1
 
-		if (self.config[0] >= 95):
+		try:
+			response = requests.get(api_score, params = params_score)
+			data = response.json()
+
+			if (data["matchStarted"] == False):
+				response_dog = requests.get(self.dog_api).json()[0]
+
+				embed = discord.Embed(
+					title = "Bruh...",
+					color = 0xea1010			# Red
+				)
+				embed.add_field(
+					name = "The match has not even started yet 🤦‍♂️",
+					value = "Wait till the match starts? Anyway here is a cute doggo ❤"
+				)
+				embed.set_image(url = response_dog["url"])
+				await ctx.send(embed = embed)
+				return
+			
+			index_v = data["score"].find("v")
+			if (data["score"][-1] != "*"):
+				current_batting = data["team-1"]
+			else:
+				current_batting = data["team-2"]
+
+			embed = discord.Embed(
+				title = "Live Score",
+				color = 0x25dbf4,					# Blue
+			)
+			embed.add_field(
+				name = "Team A",
+				value = data["score"][:index_v],
+				inline = False
+			)
+			embed.add_field(
+				name = "Team B",
+				value = data["score"][index_v + 1:],
+				inline = False
+			)
+			embed.set_image(url = self.image_url[current_batting])
+			embed.set_thumbnail(url = self.ipl_logo)
+			await ctx.send(embed = embed)
+
+		except:
 			response_dog = requests.get(self.dog_api).json()[0]
-
 			embed = discord.Embed(
 				title = "Bruh...",
 				color = 0xea1010			# Red
@@ -425,51 +439,39 @@ class IPL(commands.Cog):
 			)
 			embed.set_image(url = response_dog["url"])
 			await ctx.send(embed = embed)
-			return
 		
-		else:
-			self.config[0] += 1
-			query = """UPDATE CONFIG
-						SET RATE_LIMIT = RATE_LIMIT + 1"""
-			
-		response = requests.get(api_score, params = params_score)
-		data = response.json()
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def database(self, ctx):
 
-		if (data["matchStarted"] == False):
-			response_dog = requests.get(self.dog_api).json()[0]
+		query = """CREATE TABLE IF NOT EXISTS CONFIG(
+				RATE_LIMIT 		INT 	NOT NULL,
+				LAST_SYNCED		DATE	NOT NULL,
+				LAST_MATCH_ID	INT 	NOT NULL,
+				EMBED_ID		BIGINT 	NOT NULL,
+				CHANNEL_ID 		BIGINT 	NOT NULL)
+				"""
+		self.cursor.execute(query)
 
-			embed = discord.Embed(
-				title = "Bruh...",
-				color = 0xea1010			# Red
-			)
-			embed.add_field(
-				name = "The match has not even started yet 🤦‍♂️",
-				value = "Wait till the match starts? Anyway here is a cute doggo ❤"
-			)
-			embed.set_image(url = response_dog["url"])
-			await ctx.send(embed = embed)
-			return
+		query = """CREATE TABLE IF NOT EXISTS STANDINGS(
+				USER_ID			BIGINT 	NOT NULL,
+				POINTS			INT 	NOT NULL)"""
+		self.cursor.execute(query)
+
+		query = """CREATE TABLE IF NOT EXISTS LAST_MATCH(
+				UNIQUE_ID		INT 	NOT NULL,
+				TEAM_1			TEXT	NOT NULL,
+				TEAM_2			TEXT 	NOT NULL,
+				WINNER_TEAM		TEXT	NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
+		query = """CREATE TABLE IF NOT EXISTS UPCOMING_MATCH(
+				UNIQUE_ID		INT 	NOT NULL,
+				TEAM_1			TEXT	NOT NULL,
+				TEAM_2			TEXT 	NOT NULL,
+				MATCH_STARTED	BOOLEAN NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
 		
-		index_v = data["score"].find("v")
-		if (data["score"][-1] != "*"):
-			current_batting = data["team-1"]
-		else:
-			current_batting = data["team-2"]
-
-		embed = discord.Embed(
-			title = "Live Score",
-			color = 0x25dbf4,					# Blue
-		)
-		embed.add_field(
-			name = "Team A",
-			value = data["score"][:index_v],
-			inline = False
-		)
-		embed.add_field(
-			name = "Team B",
-			value = data["score"][index_v + 1:],
-			inline = False
-		)
-		embed.set_image(url = self.image_url[current_batting])
-		embed.set_thumbnail(url = self.ipl_logo)
-		await ctx.send(embed = embed)
+		await ctx.send("All tables created successfully")	

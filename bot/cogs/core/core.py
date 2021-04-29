@@ -67,6 +67,9 @@ class Core(commands.Cog):
 		cursor.execute(query)
 		dbcon.commit()
 
+		cursor.execute("DELETE FROM BOTSTATUS")
+		dbcon.commit()
+
 		query = f"""INSERT INTO BOTSTATUS VALUES
 				('{status}', '{activity}', '{text}')"""
 		cursor.execute(query)
