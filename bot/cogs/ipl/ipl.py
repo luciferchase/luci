@@ -19,10 +19,10 @@ class IPL(commands.Cog):
 		self.cursor = self.dbcon.cursor()
 
 		self.cursor.execute("SELECT * FROM CONFIG")
-		self.config = self.cursor.fetchall()[0]
+		self.config = list(self.cursor.fetchall()[0])
 		
 		self.cursor.execute("SELECT * FROM STANDINGS")
-		self.standings = self.cursor.fetchall()
+		self.standings = list(self.cursor.fetchall())
 
 		self.api_matches = "https://cricapi.com/api/matches"
 		self.params_matches = {
