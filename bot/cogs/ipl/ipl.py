@@ -18,7 +18,7 @@ class IPL(commands.Cog):
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
-		# self.cursor.execute("DELETE FROM CONFIG")
+		self.cursor.execute("DELETE FROM CONFIG")
 
 		query = """INSERT INTO CONFIG VALUES
 				(1, '2021-04-28', 1254079, 837294724020830238, 836214172089319477)"""
@@ -70,36 +70,25 @@ class IPL(commands.Cog):
 
 			self.cursor.execute("DELETE FROM UPCOMING_MATCH")
 
-			for match in response["matches"]:
-				if (match["unique_id"] == self.config[2] + 1):
-					self.upcoming_match_details = match
+			self.upcoming_match_details = [match for match in response["matches"] \
+			if match["unique_id"] == self.config[2] + 1][0]
 
-					print(self.upcoming_match_details)
+			query = f"""INSERT INTO UPCOMING_MATCH VALUES
+					({self.upcoming_match_details['unique_id']}, \
+					'{self.upcoming_match_details['team-1']}', '{self.upcoming_match_details['team-2']}', \
+					'{self.upcoming_match_details['matchStarted']}')"""
+			self.cursor.execute(query)
+			self.dbcon.commit()
 
-					query = f"""INSERT INTO UPCOMING_MATCH VALUES
-							({self.upcoming_match_details['unique_id']}, \
-							'{self.upcoming_match_details['team-1']}', '{self.upcoming_match_details['team-2']}', \
-							{self.upcoming_match_details['matchStarted']})"""
-					self.cursor.execute(query)
-					self.dbcon.commit()	
-			
-				elif (match["unique_id"] == self.config[2] + 2):
+			self.upcoming_match_details_2 = [match for match in response["matches"] \
+			if match["unique_id"] == self.config[2] + 2][0]
 
-					self.config[2] += 1
-
-					query = f"""UPDATE CONFIG
-								SET LAST_MATCH_ID = {self.config[2]}"""
-					self.cursor.execute(query)
-					self.dbcon.commit()
-
-					self.upcoming_match_details_2 = match
-
-					query = f"""INSERT INTO UPCOMING_MATCH VALUES
-							({self.upcoming_match_details_2['unique_id']}, \
-							'{self.upcoming_match_details_2['team-1']}', '{self.upcoming_match_details_2['team-2']}', \
-							{self.upcoming_match_details_2['matchStarted']})"""
-					self.cursor.execute(query)
-					self.dbcon.commit()
+			query = f"""INSERT INTO UPCOMING_MATCH VALUES
+					({self.upcoming_match_details_2['unique_id']}, \
+					'{self.upcoming_match_details_2['team-1']}', '{self.upcoming_match_details_2['team-2']}', \
+					'{self.upcoming_match_details_2['matchStarted']}')"""
+			self.cursor.execute(query)
+			self.dbcon.commit()
 
 		self.cursor.execute("SELECT * FROM LAST_MATCH")
 		self.last_match_details = self.cursor.fetchall()[0]
@@ -108,9 +97,7 @@ class IPL(commands.Cog):
 		data = self.cursor.fetchall()
 
 		self.upcoming_match_details = data[0]
-		self.upcoming_match_details_2 = False
-		if (len(data) == 2):
-			self.upcoming_match_details_2 = data[1]
+		self.upcoming_match_details_2 = data[1]
 
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 
@@ -124,7 +111,6 @@ class IPL(commands.Cog):
 			"Chennai Super Kings": "https://i.pinimg.com/originals/85/52/f8/8552f811e95b998d9505c43a9828c6d6.jpg",			
 			"Delhi Capitals": "https://d3pc1xvrcw35tl.cloudfront.net/ln/images/686x514/teamsinnerintrodc534x432-resize-534x432-a7542dd51f-d979030f10e79596_202009106828.jpeg"
 		}
-
 		self.ipl_logo = "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg"
 
 
