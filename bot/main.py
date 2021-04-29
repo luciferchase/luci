@@ -76,9 +76,6 @@ async def schedule_wallpaper():
 	await wallpaper.add_reaction("👍")
 	await wallpaper.add_reaction("👎")
 
-async def schedule_meme_test():
-	await meme.Meme().meme(commands.Context)
-
 # Core Commands
 @bot.event	
 async def on_ready():
@@ -151,7 +148,7 @@ async def on_ready():
 	scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
 	# Add jobs to scheduler
-	scheduler.add_job(schedule_meme_test, CronTrigger.from_crontab("* * * * *")) # Every hour
+	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("00 * * * *")) # Every hour
 	scheduler.add_job(schedule_wallpaper, CronTrigger.from_crontab("00 08 * * *")) # Each day at 0800 hrs
 
 	# Start the scheduler
