@@ -36,10 +36,50 @@ class Core(commands.Cog):
 		try:
 			data = cursor.fetchall()
 			print(data)
+			await query.author.send(data)
 		except:
 			pass
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def botstatus(self, ctx, *query):
-		pass
+		"""Set botstatus `luci <status> <activity> <text>`
+		`status` can be: online[o], idle[i], dnd[d]
+		`activity` can be : playing[p], listening[l], watching[w], competing[c]
+		"""
+		status, activity, text = query
+		text = " ".join(text)
+
+		if (status[0] == "o"):
+			status = discord.Status.online
+		elif (status[0] == "i"):
+			status = discord.Status.idle
+		elif (status[0] == "d"):
+			status = discord.Status.dnd
+
+		if (activity[0] == "p"):
+			activity_type = discord.Game(name = text)
+		elif (activity[0] == "l"):
+			activity_type = discord.Activity(
+					type = discord.ActivityType.listening,
+					name = text
+					)
+		elif (activity[0] == "w"):
+			activity_type = discord.Activity(
+					type = discord.ActivityType.watching,
+					name = text
+					)
+		elif (activity[0] == "c"):
+			activity_type = discord.Activity(
+					type = discord.ActivityType.competing,
+					name = text
+					)
+		try:
+			await bot.change_presence(
+				status = status, 
+				activity = activity_type
+				)
+			print("Activity set successfully")
+		except:
+			log.warning("Cannot set activity")
+			await query.author.send("Cannot set activity")
