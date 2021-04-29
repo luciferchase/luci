@@ -33,10 +33,11 @@ class Core(commands.Cog):
 			log.error(f"{query} not executed successfully")
 			await ctx.send("Query not executed. Check logs.")
 
-		fetch_result = await ctx.send("Do you want to print result? [y/n]")
-		if (fetch_result == "y"):
+		try:
 			data = cursor.fetchall()
 			print(json.dumps(data, indent = 2))
+		except:
+			pass
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
