@@ -381,8 +381,8 @@ class IPL(commands.Cog):
 			"unique_id": self.config[2] + 1
 		}
 		
-		if (self.upcoming_match_details_2 != False and str(datetime.now())[11:] > "19:30:00"):
-			params_score["unique_id"] += 2
+		if (self.upcoming_match_details_2 != False):
+			params_score["unique_id"] += 1
 		await ctx.send(params_score["unique_id"])
 		try:
 			response = requests.get(api_score, params = params_score)
