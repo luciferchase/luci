@@ -47,7 +47,7 @@ class Core(commands.Cog):
 		`status` can be: online[o], idle[i], dnd[d]
 		`activity` can be : playing[p], listening[l], watching[w], competing[c]
 		"""
-		status, activity, text = query
+		status, activity, *text = query
 		text = " ".join(text)
 
 		if (status[0] == "o"):
@@ -80,6 +80,7 @@ class Core(commands.Cog):
 				activity = activity_type
 				)
 			print("Activity set successfully")
+			await query.author.send("Activity set successfully")
 		except:
 			log.warning("Cannot set activity")
 			await query.author.send("Cannot set activity")
