@@ -11,7 +11,6 @@ class Core(commands.Cog):
 	async def ping(self, ctx) :
 		await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
 
-
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def sql(self, ctx, *query):
@@ -38,4 +37,5 @@ class Core(commands.Cog):
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
-	async def botstatus()
+	async def botstatus(self, ctx, *query):
+		pass
