@@ -19,7 +19,7 @@ class IPL(commands.Cog):
 		self.cursor = self.dbcon.cursor()
 
 		self.cursor.execute("SELECT * FROM CONFIG")
-		self.config = self.cursor.fetchall()[0]
+		self.config = self.cursor.fetchall()
 		
 		self.cursor.execute("SELECT * FROM STANDINGS")
 		self.standings = self.cursor.fetchall()
