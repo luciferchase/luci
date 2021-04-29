@@ -134,6 +134,8 @@ async def ping(ctx) :
 @commands.is_owner()
 @bot.command(hidden = True)
 async def sql(ctx, *query):
+	log = logging.getLogger("sql")
+
 	DATABASE_URL = os.environ["DATABASE_URL"]
 
 	dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
@@ -146,7 +148,7 @@ async def sql(ctx, *query):
 		await ctx.send("Query executed successfully")
 
 		data = cursor.fetchall()
-		await ctx.send(data)
+		print(data)
 	except:
 		log.error(f"{query} not executed successfully")
 		await ctx.send("Query not executed. Check logs.")
