@@ -36,7 +36,7 @@ class Core(commands.Cog):
 		try:
 			data = cursor.fetchall()
 			print(data)
-			await query.author.send(data)
+			await ctx.send(data)
 		except:
 			pass
 
@@ -77,12 +77,12 @@ class Core(commands.Cog):
 					name = text
 					)
 		try:
-			await bot.change_presence(
+			await self.bot.change_presence(
 				status = status, 
 				activity = activity_type
 				)
 			print("Activity set successfully")
-			await query.author.send("Activity set successfully")
+			await ctx.send("Activity set successfully")
 		except:
 			log.warning("Cannot set activity")
-			await query.author.send("Cannot set activity")
+			await ctx.send("Cannot set activity")
