@@ -18,6 +18,13 @@ class IPL(commands.Cog):
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
+		self.cursor.execute("DELETE FROM CONFIG")
+
+		query = """INSERT INTO CONFIG VALUES
+				(1, '2021-04-28', 1254079, 0, 0)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
 		self.cursor.execute("SELECT * FROM CONFIG")
 		self.config = list(self.cursor.fetchall()[0])
 		
@@ -32,7 +39,7 @@ class IPL(commands.Cog):
 		self.api_score = "https://cricapi.com/api/cricketScore"
 		self.params_score = {
 			"apikey": os.getenv("CRIC_API_KEY"),
-			"unique_id": self.config[2]
+			"unique_id": self.config[2] + 1
 		}
 		
 		if (str(date.today()) > self.config[1]):
@@ -41,9 +48,9 @@ class IPL(commands.Cog):
 			self.config[2] += 1
 
 			query = f"""UPDATE CONFIG SET
-						RATE_LIMIT = {self.config[0]},
-						LAST_SYNCED = {self.config[1]},
-						LAST_MATCH_ID = {self.config[2]}
+						RATE_LIMIT = RATE_LIMIT + 1,
+						LAST_SYNCED = {str(date.today())},
+						LAST_MATCH_ID = LAST_MATCH_ID + 1
 						"""
 			self.cursor.execute(query)
 			self.dbcon.commit()
@@ -51,6 +58,10 @@ class IPL(commands.Cog):
 			response = requests.get(self.api_matches, params = self.params_matches).json()
 			self.last_match_details = [match for match in response["matches"] \
 			if match["unique_id"] == self.config[2]]
+			print(self.last_match_details)
+
+			if (len(last_match_details) == 0):
+				return
 
 			self.cursor.execute("DELETE FROM LAST_MATCH")
 
