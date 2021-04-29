@@ -296,7 +296,7 @@ class IPL(commands.Cog):
 			for user in emoji_a:
 				query = """UPDATE STANDINGS
 							SET POINTS = POINTS + 10
-							WHERE USER_ID = {}""".format(user.id)
+							WHERE USER_ID = {}""".format(user)
 				self.cursor.execute(query)
 				self.dbcon.commit()
 
@@ -306,7 +306,7 @@ class IPL(commands.Cog):
 			for user in emoji_b:
 				query = """UPDATE STANDINGS
 							SET POINTS = POINTS + 10
-							WHERE USER_ID = {}""".format(user.id)
+							WHERE USER_ID = {}""".format(user)
 				self.cursor.execute(query)
 				self.dbcon.commit()
 				
