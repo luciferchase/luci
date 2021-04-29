@@ -7,7 +7,7 @@ class Testing(commands.Cog):
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
-	def test(sel, ctx):
+	async def test(sel, ctx):
 		DATABASE_URL = os.environ["DATABASE_URL"]
 
 		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
