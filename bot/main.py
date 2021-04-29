@@ -144,6 +144,9 @@ async def sql(ctx, *query):
 	try:
 		cursor.execute(query)
 		await ctx.send("Query executed successfully")
+
+		data = cursor.fetchall()
+		await ctx.send(data)
 	except:
 		log.error(f"{query} not executed successfully")
 		await ctx.send("Query not executed. Check logs.")
