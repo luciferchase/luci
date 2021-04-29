@@ -11,11 +11,11 @@ class IPL(commands.Cog):
 
 	def __init__(self, bot):
 		self.bot = bot
-		
+
 		DATABASE_URL = os.environ["DATABASE_URL"]
 
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
-		self.cursor = dbcon.cursor()
+		self.cursor = self.dbcon.cursor()
 
 		query = """SELECT * FROM CONFIG"""
 		self.cursor.execute(query)
