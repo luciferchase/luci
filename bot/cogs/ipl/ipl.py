@@ -280,8 +280,8 @@ class IPL(commands.Cog):
 		""" Update Standings for Sattebaaz Championship
 		"""
 
-		channel = self.bot.get_channel(self.config_data[4])
-		last_embed = await channel.fetch_message(self.config_data[3])
+		channel = self.bot.get_channel(self.config[4])
+		last_embed = await channel.fetch_message(self.config[3])
 		emoji_a = []
 		emoji_b = []
 		winners = []
