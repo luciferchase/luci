@@ -15,24 +15,22 @@ class Testing(commands.Cog):
 		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		cursor = dbcon.cursor()
 
-		cursor.execute("DELETE FROM CONFIG")
+		embed = discord.Embed(
+			color = 0x19f0e2,						# Cyan
+			title = "Sattebaaz Championship",
+		)
+		embed.add_field(
+			name = "Who do you think will win today's match?",
+			value = ':regional_indicator_a: Chennai Super Kings \n:regional_indicator_b: Sunrisers Hyderabad'
+		)
+		# embed.set_thumbnail(url = self.ipl_logo)
 
-		query = """INSERT INTO CONFIG VALUES
-				(1, '2021-04-28', 1254079, 0, 0)"""
+		last_embed = await ctx.send(embed = embed)
+		await last_embed.add_reaction("🇦")
+		await last_embed.add_reaction("🇧")
+
+		config[3] = last_embed.id
+		query = """UPDATE CONFIG
+					SET EMBED_ID = {}""".format(last_embed.id)
 		cursor.execute(query)
 		dbcon.commit()
-
-		cursor.execute("SELECT * FROM CONFIG")
-		await ctx.send(cursor.fetchall())
-
-		# cursor.execute("SELECT * FROM LAST_MATCH")
-		# data = cursor.fetchall()
-		# await ctx.send(data)
-
-		# cursor.execute("SELECT * FROM UPCOMING_MATCH")
-		# data = cursor.fetchall()
-		# await ctx.send(data)
-	
-		print(data)
-		print(len(data))
-		print(type(data))

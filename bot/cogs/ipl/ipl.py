@@ -41,15 +41,17 @@ class IPL(commands.Cog):
 			"apikey": os.getenv("CRIC_API_KEY"),
 			"unique_id": self.config[2] + 1
 		}
+		print(str(date.today()))
+		return
 		
 		if (str(date.today()) > self.config[1]):
 			self.config[0] = 1
-			self.config[1] = date.today()
+			self.config[1] = 
 			self.config[2] += 1
 
 			query = f"""UPDATE CONFIG SET
 						RATE_LIMIT = RATE_LIMIT + 1,
-						LAST_SYNCED = {str(date.today())},
+						LAST_SYNCED = '',
 						LAST_MATCH_ID = LAST_MATCH_ID + 1
 						"""
 			self.cursor.execute(query)
@@ -200,9 +202,7 @@ class IPL(commands.Cog):
 		embed.set_image(url = self.image_url[self.last_match_details[3]])
 		embed.set_thumbnail(url = self.ipl_logo)
 		await ctx.send(embed = embed)
-		
-	async def fetch_standings(self, ctx):
-		
+	
 	@commands.bot_has_permissions(embed_links = True)
 	@commands.is_owner()
 	@commands.command(hidden = True)
