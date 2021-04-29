@@ -64,6 +64,7 @@ class IPL(commands.Cog):
 	@commands.command(hidden = True)
 	async def insert(self, ctx):
 		print(self.config)
+	
 		if (date.today() > self.config[1]):
 			params = {
 				"apikey": os.environ("CRIC_API_KEY")
