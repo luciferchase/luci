@@ -19,8 +19,8 @@ class IPL(commands.Cog):
 		self.cursor = self.dbcon.cursor()
 
 		self.cursor.execute("DELETE FROM CONFIG")
-		query = """INSERT INTO CONFIG VALUES
-				(0, "2021-04-28", 1254079, 837294724020830238, 836214172089319477)"""
+		query = """INSERT INTO CONFIG(RATE_LIMIT, LAST_SYNCED, LAST_MATCH_ID, EMBED_ID, CHANNEL_ID) VALUES
+				(1, "2021-04-28", 1254079, 837294724020830238, 836214172089319477)"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
 
@@ -452,7 +452,7 @@ class IPL(commands.Cog):
 
 		query = """CREATE TABLE IF NOT EXISTS CONFIG(
 				RATE_LIMIT 		INT 	NOT NULL,
-				LAST_SYNCED		DATE	NOT NULL,
+				LAST_SYNCED		TEXT	NOT NULL,
 				LAST_MATCH_ID	INT 	NOT NULL,
 				EMBED_ID		BIGINT 	NOT NULL,
 				CHANNEL_ID 		BIGINT 	NOT NULL)
