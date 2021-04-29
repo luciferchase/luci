@@ -60,7 +60,7 @@ class IPL(commands.Cog):
 			if match["unique_id"] == self.config[2]]
 			print(self.last_match_details)
 
-			if (len(last_match_details) == 0):
+			if (len(self.last_match_details) == 0):
 				return
 
 			self.cursor.execute("DELETE FROM LAST_MATCH")
