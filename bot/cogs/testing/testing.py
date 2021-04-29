@@ -3,6 +3,7 @@ from discord.ext import commands
 
 import psycopg2
 import os
+from datetime import date, timedelta
 
 class Testing(commands.Cog):
 
@@ -13,6 +14,11 @@ class Testing(commands.Cog):
 
 		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		cursor = dbcon.cursor()
+
+		query = f"""INSERT INTO CONFIG VALUES
+				(0, {date.today() - timedelta(days = 1)}, 1254079, 0, 0)"""
+		cursor.execute(query)
+		dbcon.commit()
 
 		query = """SELECT * FROM CONFIG"""
 		cursor.execute(query)
