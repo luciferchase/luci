@@ -77,7 +77,7 @@ async def schedule_wallpaper():
 	await wallpaper.add_reaction("👎")
 
 async def schedule_meme_test():
-	await meme.Meme.meme(commands.Context)
+	await meme.Meme().meme(commands.Context)
 
 # Core Commands
 @bot.event	
