@@ -37,7 +37,7 @@ class IPL(commands.Cog):
 				WINNER_TEAM		TEXT,
 				MATCH_STARTED	BOOLEAN NOT NULL)"""
 		cursor.execute(query)
-		cursor.commit()
+		dbcon.commit()
 		
 		print("All tables created successfully")
 
