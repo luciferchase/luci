@@ -35,7 +35,7 @@ class IPL(commands.Cog):
 			"unique_id": self.config[2]
 		}
 		
-		if (date.today() > self.config[1]):
+		if (str(date.today()) > self.config[1]):
 			self.config[0] = 1
 			self.config[1] = date.today()
 			self.config[2] += 1
