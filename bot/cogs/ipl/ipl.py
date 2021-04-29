@@ -166,7 +166,7 @@ class IPL(commands.Cog):
 			\n{self.upcoming_match_details[2]}',
 			inline = False
 		)
-		if (upcoming_match_details_2):
+		if (self.upcoming_match_details_2):
 			embed.add_field(
 			name = "Match 2", 
 			value = f'{self.upcoming_match_details_2[1]} \nvs \
