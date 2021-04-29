@@ -20,7 +20,7 @@ class IPL(commands.Cog):
 		query = """SELECT * FROM CONFIG"""
 		self.cursor.execute(query)
 
-		self.config = self.cursor.fetchall()[0]
+		self.config = self.cursor.fetchall()
 
 		self.api_matches = "https://cricapi.com/api/matches"
 			
@@ -63,6 +63,7 @@ class IPL(commands.Cog):
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def insert(self, ctx):
+		print(self.config)
 		if (date.today() > self.config[1]):
 			params = {
 				"apikey": os.environ("CRIC_API_KEY")
