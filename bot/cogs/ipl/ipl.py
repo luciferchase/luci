@@ -45,33 +45,33 @@ class IPL(commands.Cog):
 						LAST_SYNCED = {self.config[1]},
 						LAST_MATCH_ID = {self.config[2]},
 						"""
-			cursor.execute(query)
-			dbcon.commit()
+			self.cursor.execute(query)
+			self.dbcon.commit()
 
 			response = requests.get(self.api_matches, params = self.params_matches).json()
 			self.last_match_details = [match for match in response["matches"] \
 			if match["unique_id"] == self.config[2]]
 
-			cursor.execute("DELETE FROM LAST_MATCH")
+			self.cursor.execute("DELETE FROM LAST_MATCH")
 
 			query = f"""INSERT INTO LAST_MATCH VALUES
 					({self.last_match_details["unique_id"]}, \
 					{self.last_match_details["team-1"]}, {self.last_match_details["team-2"]}, \
 					{self.last_match_details["winner_team"]})"""
-			cursor.execute(query)
+			self.cursor.execute(query)
 
 			for match in response["matches"]:
 				if (match["unique_id"] == self.config[2] + 1):
 					self.upcoming_match_details = match
 
-					cursor.execute("DELETE FROM UPCOMING_MATCH")
+					self.cursor.execute("DELETE FROM UPCOMING_MATCH")
 
 					query = f"""INSERT INTO UPCOMING_MATCH VALUES
 							({self.upcoming_match_details["unique_id"]}, \
 							{self.upcoming_match_details["team-1"]}, {self.upcoming_match_details["team-2"]}, \
 							{self.upcoming_match_details["match_started"]})"""
-					cursor.execute(query)
-					dbcon.commit()	
+					self.cursor.execute(query)
+					self.dbcon.commit()	
 			
 				elif (match["unique_id"] == self.config[2] + 2):
 
@@ -79,8 +79,8 @@ class IPL(commands.Cog):
 
 					query = f"""UPDATE CONFIG
 								SET LAST_MATCH_ID = {self.confg[2]}"""
-					cursor.execute(query)
-					dbcon.commit()
+					self.cursor.execute(query)
+					self.dbcon.commit()
 
 					self.upcoming_match_details_2 = match
 
@@ -88,7 +88,7 @@ class IPL(commands.Cog):
 							({self.upcoming_match_details_2["unique_id"]}, \
 							{self.upcoming_match_details_2["team-1"]}, {self.upcoming_match_details_2["team-2"]}, \
 							{self.upcoming_match_details_2["match_started"]})"""
-					cursor.execute(query)
+					self.cursor.execute(query)
 					self.dbcon.commit()
 
 		self.cursor.execute("SELECT * FROM LAST_MATCH")
