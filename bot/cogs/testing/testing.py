@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 import psycopg2
+import os
 
 class Testing(commands.Cog):
 

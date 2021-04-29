@@ -8,13 +8,13 @@ class Core(commands.Cog):
 		self.bot = bot
 
 	@commands.command()
-	async def ping(ctx) :
+	async def ping(self, ctx) :
 		await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
 
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
-	async def sql(ctx, *query):
+	async def sql(self, ctx, *query):
 		log = logging.getLogger("sql")
 
 		DATABASE_URL = os.environ["DATABASE_URL"]
@@ -35,4 +35,7 @@ class Core(commands.Cog):
 		if (fetch_result == "y"):
 			data = cursor.fetchall()
 			print(json.dumps(data, indent = 2))
-			
+
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def botstatus()
