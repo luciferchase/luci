@@ -86,7 +86,7 @@ class IPL(commands.Cog):
 					self.config[2] += 1
 
 					query = f"""UPDATE CONFIG
-								SET LAST_MATCH_ID = {self.confg[2]}"""
+								SET LAST_MATCH_ID = {self.config[2]}"""
 					self.cursor.execute(query)
 					self.dbcon.commit()
 
