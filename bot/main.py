@@ -48,13 +48,13 @@ bot.add_cog(photo.Photo())
 
 # Scheduled events
 async def schedule_meme():
-	channel = bot.get_channel(836214172089319477)
+	channel = bot.get_channel(756701639544668160)
 	embed = await meme.Meme().meme_code()
 	await channel.send(embed = embed)
 
 # Only a small function so leaving it here
 async def schedule_wallpaper():
-	channel = bot.get_channel(836214172089319477)
+	channel = bot.get_channel(738731755569414197)
 	api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-IN"
 
 	response = requests.get(api)
@@ -66,6 +66,40 @@ async def schedule_wallpaper():
 	await wallpaper.add_reaction("❤️")
 	await wallpaper.add_reaction("👍")
 	await wallpaper.add_reaction("👎")
+
+async def schedule_ipl():
+	channel = bot.get_channel(756701639544668160)
+	IPL = ipl.IPL(bot)
+
+	# Update points and display last winners
+	embed = await IPL.show_points()
+	await channel.send(embed = embed)
+
+	# Show current standings
+	embed = await IPL.fetch_standings()
+	await channel.send(embed = embed)
+
+	# Make polls for todays match
+	*_, next_match_details, next_match_details_2 = IPL.fetch_matches()
+
+	embed_id = await self.predict_code(next_match_details)
+
+	# Update database
+	self.cursor.execute("DELETE FROM predict")
+	query = """INSERT INTO predict VALUES
+			({})""".format(embed_id)
+	self.cursor.execute(query)
+	self.dbcon.commit()
+
+	# If there is a second match on that day
+	if (next_match_details_2 != False):
+		embed_id = await IPL.predict_code(next_match_details_2)
+
+		# Update database
+		query = """INSERT INTO predict VALUES
+				({})""".format(embed_id)
+		self.cursor.execute(query)
+		self.dbcon.commit()
 
 # Core Commands
 @bot.event	
@@ -140,7 +174,10 @@ async def on_ready():
 
 	# Add jobs to scheduler
 	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("0,30 * * * *")) # Every hour
-	scheduler.add_job(schedule_wallpaper, CronTrigger.from_crontab("00 08 * * *")) # Each day at 0800 hrs
+
+	# Because we are 05:30 hrs ahead of GMT, every cron is set 05:30 hrs behind
+	scheduler.add_job(schedule_wallpaper, CronTrigger.from_crontab("30 02 * * *")) # Each day at 0800 hrs
+	scheduler.add_job(schedule_ipl, CronTrigger.from_crontab("30 02 * * *"))
 
 	# Start the scheduler
 	scheduler.start()
@@ -151,10 +188,15 @@ async def on_member_join(member):
 		
 	if channel is not None:
 		embed = discord.Embed(
-			title = f"Welcome @{member.name}", 
-			description = f"Ayeeeee! Welcome to {member.guild.name} 😁😁"
+			title = f"Welcome {member.name}", 
+			description = f"Aap aayen hai {member.guild.name} ki bagiyaaan mein,\n \
+							phool khile hai gulshan gulshan \n \
+							Phulllll khile hai gulshan gulshaannnnnnnnn\n \
+							Phool khile hai iss bagiyaan mein\n \
+							Aap aayein hai gulshan gulshan\n "
 		) 
-		embed.set_thumbnail(url = member.avatar_url) 
+		embed.set_thumbnail(url = member.guild.icon_url)
+		embed.set_image(url = member.avatar_url)
 		await channel.send(embed = embed)
 
 # Run the bot

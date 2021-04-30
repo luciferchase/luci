@@ -259,7 +259,7 @@ class IPL(commands.Cog):
 	# Following are all owner only command
 	async def predict_code(self, match_details):
 		# Set Channel
-		channel = self.bot.get_channel(836214172089319477)
+		channel = self.bot.get_channel(756701639544668160)
 
 		embed = discord.Embed(
 			color = 0x19f0e2,						# Cyan
@@ -308,7 +308,7 @@ class IPL(commands.Cog):
 		users = self.cursor.fetchall()
 
 		# Get user ids of all members who has selected each team
-		channel = self.bot.get_channel(836214172089319477)
+		channel = self.bot.get_channel(756701639544668160)
 		last_embed = await channel.fetch_message(embed_id)
 		team_1 = []
 		team_2 = []
@@ -342,9 +342,7 @@ class IPL(commands.Cog):
 
 		return winners
 
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def points(self, ctx):
+	async def show_points(self):
 		# Get last match's details
 		last_match_details, last_match_details_2, *_ = self.fetch_matches()
 
@@ -353,12 +351,12 @@ class IPL(commands.Cog):
 		data = self.cursor.fetchall()
 		embed_id = data[0]
 
-		winners = await update_points(last_match_details, embed_id)
+		winners = await self.update_points(last_match_details, embed_id)
 
 		# If there was another match yesterday
 		if (last_match_details_2 != False):
 			embed_id = data[1]
-			second_winners = await update_points(last_match_details_2, embed_id)
+			second_winners = await self.update_points(last_match_details_2, embed_id)
 
 		embed = discord.Embed(
 			color = 0x07f223,						# Green
@@ -390,10 +388,17 @@ class IPL(commands.Cog):
 				inline = False
 			)
 
-		embed.set_image(url = self.image_url[self.last_match_details[3]])
+		embed.set_image(url = self.image_url[self.last_match_details["winner_team"]])
 		embed.set_thumbnail(url = self.ipl_logo)
+		return embed
+
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def points(self, ctx):
+		"""Update points and show winners of last prediction(s)"""
+		embed = await self.show_points()
 		await ctx.send(embed = embed)
-	
+		
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def database(self, ctx):
@@ -408,15 +413,3 @@ class IPL(commands.Cog):
 		self.cursor.execute(query)
 		self.dbcon.commit()
 		await ctx.send("All tables created successfully")
-
-		query = """INSERT INTO standings VALUES
-				(707557256220115035, 40),
-				(650661454000947210, 40),
-				(707935222267904070, 0),
-				(708149141909274696, 20),
-				(713963160641601548, 60),
-				(735347909163352084, 20),
-				(708578251320066068, 0)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-		await ctx.send("All data inserted successfully")
