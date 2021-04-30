@@ -1,99 +1,27 @@
 import discord
 from discord.ext import commands
 
+from datetime import date, timedelta
 import os
 import psycopg2
 import requests
-from datetime import datetime, date
-import calendar
 
 class IPL(commands.Cog):
-	"""View details of matches and play Sattebaaz Championship"""
+	"""Get info about today's as well as last match in IPL. See current score and play Sattebaaz Championship"""
 
 	def __init__(self, bot):
 		self.bot = bot
 
-		DATABASE_URL = os.environ["DATABASE_URL"]
+		self.api_matches = "https://cricapi.com/api/matches?"
+		self.api_score = "https://cricapi.com/api/cricketScore?"
+		self.apikey = os.getenv("CRIC_API_KEY")
 
+		# Initialize Connection to database
+		DATABASE_URL = os.environ['DATABASE_URL']
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
-		self.cursor.execute("SELECT * FROM CONFIG")
-		self.config = list(self.cursor.fetchall()[0])
-		
-		self.cursor.execute("SELECT * FROM STANDINGS")
-		self.standings = list(self.cursor.fetchall())
-
-		self.api_matches = "https://cricapi.com/api/matches"
-		self.params_matches = {
-			"apikey": os.getenv("CRIC_API_KEY")
-		}
-		
-		if (str(date.today()) > self.config[1]):
-			self.config[0] = 1
-			self.config[1] = str(date.today())
-			self.config[2] += 1
-
-			query = f"""UPDATE CONFIG SET
-						RATE_LIMIT = RATE_LIMIT + 1,
-						LAST_SYNCED = '{str(date.today())}',
-						LAST_MATCH_ID = LAST_MATCH_ID + 1
-						"""
-			self.cursor.execute(query)
-			self.dbcon.commit()
-
-			response = requests.get(self.api_matches, params = self.params_matches).json()
-			
-			self.last_match_details = [match for match in response["matches"] \
-			if match["unique_id"] == self.config[2]][0]
-
-			self.cursor.execute("DELETE FROM LAST_MATCH")
-
-			query = f"""INSERT INTO LAST_MATCH VALUES
-					({self.last_match_details['unique_id']}, \
-					'{self.last_match_details['team-1']}', '{self.last_match_details['team-2']}', \
-					'{self.last_match_details['winner_team']}')"""
-			self.cursor.execute(query)
-
-			self.cursor.execute("DELETE FROM UPCOMING_MATCH")
-
-			self.upcoming_match_details = [match for match in response["matches"] \
-			if match["unique_id"] == self.config[2] + 1][0]
-
-			query = f"""INSERT INTO UPCOMING_MATCH VALUES
-					({self.upcoming_match_details['unique_id']}, \
-					'{self.upcoming_match_details['team-1']}', '{self.upcoming_match_details['team-2']}', \
-					'{self.upcoming_match_details['matchStarted']}')"""
-			self.cursor.execute(query)
-			self.dbcon.commit()
-
-			self.upcoming_match_details_2 = False
-
-			self.upcoming_match_details_2 = [match for match in response["matches"] \
-			if match["unique_id"] == self.config[2] + 2 and match["date"][:10] == str(date.today())][0]
-
-			if (self.upcoming_match_details_2):
-				query = f"""INSERT INTO UPCOMING_MATCH VALUES
-						({self.upcoming_match_details_2['unique_id']}, \
-						'{self.upcoming_match_details_2['team-1']}', '{self.upcoming_match_details_2['team-2']}', \
-						'{self.upcoming_match_details_2['matchStarted']}')"""
-				self.cursor.execute(query)
-				self.dbcon.commit()
-
-		self.cursor.execute("SELECT * FROM LAST_MATCH")
-		self.last_match_details = self.cursor.fetchall()[0]
-
-		self.cursor.execute("SELECT * FROM UPCOMING_MATCH")
-		data = self.cursor.fetchall()
-
-		self.upcoming_match_details = data[0]
-		if (len(data) > 1):
-			self.upcoming_match_details_2 = data[1]
-		else:
-			self.upcoming_match_details_2 = False
-
-		self.dog_api = "https://api.thedogapi.com/v1/images/search"
-
+		# Links for image url of all the teams and the ipl logo
 		self.image_url = {
 			"Kolkata Knight Riders": "https://hdsportsnews.com/wp-content/uploads/2020/01/kolkata-knight-riders-kkr-2020-team-squad-players-live-score-time-table-point-table-schedule-auction-match-fixture-venue-highlight-1280x720.jpg",			
 			"Rajasthan Royals": "https://cdn5.newsnationtv.com/images/2021/02/22/royal-rajasthan-logo-70.jpg",			
@@ -104,375 +32,110 @@ class IPL(commands.Cog):
 			"Chennai Super Kings": "https://i.pinimg.com/originals/85/52/f8/8552f811e95b998d9505c43a9828c6d6.jpg",			
 			"Delhi Capitals": "https://d3pc1xvrcw35tl.cloudfront.net/ln/images/686x514/teamsinnerintrodc534x432-resize-534x432-a7542dd51f-d979030f10e79596_202009106828.jpeg"
 		}
+
 		self.ipl_logo = "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg"
 
-	@commands.bot_has_permissions(embed_links = True)
+	# Update details of last match and upcoming match
+	def update(self):
+		# Fetch matches from website
+		params = {"apikey": self.apikey}
+		response = requests.get(url = self.api_matches, params = params).json()
+
+		# Details about the last match
+		last_match = []
+
+		# Details about the todays match
+		next_match = []
+
+		for match in response["matches"]:
+			# If last match id is similar to IPL matches' ID and date was yesterday 
+			# then add the match to last match list
+
+			if (str(match["unique_id"])[:-2] == "12540"\
+			 and match["date"][:10] == str(date.today() - timedelta(days = 1))):
+				# date.today() - timedelta(days = 1) yields yesterday's date
+
+				last_match.append(match)
+
+			# If date is todays date
+			if (str(match["unique_id"])[:-2] == "12540"\
+			 and match["date"][:10] == str(date.today())):
+				next_match.append(match)
+			
+		# On normal days, there should be only one last match and second match should be False
+		last_match_details = last_match[0]
+		last_match_details_2 = False
+
+		# However when there were two matches yesterday, add it to last match details 2
+		if (len(last_match) > 1):
+			last_match_details_2 = last_match[1]
+
+		# Similarly make details of next match also
+		next_match_details = next_match[0]
+		next_match_details_2 = False
+
+		if (len(next_match) > 1):
+			next_match_details_2 = next_match[1]
+
+		# Return the details
+		return (last_match_details, last_match_details_2, next_match_details, next_match_details_2)
+
+
 	@commands.command()
-	async def ipl(self, ctx):
-		""" Get details of last match played, winner and the next match
-		"""
+	async def ipl(self):
+		"""Get info about last match and upcoming matches"""
+
+		# Fetch details first
+		last_match_details, last_match_details_2, next_match_details, next_match_details_2 = data()
 
 		embed = discord.Embed(
 			color = 0x25dbf4,					# Blue
-			title = "Matches",
+			title = "Matches"
 		)
 		embed.add_field(
 			name = "Next Match", 
-			value = f'{self.upcoming_match_details[1]} \nvs \
-			\n{self.upcoming_match_details[2]}',
+			value = f'{self.next_match_details["team-1"]} \nvs \
+			\n{self.next_match_details["team-2"]}',
 			inline = False
 		)
-		if (self.upcoming_match_details_2):
+
+		# If there is a second match on that day
+		if (next_match_details_2):
 			embed.add_field(
-			name = "Match 2", 
-			value = f'{self.upcoming_match_details_2[1]} \nvs \
-			\n{self.upcoming_match_details_2[2]}',
-			inline = False
+				name = "Match 2", 
+				value = f'{self.next_match_details_2["team-1"]} \nvs \
+				\n{self.next_match_details_2["team-2"]}',
+				inline = False
 			)
+
 		embed.add_field(
 			name = "Last Match",
-			value = f'{self.last_match_details[1]} \nvs \n{self.last_match_details[2]}',
+			value = f'{self.last_match_details["team-1"]} \nvs \n{self.last_match_details["team-2"]}',
 			inline = True
 		)
 		embed.add_field(
 			name = "Winner",
-			value = f'{self.last_match_details[3]}',
+			value = f'{self.last_match_details["winner_team"]}',
 			inline = True
 		)
-		embed.set_image(url = self.image_url[self.last_match_details[3]])
-		embed.set_thumbnail(url = self.ipl_logo)
-		await ctx.send(embed = embed)
-	
-	@commands.bot_has_permissions(embed_links = True)
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def predict(self, ctx, match = 1):
-		""" Poll for today's match
-		"""
+		image_url = self.image_url[last_match_details["winner_team"]]
 
-		allowed_mentions = discord.AllowedMentions(everyone = True)
-		await ctx.send(content = "@everyone", allowed_mentions = allowed_mentions)
-
-		if (match == 2):
-			self.upcoming_match_details = self.upcoming_match_details_2
-
-			channel = self.bot.get_channel(self.config_data[4])
-			last_embed = await channel.fetch_message(self.config_data[3])
-			emoji_a = []
-			emoji_b = []
-			winners = []
-			for reaction in last_embed.reactions:
-				async for user in reaction.users():
-					if (reaction.emoji == "🇦" and not user.bot):
-						emoji_a.append(user.id)
-					elif (reaction.emoji == "🇧" and not user.bot):
-						emoji_b.append(user.id)
-
-			if (self.last_match_details[3] == self.last_match_details[1]):
-				for user in emoji_a:
-					query = """UPDATE STANDINGS
-								SET POINTS = POINTS + 10
-								WHERE USER_ID = {}""".format(user.id)
-					self.cursor.execute(query)
-					self.dbcon.commit()
-
-					username = await self.bot.fetch_user(user)
-					winners.append(username)
-			else:
-				for user in emoji_b:
-					query = """UPDATE STANDINGS
-								SET POINTS = POINTS + 10
-								WHERE USER_ID = {}""".format(user.id)
-					self.cursor.execute(query)
-					
-					self.dbcon.commit()
-					username = await self.bot.fetch_user(user)
-					winners.append(username)
-
-		self.cursor.execute("SELECT * FROM STANDINGS")
-		data = self.cursor.fetchall()
-
-		current_standings = {}
-
-		for user in data:
-			username = await self.bot.fetch_user(user[0])
-			current_standings[username] = user[1]
-
-		embed_string_name = ""
-		embed_string_points = ""
-		for user in current_standings:
-			embed_string_name += f"\n{user}\n"
-			embed_string_points += f"\n : \t {current_standings[user]}\n"
-
-		embed = discord.Embed(
-			color = 0x07f223,							# Green
-			title = "Sattebaaz Championship",
-		)
-		embed.add_field(
-			name = "Current Standings",
-			value = f"```\n{embed_string_name}```",
-			inline = True
-		)
-		embed.add_field(
-			name = "Points",
-			value = f"```\n{embed_string_points}```",
-			inline = True
-		)
-		embed.set_thumbnail(url = self.ipl_logo)
-		await ctx.send(embed = embed)
-
-		embed = discord.Embed(
-			color = 0x19f0e2,						# Cyan
-			title = "Sattebaaz Championship",
-		)
-		embed.add_field(
-			name = "Who do you think will win today's match?",
-			value = f':regional_indicator_a: {self.upcoming_match_details[1]}\n\
-			:regional_indicator_b: {self.upcoming_match_details[2]}'
-		)
-		embed.set_thumbnail(url = self.ipl_logo)
-
-		last_embed = await ctx.send(embed = embed)
-		await last_embed.add_reaction("🇦")
-		await last_embed.add_reaction("🇧")
-
-		self.config[3] = last_embed.id
-		query = """UPDATE CONFIG
-					SET EMBED_ID = {}""".format(last_embed.id)
-		self.cursor.execute(query)
-		self.dbcon.commit()
-
-	@commands.bot_has_permissions(embed_links = True)
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def points(self, ctx):
-		""" Update Standings for Sattebaaz Championship
-		"""
-
-		channel = self.bot.get_channel(self.config[4])
-		last_embed = await channel.fetch_message(self.config[3])
-		emoji_a = []
-		emoji_b = []
-		winners = []
-		for reaction in last_embed.reactions:
-			async for user in reaction.users():
-				if (reaction.emoji == "🇦" and not user.bot):
-					emoji_a.append(user.id)
-				elif (reaction.emoji == "🇧" and not user.bot):
-					emoji_b.append(user.id)
-
-		if (self.last_match_details[3] == self.last_match_details[1]):
-			for user in emoji_a:
-				query = """UPDATE STANDINGS
-							SET POINTS = POINTS + 10
-							WHERE USER_ID = {}""".format(user)
-				self.cursor.execute(query)
-				self.dbcon.commit()
-
-				username = await self.bot.fetch_user(user)
-				winners.append(username)
-		else:
-			for user in emoji_b:
-				query = """UPDATE STANDINGS
-							SET POINTS = POINTS + 10
-							WHERE USER_ID = {}""".format(user)
-				self.cursor.execute(query)
-				self.dbcon.commit()
-				
-				username = await self.bot.fetch_user(user)
-				winners.append(username)
-
-		embed = discord.Embed(
-			color = 0x07f223,						# Green
-			title = "Sattebaaz Championship",
-		)
-		embed.add_field(
-			name = "Last match was won by ...",
-			value = self.last_match_details[3],
-			inline = False
-		)
-		embed.add_field(
-			name = "Winning sattebaaz",
-			value = "`{}`".format("\n".join(str(winner.name + "#" + winner.discriminator)\
-				for winner in winners)),
-			inline = False
-		)
-
-		embed.set_image(url = self.image_url[self.last_match_details[3]])
-		embed.set_thumbnail(url = self.ipl_logo)
-		await ctx.send(embed = embed)
-
-		self.cursor.execute("SELECT * FROM STANDINGS")
-		data = self.cursor.fetchall()
-
-		current_standings = {}
-
-		for user in data:
-			username = await self.bot.fetch_user(user[0])
-			current_standings[username] = user[1]
-
-		embed_string_name = ""
-		embed_string_points = ""
-		for user in current_standings:
-			embed_string_name += f"\n{user}\n"
-			embed_string_points += f"\n : \t {current_standings[user]}\n"
-
-		embed = discord.Embed(
-			color = 0x07f223,							# Green
-			title = "Sattebaaz Championship",
-		)
-		embed.add_field(
-			name = "Current Standings",
-			value = f"```\n{embed_string_name}```",
-			inline = True
-		)
-		embed.add_field(
-			name = "Points",
-			value = f"```\n{embed_string_points}```",
-			inline = True
-		)
-		embed.set_thumbnail(url = self.ipl_logo)
-		await ctx.send(embed = embed)
-
-	@commands.command()
-	async def standings(self, ctx):
-		""" See current standings of Sattebaaz Championship
-		"""
-		self.cursor.execute("SELECT * FROM STANDINGS")
-		data = self.cursor.fetchall()
-
-		current_standings = {}
-
-		for user in data:
-			username = await self.bot.fetch_user(user[0])
-			current_standings[username] = user[1]
-
-		embed_string_name = ""
-		embed_string_points = ""
-		for user in current_standings:
-			embed_string_name += f"\n{user}\n"
-			embed_string_points += f"\n : \t {current_standings[user]}\n"
-
-		embed = discord.Embed(
-			color = 0x07f223,							# Green
-			title = "Sattebaaz Championship",
-		)
-		embed.add_field(
-			name = "Current Standings",
-			value = f"```\n{embed_string_name}```",
-			inline = True
-		)
-		embed.add_field(
-			name = "Points",
-			value = f"```\n{embed_string_points}```",
-			inline = True
-		)
-		embed.set_thumbnail(url = self.ipl_logo)
-		await ctx.send(embed = embed)
-
-
-	@commands.command()
-	async def score(self, ctx):
-		""" Get live score of present IPL match
-		"""
-		api_score = "https://cricapi.com/api/cricketScore"
-		params_score = {
-			"apikey": os.getenv("CRIC_API_KEY"),
-			"unique_id": self.config[2] + 1
-		}
-		
-		if (self.upcoming_match_details_2 != False and str(datetime.now())[11:13] > "19"):
-			params_score["unique_id"] += 1
-
-		try:
-			response = requests.get(api_score, params = params_score)
-			await ctx.send(response.url)
-			data = response.json()
-
-			if (data["matchStarted"] == False):
-				response_dog = requests.get(self.dog_api).json()[0]
-
-				embed = discord.Embed(
-					title = "Bruh...",
-					color = 0xea1010			# Red
-				)
-				embed.add_field(
-					name = "The match has not even started yet 🤦‍♂️",
-					value = "Wait till the match starts? Anyway here is a cute doggo ❤"
-				)
-				embed.set_image(url = response_dog["url"])
-				await ctx.send(embed = embed)
-				return
-			
-			index_v = data["score"].find("v")
-			if (data["score"][-1] != "*"):
-				current_batting = data["team-1"]
-			else:
-				current_batting = data["team-2"]
-
-			embed = discord.Embed(
-				title = "Live Score",
-				color = 0x25dbf4,					# Blue
-			)
+		# If there was another match yesterday
+		if (last_match_details_2):
 			embed.add_field(
-				name = "Team A",
-				value = data["score"][:index_v],
+				name = "Match 2", 
+				value = f'{self.next_match_details_2["team-1"]} \nvs \
+				\n{self.next_match_details_2["team-2"]}',
 				inline = False
 			)
 			embed.add_field(
-				name = "Team B",
-				value = data["score"][index_v + 1:],
-				inline = False
+				name = "Winner",
+				value = f'{self.last_match_details_2["winner_team"]}',
+				inline = True
 			)
-			embed.set_image(url = self.image_url[current_batting])
-			embed.set_thumbnail(url = self.ipl_logo)
-			await ctx.send(embed = embed)
+			# Update the image to show
+			image_url = self.image_url[last_match_details_2["winner_team"]]
 
-		except:
-			response_dog = requests.get(self.dog_api).json()[0]
-			embed = discord.Embed(
-				title = "Bruh...",
-				color = 0xea1010			# Red
-			)
-			embed.add_field(
-				name = "100/100 requests made for the day!",
-				value = "Sorry! But I ain't Ambani bruh? Anyway here is a cute doggo ❤"
-			)
-			embed.set_image(url = response_dog["url"])
-			await ctx.send(embed = embed)
-		
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def database(self, ctx):
-
-		query = """CREATE TABLE IF NOT EXISTS CONFIG(
-				RATE_LIMIT 		INT 	NOT NULL,
-				LAST_SYNCED		TEXT	NOT NULL,
-				LAST_MATCH_ID	INT 	NOT NULL,
-				EMBED_ID		BIGINT 	NOT NULL,
-				CHANNEL_ID 		BIGINT 	NOT NULL)
-				"""
-		self.cursor.execute(query)
-
-		query = """CREATE TABLE IF NOT EXISTS STANDINGS(
-				USER_ID			BIGINT 	NOT NULL,
-				POINTS			INT 	NOT NULL)"""
-		self.cursor.execute(query)
-
-		query = """CREATE TABLE IF NOT EXISTS LAST_MATCH(
-				UNIQUE_ID		INT 	NOT NULL,
-				TEAM_1			TEXT	NOT NULL,
-				TEAM_2			TEXT 	NOT NULL,
-				WINNER_TEAM		TEXT	NOT NULL)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-
-		query = """CREATE TABLE IF NOT EXISTS UPCOMING_MATCH(
-				UNIQUE_ID		INT 	NOT NULL,
-				TEAM_1			TEXT	NOT NULL,
-				TEAM_2			TEXT 	NOT NULL,
-				MATCH_STARTED	BOOLEAN NOT NULL)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-		
-		await ctx.send("All tables created successfully")	
+		embed.set_image(url = image_url)
+		embed.set_thumbnail(url = self.ipl_logo)
+		await ctx.send(embed = embed)
