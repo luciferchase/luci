@@ -6,11 +6,13 @@ import os
 import psycopg2
 
 class Core(commands.Cog):
+	"""Core commands. Most of them are owner only."""
 	def __init__(self, bot):
 		self.bot = bot	
 
 	@commands.command()
 	async def ping(self, ctx) :
+		"""Ping Pong"""
 		await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
 
 	@commands.is_owner()

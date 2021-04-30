@@ -8,8 +8,7 @@ import logging
 
 
 class Meme(commands.Cog):
-	""" Get memes.
-	"""
+	""" Get memes"""
 
 	# Different func so that I could schedule it
 	async def meme_code(self, endpoint = ""):
