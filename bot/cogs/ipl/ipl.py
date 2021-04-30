@@ -237,7 +237,7 @@ class IPL(commands.Cog):
 		embed.set_thumbnail(url = self.ipl_logo)
 
 		# Add fields to the embed
-		for index in len(leaderboard):
+		for index in range(len(leaderboard)):
 			if (index == 0):
 				embed.add_field(
 					name = f":first_place: {leaderboard[index]}",
