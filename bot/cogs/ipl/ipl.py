@@ -413,6 +413,3 @@ class IPL(commands.Cog):
 		self.cursor.execute(query)
 		self.dbcon.commit()
 		await ctx.send("All tables created successfully")
-
-		self.cursor.execute("DELETE FROM predict")
-		self.cursor.execute("INSERT INTO predict VALUES (837517369675874314)")

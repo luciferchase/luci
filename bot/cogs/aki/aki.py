@@ -4,7 +4,7 @@ from akinator.async_aki import Akinator
 import discord
 from discord.ext import commands
 
-import cogs.core.menus as menus
+import menus as menus
 
 
 class AkiMenu(menus.Menu):

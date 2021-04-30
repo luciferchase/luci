@@ -111,12 +111,21 @@ class Core(commands.Cog):
 			await ctx.send("Cannot set activity")
 
 	@commands.is_owner()
-	@commands.command()
+	@commands.command(hidden = True)
 	async def botname(self, ctx, name):
-		await self.bot.user.edit(username = name)
+		"""Change bot name.
+		   Syntax: `luci botname <name>`
+		"""
+		log = logging.getLogger("botstatus")
+		try:
+			await self.bot.user.edit(username = name)
+			await ctx.send("Bot name changed")
+		except:
+			log.error("Cannot change bot name")
+			await ctx.send("Error. Bot name not changed. Check logs.")
 
 	@commands.is_owner()
-	@commands.command()
+	@commands.command(hidden = True)
 	async def botavatar(self, ctx):
-		with open("avatar.png") as avatar:
+		with open("/app/bot/avatar.png") as avatar:
 			await self.bot.user.edit(avatar = avatar)
