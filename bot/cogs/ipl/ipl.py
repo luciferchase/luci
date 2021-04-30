@@ -205,7 +205,7 @@ class IPL(commands.Cog):
 		else:
 			match_details = next_match_details
 
-		embed = await self.fetch_score(match_details)
+		embed = self.fetch_score(match_details)
 		await ctx.send(embed = embed)
 
 	def fetch_standings(self):

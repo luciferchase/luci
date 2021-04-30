@@ -1,7 +1,7 @@
 # Install all dependencies
 import discord
 from discord.ext import commands
-from pretty_help import DefaultMenu, PrettyHelp
+# from pretty_help import DefaultMenu, PrettyHelp
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -31,7 +31,7 @@ intents = discord.Intents.all()
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = commands.Bot(command_prefix = ["luci ", "Luci "], case_insensitive = True, 
-	intents = intents, help_command = PrettyHelp())
+	intents = intents, help_command = None)
 
 logging.basicConfig(level = logging.WARNING)
 
@@ -40,6 +40,7 @@ bot.add_cog(aki.Aki(bot))
 bot.add_cog(avatar.Avatar())
 bot.add_cog(comics.Comics(bot))
 bot.add_cog(core.Core(bot))
+bot.add_cog(core.Help(bot))
 bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(forward.Forward(bot))
 bot.add_cog(ipl.IPL(bot))
