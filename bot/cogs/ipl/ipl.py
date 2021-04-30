@@ -140,7 +140,7 @@ class IPL(commands.Cog):
 		embed.set_thumbnail(url = self.ipl_logo)
 		await ctx.send(embed = embed)
 
-	async def fetch_score(self, match_details):
+	def fetch_score(self, match_details):
 		# Set up params
 		params = {"apikey": self.apikey, "unique_id": match_details["unique_id"]}
 		response = requests.get(url = self.api_score, params = params)
@@ -193,8 +193,7 @@ class IPL(commands.Cog):
 	async def score(self, ctx):
 		"""See live score"""
 
-		last_match_details, last_match_details_2, \
-		next_match_details, next_match_details_2 = self.fetch_score()
+		*_, next_match_details, next_match_details_2 = self.fetch_score()
 
 		# Check if there is second match
 		if (next_match_details_2 != False):
@@ -209,7 +208,7 @@ class IPL(commands.Cog):
 		embed = await self.fetch_score(match_details)
 		await ctx.send(embed = embed)
 
-	async def fetch_standings(self):
+	def fetch_standings(self):
 		# Fetch standings from the database
 
 		self.cursor.execute("SELECT * FROM STANDINGS")
@@ -231,7 +230,7 @@ class IPL(commands.Cog):
 		embed_string_points = ""
 		for user in current_standings:
 			embed_string_name += f"\n{user}\n"
-			embed_string_points += f"\n : \t {current_standings[user]}\n"
+			embed_string_points += f"\n: {current_standings[user]}\n"
 
 		embed = discord.Embed(
 			color = 0x07f223,							# Green
@@ -254,7 +253,170 @@ class IPL(commands.Cog):
 	async def standings(self, ctx):
 		"""Get current standings of Sattebaaz Championship"""
 
-		embed = await self.fetch_standings()
+		embed = self.fetch_standings()
 		await ctx.send(embed = embed)
 
 	# Following are all owner only command
+	async def predict_code(self, match_details):
+		# Set Channel
+		channel = self.bot.get_channel(836214172089319477)
+
+		embed = discord.Embed(
+			color = 0x19f0e2,						# Cyan
+			title = "Sattebaaz Championship",
+		)
+		embed.add_field(
+			name = "Who do you think will win today's match?",
+			value = f':regional_indicator_a: {match_details["team-1"]}\n\
+			:regional_indicator_b: {match_details["team-2"]}'
+		)
+		embed.set_thumbnail(url = self.ipl_logo)
+
+		last_embed = await channel.send(embed = embed)
+		await last_embed.add_reaction("🇦")
+		await last_embed.add_reaction("🇧")
+
+		return (last_embed.id)
+
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def predict(self):
+		*_, next_match_details, next_match_details_2 = self.fetch_matches()
+
+		embed_id = await self.predict_code(next_match_details)
+
+		# Update database
+		self.cursor.execute("DELETE FROM predict")
+		query = """INSERT INTO predict VALUES
+				({})""".format(last_embed.id)
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
+		# If there is a second match on that day
+		if (next_match_details_2 != False):
+			embed_id = await self.predict_code(next_match_details_2)
+
+			# Update database
+			query = """INSERT INTO predict VALUES
+					({})""".format(last_embed.id)
+			self.cursor.execute(query)
+			self.dbcon.commit()
+
+	async def update_points(self, match_details, embed_id):
+		# Get members details
+		self.cursor.execute("SELECT * FROM standings")
+		users = self.cursor.fetchall()
+
+		# Get user ids of all members who has selected each team
+		channel = self.bot.get_channel(836214172089319477)
+		last_embed = await channel.fetch_message(embed_id)
+		team_1 = []
+		team_2 = []
+		for reaction in last_embed.reactions:
+			async for user in reaction.users():
+				if (reaction.emoji == "🇦" and not user.bot):
+					team_1.append(user.id)
+				elif (reaction.emoji == "🇧" and not user.bot):
+					team_2.append(user.id)
+
+		# Get winners
+		if (match_details["winner_team"] == match_details["team-1"]):
+			winners = team_1
+		else:
+			winners = team_2
+
+		# Update points
+		for user in users:
+			# First convert tuple into list
+			user = list(user)
+			if (user[0] in winners):
+				user[1] += 10
+
+		# Update database
+		self.cursor.execute("DELETE FROM standings")
+		self.dbcon.commit()
+
+		for user in users:
+			self.cursor.execute("INSERT INTO standings VALUES {}".format(tuple(user)))
+			self.dbcon.commit()
+
+		return winners
+
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def points(self, ctx):
+		# Get last match's details
+		last_match_details, last_match_details_2, *_ = self.fetch_matches()
+
+		# Get last embed id
+		self.cursor.execute("SELECT * FROM predict")
+		data = self.cursor.fetchall()
+		embed_id = data[0]
+
+		winners = await update_points(last_match_details, embed_id)
+
+		# If there was another match yesterday
+		if (last_match_details_2 != False):
+			embed_id = data[1]
+			second_winners = await update_points(last_match_details_2, embed_id)
+
+		embed = discord.Embed(
+			color = 0x07f223,						# Green
+			title = "Sattebaaz Championship",
+		)
+		embed.add_field(
+			name = "Last match was won by ...",
+			value = self.last_match_details["winner_team"],
+			inline = True
+		)
+		embed.add_field(
+			name = "Winning sattebaaz",
+			value = "`{}`".format("\n".join(str(winner.name + "#" + winner.discriminator)\
+				for winner in winners)),
+			inline = False
+		)
+
+		# Add another field if there was another match yesterday
+		if (last_match_details_2 != False):
+			embed.add_field(
+				name = "Second match was won by ...",
+				value = self.last_match_details_2["winner_team"],
+				inline = True
+			)
+			embed.add_field(
+				name = "Winning sattebaaz",
+				value = "`{}`".format("\n".join(str(winner.name + "#" + winner.discriminator)\
+					for winner in second_winners)),
+				inline = False
+			)
+
+		embed.set_image(url = self.image_url[self.last_match_details[3]])
+		embed.set_thumbnail(url = self.ipl_logo)
+		await ctx.send(embed = embed)
+	
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def database(self, ctx):
+		query = """CREATE TABLE IF NOT EXISTS predict
+				(embed_id 	BIGINT	NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
+		query = """CREATE TABLE IF NOT EXISTS standings(
+				user		BIGINT	NOT NULL,
+				points		INT 	NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+		await ctx.send("All tables created successfully")
+
+		query = """INSERT INTO standings VALUES
+				(707557256220115035, 40),
+				(650661454000947210, 40),
+				(707935222267904070, 0),
+				(708149141909274696, 20),
+				(713963160641601548, 60),
+				(735347909163352084, 20),
+				(708578251320066068, 0)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+		await ctx.send("All data inserted successfully")
