@@ -234,11 +234,9 @@ class IPL(commands.Cog):
 		embed = discord.Embed(
 			title = "Current Standings"
 		)
+		embed.set_thumbnail(url = self.ipl_logo)
 
-		# Get guild icon url
-		guild = await self.bot.fetch_guild(738731754885480468)
-		embed.set_thumbnail(url = guild.icon_url)
-
+		# Add fields to the embed
 		for index in len(leaderboard):
 			if (index == 0):
 				embed.add_field(
