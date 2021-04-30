@@ -86,7 +86,7 @@ class IPL(commands.Cog):
 		"""Get info about last match and upcoming matches"""
 
 		# Fetch details first
-		last_match_details, last_match_details_2, next_match_details, next_match_details_2 = update()
+		last_match_details, last_match_details_2, next_match_details, next_match_details_2 = self.update()
 
 		embed = discord.Embed(
 			color = 0x25dbf4,					# Blue
