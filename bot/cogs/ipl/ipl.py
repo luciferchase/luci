@@ -144,7 +144,7 @@ class IPL(commands.Cog):
 		response = requests.get(url = self.api_score, params = params)
 		data = response.json()
 
-		if (response["matchStarted"] == False):
+		if (data["matchStarted"] == False):
 			dog_api = "https://api.thedogapi.com/v1/images/search"
 			response_dog = requests.get(dog_api).json()[0]
 
