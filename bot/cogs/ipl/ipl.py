@@ -220,7 +220,7 @@ class IPL(commands.Cog):
 		for user in data:
 			# user = (user, points)
 			# Fetch username
-			user_info = await self.bot.get_user(user[0])
+			user_info = self.bot.get_user(user[0])
 			username = user_info.name
 
 			# Make a dictionary of the form
@@ -256,3 +256,5 @@ class IPL(commands.Cog):
 
 		embed = await self.fetch_standings()
 		await ctx.send(embed = embed)
+
+	# Following are all owner only command
