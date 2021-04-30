@@ -10,6 +10,8 @@ import logging
 class Meme(commands.Cog):
 	""" Get memes.
 	"""
+
+	# Different func so that I could schedule it
 	async def meme_code(self, endpoint = ""):
 		log = logging.getLogger("meme")
 		dog_api = "https://api.thedogapi.com/v1/images/search"

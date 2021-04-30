@@ -47,26 +47,12 @@ bot.add_cog(photo.Photo())
 # bot.add_cog(testing.Testing())
 
 # Scheduled events
-
-# # Until I find a better way, have to use this ugly hack
-# async def schedule_meme():
-# 	channel = bot.get_channel(836214172089319477)
-# 	response = requests.get("https://meme-api.herokuapp.com/gimme/dankmemes").json()
-
-# 	embed = discord.Embed(
-# 		color = 0x06f9f5,							# Blue-ish
-# 		title = response["title"],
-# 		url = response["postLink"]
-# 	)
-# 	embed.set_image(url = response["url"])
-# 	embed.set_footer(text = f'👍 {response["ups"]}')
-# 	await channel.send(embed = embed)
-
 async def schedule_meme():
 	channel = bot.get_channel(836214172089319477)
 	embed = await meme.Meme().meme_code()
 	await channel.send(embed = embed)
 
+# Only a small function so leaving it here
 async def schedule_wallpaper():
 	channel = bot.get_channel(836214172089319477)
 	api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-IN"
@@ -153,7 +139,7 @@ async def on_ready():
 	scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
 	# Add jobs to scheduler
-	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("* * * * *")) # Every hour
+	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("0,30 * * * *")) # Every hour
 	scheduler.add_job(schedule_wallpaper, CronTrigger.from_crontab("00 08 * * *")) # Each day at 0800 hrs
 
 	# Start the scheduler

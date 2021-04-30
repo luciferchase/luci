@@ -131,7 +131,7 @@ class Photo(commands.Cog):
 		await wallpaper.add_reaction("❤️")
 		await wallpaper.add_reaction("👍")
 		await wallpaper.add_reaction("👎")
-
+		
 	@commands.command()
 	async def dog(self, ctx):
 		""" Get a random dog pic
