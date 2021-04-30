@@ -48,7 +48,7 @@ bot.add_cog(photo.Photo())
 
 # Scheduled events
 async def schedule_meme():
-	channel = bot.get_channel(738731755569414196)
+	channel = bot.get_channel(835113922172026881)
 	embed = await meme.Meme().meme_code()
 	await channel.send(embed = embed)
 
