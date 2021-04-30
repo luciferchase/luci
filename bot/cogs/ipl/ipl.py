@@ -16,10 +16,6 @@ class IPL(commands.Cog):
 		self.api_score = "https://cricapi.com/api/cricketScore?"
 		self.apikey = os.getenv("CRIC_API_KEY")
 
-		print(self.apikey)
-
-		return
-
 		# Initialize Connection to database
 		DATABASE_URL = os.environ['DATABASE_URL']
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
@@ -41,6 +37,7 @@ class IPL(commands.Cog):
 
 	# Update details of last match and upcoming match
 	def update(self):
+		print(self.apikey)
 		# Fetch matches from website
 		params = {"apikey": self.apikey}
 		response = requests.get(url = self.api_matches, params = params).json()
