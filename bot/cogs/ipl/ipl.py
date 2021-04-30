@@ -37,7 +37,6 @@ class IPL(commands.Cog):
 
 	# Update details of last match and upcoming match
 	def update(self):
-		print(self.apikey)
 		# Fetch matches from website
 		params = {"apikey": self.apikey}
 		response = requests.get(url = self.api_matches, params = params).json()
@@ -94,8 +93,8 @@ class IPL(commands.Cog):
 		)
 		embed.add_field(
 			name = "Next Match", 
-			value = f'{self.next_match_details["team-1"]} \nvs \
-			\n{self.next_match_details["team-2"]}',
+			value = f'{next_match_details["team-1"]} \nvs \
+			\n{next_match_details["team-2"]}',
 			inline = False
 		)
 
@@ -103,19 +102,19 @@ class IPL(commands.Cog):
 		if (next_match_details_2):
 			embed.add_field(
 				name = "Match 2", 
-				value = f'{self.next_match_details_2["team-1"]} \nvs \
-				\n{self.next_match_details_2["team-2"]}',
+				value = f'{next_match_details_2["team-1"]} \nvs \
+				\n{next_match_details_2["team-2"]}',
 				inline = False
 			)
 
 		embed.add_field(
 			name = "Last Match",
-			value = f'{self.last_match_details["team-1"]} \nvs \n{self.last_match_details["team-2"]}',
+			value = f'{last_match_details["team-1"]} \nvs \n{last_match_details["team-2"]}',
 			inline = True
 		)
 		embed.add_field(
 			name = "Winner",
-			value = f'{self.last_match_details["winner_team"]}',
+			value = f'{last_match_details["winner_team"]}',
 			inline = True
 		)
 		image_url = self.image_url[last_match_details["winner_team"]]
@@ -124,13 +123,13 @@ class IPL(commands.Cog):
 		if (last_match_details_2):
 			embed.add_field(
 				name = "Match 2", 
-				value = f'{self.next_match_details_2["team-1"]} \nvs \
-				\n{self.next_match_details_2["team-2"]}',
+				value = f'{next_match_details_2["team-1"]} \nvs \
+				\n{next_match_details_2["team-2"]}',
 				inline = False
 			)
 			embed.add_field(
 				name = "Winner",
-				value = f'{self.last_match_details_2["winner_team"]}',
+				value = f'{last_match_details_2["winner_team"]}',
 				inline = True
 			)
 			# Update the image to show
