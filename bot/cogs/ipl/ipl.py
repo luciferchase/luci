@@ -138,3 +138,65 @@ class IPL(commands.Cog):
 		embed.set_image(url = image_url)
 		embed.set_thumbnail(url = self.ipl_logo)
 		await ctx.send(embed = embed)
+
+	async def fetch_score(self, match_details):
+		params = {"apikey": self.apikey, "unique_id": match_details["unique_id"]}
+		response = requests.get(url = self.api_score, params = params)
+		data = response.json()
+
+		if (response["matchStarted"] == False):
+			dog_api = "https://api.thedogapi.com/v1/images/search"
+			response_dog = requests.get(dog_api).json()[0]
+
+			embed = discord.Embed(
+				title = "Bruh...",
+				color = 0xea1010			# Red
+			)
+			embed.add_field(
+				name = "The match has not even started yet 🤦‍♂️",
+				value = "Wait till the match starts? Anyway here is a cute doggo ❤"
+			)
+			embed.set_image(url = response_dog["url"])
+			await ctx.send(embed = embed)
+			return
+		
+		index_v = data["score"].find("v")
+		if (data["score"][-1] != "*"):
+			current_batting = data["team-1"]
+		else:
+			current_batting = data["team-2"]
+
+		embed = discord.Embed(
+			title = "Live Score",
+			color = 0x25dbf4,					# Blue
+		)
+		embed.add_field(
+			name = "Team A",
+			value = data["score"][:index_v],
+			inline = False
+		)
+		embed.add_field(
+			name = "Team B",
+			value = data["score"][index_v + 1:],
+			inline = False
+		)
+		embed.set_image(url = self.image_url[current_batting])
+		embed.set_thumbnail(url = self.ipl_logo)
+		return embed
+
+	@commands.command()
+	async def score(self, ctx):
+		"""See live score"""
+
+		last_match_details, last_match_details_2, next_match_details, next_match_details_2 = self.update()
+
+		if (next_match_details_2 != False):
+			if (next_match_details_2["matchStarted"] != False):
+				match_details = next_match_details_2
+			else:
+				match_details = next_match_details_2
+		else:
+			match_details = next_match_details
+
+		embed = await self.fetch_score(match_details)
+		await ctx.send(embed = embed)
