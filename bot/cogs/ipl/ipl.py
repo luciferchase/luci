@@ -99,6 +99,7 @@ class IPL(commands.Cog):
 		)
 
 		# If there is a second match on that day
+		print(next_match_details_2)
 		if (next_match_details_2):
 			embed.add_field(
 				name = "Match 2", 
