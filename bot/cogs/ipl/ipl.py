@@ -16,6 +16,10 @@ class IPL(commands.Cog):
 		self.api_score = "https://cricapi.com/api/cricketScore?"
 		self.apikey = os.getenv("CRIC_API_KEY")
 
+		print(self.apikey)
+
+		return
+
 		# Initialize Connection to database
 		DATABASE_URL = os.environ['DATABASE_URL']
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
@@ -35,7 +39,6 @@ class IPL(commands.Cog):
 
 		self.ipl_logo = "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg"
 
-	@classmethod	
 	# Update details of last match and upcoming match
 	def update(self):
 		# Fetch matches from website
