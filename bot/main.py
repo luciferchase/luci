@@ -55,7 +55,6 @@ async def schedule_meme():
 	embed = await meme.Meme().meme_code()
 	meme = await channel.send(embed = embed)
 	await meme.add_reaction("😂")
-	await meme.add_reaction("🤬")
 
 # Only a small function so leaving it here
 async def schedule_wallpaper():

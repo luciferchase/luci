@@ -128,11 +128,11 @@ class Core(commands.Cog):
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
-	async def botavatar(self, ctx):
+	async def botavatar(self, ctx, which = ""):
 		"""Change bot name.
 		"""
 		log = logging.getLogger("botavatar")
-		with open("/app/bot/avatar.png", "rb") as avatar:
+		with open(f"/app/bot/avatar{which}.png", "rb") as avatar:
 			avatar_image = avatar.read()
 			try:
 				await self.bot.user.edit(avatar = avatar_image)
