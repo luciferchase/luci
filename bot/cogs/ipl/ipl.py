@@ -157,8 +157,7 @@ class IPL(commands.Cog):
 				value = "Wait till the match starts? Anyway here is a cute doggo ❤"
 			)
 			embed.set_image(url = response_dog["url"])
-			await ctx.send(embed = embed)
-			return
+			return embed
 		
 		index_v = data["score"].find("v")
 		if (data["score"][-1] != "*"):
