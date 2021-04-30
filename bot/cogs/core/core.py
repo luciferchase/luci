@@ -127,5 +127,5 @@ class Core(commands.Cog):
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def botavatar(self, ctx):
-		with open("/app/bot/avatar.png") as avatar:
+		with open("/app/bot/avatar.png", "rb") as avatar:
 			await self.bot.user.edit(avatar = avatar)
