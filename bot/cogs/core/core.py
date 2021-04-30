@@ -148,7 +148,7 @@ class Help(commands.Cog):
 
 	@commands.command()
 	async def help(self, ctx, *input):
-	"""Shows all modules of that bot"""
+		"""Shows all modules of that bot"""
 	
 		prefix = "luci "
 		owner = 707557256220115035
