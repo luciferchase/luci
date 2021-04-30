@@ -112,5 +112,11 @@ class Core(commands.Cog):
 
 	@commands.is_owner()
 	@commands.command()
-	async def name(self, ctx, name):
+	async def botname(self, ctx, name):
 		await self.bot.user.edit(username = name)
+
+	@commands.is_owner()
+	@commands.command()
+	async def botavatar(self, ctx):
+		with open("avatar.png") as avatar:
+			await self.bot.user.edit(avatar = avatar)
