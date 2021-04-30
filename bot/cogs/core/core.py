@@ -60,17 +60,17 @@ class Core(commands.Cog):
 		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		cursor = dbcon.cursor()
 
-		query = """CREATE TABLE IF NOT EXISTS BOTSTATUS(
-				STATUS		TEXT	NOT NULL,
-				ACTIVITY 	TEXT,
-				NAME 		TEXT)"""
+		query = """CREATE TABLE IF NOT EXISTS botstatus(
+				status		TEXT	NOT NULL,
+				activity 	TEXT,
+				name 		TEXT)"""
 		cursor.execute(query)
 		dbcon.commit()
 
-		cursor.execute("DELETE FROM BOTSTATUS")
+		cursor.execute("DELETE FROM botstatus")
 		dbcon.commit()
 
-		query = f"""INSERT INTO BOTSTATUS VALUES
+		query = f"""INSERT INTO botstatus VALUES
 				('{status}', '{activity}', '{text}')"""
 		cursor.execute(query)
 		dbcon.commit()
@@ -109,3 +109,8 @@ class Core(commands.Cog):
 		except:
 			log.warning("Cannot set activity")
 			await ctx.send("Cannot set activity")
+
+	@commands.is_owner()
+	@commands.command()
+	async def name(self, ctx, name):
+		await self.bot.user.edit(username = name)
