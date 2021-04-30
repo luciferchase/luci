@@ -241,22 +241,26 @@ class IPL(commands.Cog):
 			if (index == 0):
 				embed.add_field(
 					name = f":first_place: {leaderboard[index]}",
-					value = f"Points: {current_standings[leaderboard[index]]}"
+					value = f"Points: {current_standings[leaderboard[index]]}",
+					inline = False
 				)
 			elif (index == 1):
 				embed.add_field(
 					name = f":second_place: {leaderboard[index]}",
-					value = f"Points: {current_standings[leaderboard[index]]}"
+					value = f"Points: {current_standings[leaderboard[index]]}",
+					inline = False
 				)
 			elif (index == 2):
 				embed.add_field(
 					name = f":third_place: {leaderboard[index]}",
-					value = f"Points: {current_standings[leaderboard[index]]}"
+					value = f"Points: {current_standings[leaderboard[index]]}",
+					inline = False
 				)
 			else:
 				embed.add_field(
 					name = f"➡️ {leaderboard[index]}",
-					value = f"Points: {current_standings[leaderboard[index]]}"
+					value = f"Points: {current_standings[leaderboard[index]]}",
+					inline = False
 				)
 		return embed
 
