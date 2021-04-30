@@ -209,7 +209,7 @@ class IPL(commands.Cog):
 		embed = self.fetch_score(match_details)
 		await ctx.send(embed = embed)
 
-	def fetch_standings(self):
+	async def fetch_standings(self):
 		# Fetch standings from the database
 
 		self.cursor.execute("SELECT * FROM STANDINGS")
@@ -236,7 +236,7 @@ class IPL(commands.Cog):
 		)
 
 		# Get guild icon url
-		guild = self.bot.fetch_guild(738731754885480468)
+		guild = await self.bot.fetch_guild(738731754885480468)
 		embed.set_thumbnail(url = guild.icon_url)
 
 		for index in len(leaderboard):
@@ -266,7 +266,7 @@ class IPL(commands.Cog):
 	async def standings(self, ctx):
 		"""Get current standings of Sattebaaz Championship"""
 
-		embed = self.fetch_standings()
+		embed = await self.fetch_standings()
 		await ctx.send(embed = embed)
 
 	# Following are all owner only command
