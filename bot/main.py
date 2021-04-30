@@ -178,7 +178,7 @@ async def on_ready():
 	scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
 	# Add jobs to scheduler
-	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("0 * * * *")) # Every hour
+	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("30 * * * *")) # Every hour
 
 	# Because we are 05:30 hrs ahead of GMT, every cron is set 05:30 hrs behind
 	scheduler.add_job(schedule_wallpaper, CronTrigger.from_crontab("30 02 * * *")) # Each day at 0800 hrs
