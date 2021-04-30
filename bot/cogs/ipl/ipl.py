@@ -236,7 +236,7 @@ class IPL(commands.Cog):
 		)
 
 		# Get guild icon url
-		guild = await self.bot.fetch_guild(738731754885480468)
+		guild = self.bot.fetch_guild(738731754885480468)
 		embed.set_thumbnail(url = guild.icon_url)
 
 		for index in len(leaderboard):

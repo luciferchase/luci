@@ -28,10 +28,13 @@ from cogs.photo import photo
 # Get Members intent
 intents = discord.Intents.all()
 
+# Configure help menu
+menu = DefaultMenu(color = 0xf34949, sort_commands = True)
+
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = commands.Bot(command_prefix = ["luci ", "Luci "], case_insensitive = True, 
-	intents = intents, help_command = PrettyHelp())
+	intents = intents, help_command = PrettyHelp(menu = menu))
 
 logging.basicConfig(level = logging.WARNING)
 
