@@ -9,6 +9,7 @@ import time
 
 
 class Math(commands.Cog):
+	"""Do math"""
 
 	def __init__(self, bot):
 		self.bot = bot
