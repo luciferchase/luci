@@ -53,7 +53,9 @@ bot.add_cog(photo.Photo())
 async def schedule_meme():
 	channel = bot.get_channel(835113922172026881)
 	embed = await meme.Meme().meme_code()
-	await channel.send(embed = embed)
+	meme = await channel.send(embed = embed)
+	await meme.add_reaction("😂")
+	await meme.add_reaction(🤬)
 
 # Only a small function so leaving it here
 async def schedule_wallpaper():
@@ -177,7 +179,7 @@ async def on_ready():
 	scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
 	# Add jobs to scheduler
-	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("0,30 * * * *")) # Every hour
+	scheduler.add_job(schedule_meme, CronTrigger.from_crontab("30 * * * *")) # Every hour
 
 	# Because we are 05:30 hrs ahead of GMT, every cron is set 05:30 hrs behind
 	scheduler.add_job(schedule_wallpaper, CronTrigger.from_crontab("30 02 * * *")) # Each day at 0800 hrs
