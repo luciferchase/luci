@@ -53,8 +53,8 @@ bot.add_cog(photo.Photo())
 async def schedule_meme():
 	channel = bot.get_channel(835113922172026881)
 	embed = await meme.Meme().meme_code()
-	meme = await channel.send(embed = embed)
-	await meme.add_reaction("😂")
+	meme_embed = await channel.send(embed = embed)
+	await meme_embed.add_reaction("😂")
 
 # Only a small function so leaving it here
 async def schedule_wallpaper():
