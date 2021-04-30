@@ -193,7 +193,7 @@ class IPL(commands.Cog):
 	async def score(self, ctx):
 		"""See live score"""
 
-		*_, next_match_details, next_match_details_2 = self.fetch_score()
+		*_, next_match_details, next_match_details_2 = self.fetch_matches()
 
 		# Check if there is second match
 		if (next_match_details_2 != False):
