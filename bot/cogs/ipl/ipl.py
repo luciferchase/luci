@@ -82,7 +82,7 @@ class IPL(commands.Cog):
 
 
 	@commands.command()
-	async def ipl(self):
+	async def ipl(self, ctx):
 		"""Get info about last match and upcoming matches"""
 
 		# Fetch details first
