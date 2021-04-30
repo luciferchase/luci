@@ -288,7 +288,7 @@ class IPL(commands.Cog):
 		# Update database
 		self.cursor.execute("DELETE FROM predict")
 		query = """INSERT INTO predict VALUES
-				({})""".format(last_embed.id)
+				({})""".format(embed_id)
 		self.cursor.execute(query)
 		self.dbcon.commit()
 
@@ -298,7 +298,7 @@ class IPL(commands.Cog):
 
 			# Update database
 			query = """INSERT INTO predict VALUES
-					({})""".format(last_embed.id)
+					({})""".format(embed_id)
 			self.cursor.execute(query)
 			self.dbcon.commit()
 
