@@ -249,8 +249,8 @@ class Help(commands.Cog):
 			embed = discord.Embed(
 				title = "It's a magical place.",
 				description = "I don't know how you got here. But I didn't see this coming at all.\n"
-								"Would you please be so kind to report that issue to me {}\n".format(owner)
-								"Thank you! ~ Lucifer Chase",
+								"Would you please be so kind to report that issue to me {}\n"
+								"Thank you! ~ Lucifer Chase".format(owner),
 				color = discord.Color.red())
 
 		# sending reply embed using our own function defined above
