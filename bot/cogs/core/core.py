@@ -254,4 +254,4 @@ class Help(commands.Cog):
 				color = discord.Color.red())
 
 		# sending reply embed using our own function defined above
-		await ctx.send(embed)
+		await ctx.send(embed = embed)

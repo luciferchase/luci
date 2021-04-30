@@ -192,6 +192,7 @@ class IPL(commands.Cog):
 	@commands.command()
 	async def score(self, ctx):
 		"""See live score"""
+		await ctx.trigger_typing()
 
 		*_, next_match_details, next_match_details_2 = self.fetch_matches()
 
