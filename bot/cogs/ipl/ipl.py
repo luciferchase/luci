@@ -280,7 +280,7 @@ class IPL(commands.Cog):
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
-	async def predict(self):
+	async def predict(self, ctx):
 		*_, next_match_details, next_match_details_2 = self.fetch_matches()
 
 		embed_id = await self.predict_code(next_match_details)
