@@ -1,7 +1,7 @@
 # Install all dependencies
 import discord
 from discord.ext import commands
-# from pretty_help import DefaultMenu, PrettyHelp
+from pretty_help import DefaultMenu, PrettyHelp
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -31,7 +31,7 @@ intents = discord.Intents.all()
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = commands.Bot(command_prefix = ["luci ", "Luci "], case_insensitive = True, 
-	intents = intents, help_command = None)
+	intents = intents, help_command = PrettyHelp())
 
 logging.basicConfig(level = logging.WARNING)
 
@@ -40,7 +40,7 @@ bot.add_cog(aki.Aki(bot))
 bot.add_cog(avatar.Avatar())
 bot.add_cog(comics.Comics(bot))
 bot.add_cog(core.Core(bot))
-bot.add_cog(core.Help(bot))
+# bot.add_cog(core.Help(bot))
 bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(forward.Forward(bot))
 bot.add_cog(ipl.IPL(bot))
@@ -193,11 +193,11 @@ async def on_member_join(member):
 	if channel is not None:
 		embed = discord.Embed(
 			title = f"Welcome {member.name}", 
-			description = f"Aap aayen hai {member.guild.name} ki bagiyaaan mein,\n \
-							phool khile hai gulshan gulshan \n \
-							Phulllll khile hai gulshan gulshaannnnnnnnn\n \
-							Phool khile hai iss bagiyaan mein\n \
-							Aap aayein hai gulshan gulshan\n "
+			description = f"Aap aayen hai {member.guild.name} ki bagiyaaan mein"
+							"phool khile hai gulshan gulshan"
+							"Phulllll khile hai gulshan gulshaannnnnnnnn"
+							"Phool khile hai iss bagiyaan mein"
+							"Aap aayein hai gulshan gulshan"
 		) 
 		embed.set_thumbnail(url = member.guild.icon_url)
 		embed.set_image(url = member.avatar_url)

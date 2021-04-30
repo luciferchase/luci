@@ -138,6 +138,7 @@ class Core(commands.Cog):
 				log.error("Cannot change bot name")
 				await ctx.send("Cannot change bot avatar. Check logs.")
 
+# Not in use though
 class Help(commands.Cog):
 	"""
 	Sends this help message

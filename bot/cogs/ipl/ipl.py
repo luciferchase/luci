@@ -227,27 +227,39 @@ class IPL(commands.Cog):
 			# {username: points}
 			current_standings[username] = user[1]
 
-		embed_string_name = ""
-		embed_string_points = ""
-		for user in current_standings:
-			embed_string_name += f"\n{user}\n"
-			embed_string_points += f"\n: {current_standings[user]}\n"
+		# Sort the the standings according to their value
+		current_standings = dict(sorted(current_standings.items(), key = lambda item: item[1], reverse = True))
+		leaderboard = [user for user in current_standings]
 
 		embed = discord.Embed(
-			color = 0x07f223,							# Green
-			title = "Sattebaaz Championship",
+			title = "Current Standings"
 		)
-		embed.add_field(
-			name = "Current Standings",
-			value = f"```\n{embed_string_name}```",
-			inline = True
-		)
-		embed.add_field(
-			name = "Points",
-			value = f"```\n{embed_string_points}```",
-			inline = True
-		)
-		embed.set_thumbnail(url = self.ipl_logo)
+
+		# Get guild icon url
+		guild = await self.bot.fetch_guild(738731754885480468)
+		embed.set_thumbnail(url = guild.icon_url)
+
+		for index in len(leaderboard):
+			if (index == 0):
+				embed.add_field(
+					name = f":first_place: {leaderboard[index]}",
+					value = f"Points: {current_standings[leaderboard[index]]}"
+				)
+			elif (index == 1):
+				embed.add_field(
+					name = f":second_place: {leaderboard[index]}",
+					value = f"Points: {current_standings[leaderboard[index]]}"
+				)
+			elif (index == 2):
+				embed.add_field(
+					name = f":third_place: {leaderboard[index]}",
+					value = f"Points: {current_standings[leaderboard[index]]}"
+				)
+			else:
+				embed.add_field(
+					name = f"➡️ {leaderboard[index]}",
+					value = f"Points: {current_standings[leaderboard[index]]}"
+				)
 		return embed
 
 	@commands.command()
