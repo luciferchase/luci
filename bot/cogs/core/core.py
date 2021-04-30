@@ -116,10 +116,10 @@ class Core(commands.Cog):
 		"""Change bot name.
 		   Syntax: `luci botname <name>`
 		"""
-		log = logging.getLogger("botstatus")
+		log = logging.getLogger("botname")
 		try:
 			await self.bot.user.edit(username = name)
-			await ctx.send("Bot name changed")
+			await ctx.send("Bot name changed successfully")
 		except:
 			log.error("Cannot change bot name")
 			await ctx.send("Error. Bot name not changed. Check logs.")
@@ -127,5 +127,13 @@ class Core(commands.Cog):
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def botavatar(self, ctx):
+		"""Change bot name.
+		"""
+		log = logging.getLogger("botavatar")
 		with open("/app/bot/avatar.png", "rb") as avatar:
-			await self.bot.user.edit(avatar = avatar)
+			try:
+				await self.bot.user.edit(avatar = avatar)
+				await ctx.send("Bot avatar chaned successfully")
+			except:
+				log.error("Cannot change bot name")
+				await ctx.send("Error. Bot name not changed. Check logs.")

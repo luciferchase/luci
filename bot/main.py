@@ -113,6 +113,13 @@ async def on_ready():
 	dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 	cursor = dbcon.cursor()
 
+	# Set hypesquad house of the bot
+	try:
+		await bot.user.edit(house = discord.HypeSquadHouse.bravery)
+	except:
+		log.error("Cannet set hypesquad house")
+
+	# Change botstatus from datatbase
 	try:
 		cursor.execute("SELECT * FROM botstatus")
 		data = cursor.fetchall()
