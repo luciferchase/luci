@@ -125,7 +125,7 @@ class IPL(commands.Cog):
 				name = "Match 2", 
 				value = f'{last_match_details_2["team-1"]} \nvs \
 				\n{last_match_details_2["team-2"]}',
-				inline = True
+				inline = False
 			)
 			embed.add_field(
 				name = "Winner",
