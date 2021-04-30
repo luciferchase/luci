@@ -123,8 +123,8 @@ class IPL(commands.Cog):
 		if (last_match_details_2 != False):
 			embed.add_field(
 				name = "Match 2", 
-				value = f'{next_match_details_2["team-1"]} \nvs \
-				\n{next_match_details_2["team-2"]}',
+				value = f'{last_match_details_2["team-1"]} \nvs \
+				\n{last_match_details_2["team-2"]}',
 				inline = False
 			)
 			embed.add_field(
