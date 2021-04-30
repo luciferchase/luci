@@ -131,9 +131,11 @@ class Core(commands.Cog):
 		"""
 		log = logging.getLogger("botavatar")
 		with open("/app/bot/avatar.png", "rb") as avatar:
-			try:
-				await self.bot.user.edit(avatar = avatar)
-				await ctx.send("Bot avatar chaned successfully")
-			except:
-				log.error("Cannot change bot name")
-				await ctx.send("Error. Bot name not changed. Check logs.")
+			# try:
+			# 	await self.bot.user.edit(avatar = avatar)
+			# 	await ctx.send("Bot avatar chaned successfully")
+			# except:
+			# 	log.error("Cannot change bot name")
+			# 	await ctx.send("Cannot change bot avatar. Check logs.")
+			await self.bot.user.edit(avatar = avatar)
+			await ctx.send("Bot avatar chaned successfully")

@@ -117,7 +117,7 @@ async def on_ready():
 	try:
 		await bot.user.edit(house = discord.HypeSquadHouse.bravery)
 	except:
-		log.error("Cannet set hypesquad house")
+			log.error("Cannot set hypesquad house")
 
 	# Change botstatus from datatbase
 	try:
