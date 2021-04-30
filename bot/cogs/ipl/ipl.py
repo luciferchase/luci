@@ -403,7 +403,7 @@ class IPL(commands.Cog):
 		self.dbcon.commit()
 
 		query = """CREATE TABLE IF NOT EXISTS standings(
-				user		BIGINT	NOT NULL,
+				user_id		BIGINT	NOT NULL,
 				points		INT 	NOT NULL)"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
