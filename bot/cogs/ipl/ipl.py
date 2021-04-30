@@ -99,8 +99,7 @@ class IPL(commands.Cog):
 		)
 
 		# If there is a second match on that day
-		print(next_match_details_2)
-		if (next_match_details_2):
+		if (next_match_details_2 != False):
 			embed.add_field(
 				name = "Match 2", 
 				value = f'{next_match_details_2["team-1"]} \nvs \
@@ -121,7 +120,7 @@ class IPL(commands.Cog):
 		image_url = self.image_url[last_match_details["winner_team"]]
 
 		# If there was another match yesterday
-		if (last_match_details_2):
+		if (last_match_details_2 != False):
 			embed.add_field(
 				name = "Match 2", 
 				value = f'{next_match_details_2["team-1"]} \nvs \
