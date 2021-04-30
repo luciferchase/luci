@@ -36,7 +36,7 @@ class IPL(commands.Cog):
 		self.ipl_logo = "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg"
 
 	# Update details of last match and upcoming match
-	def update(self):
+	def fetch_matches(self):
 		# Fetch matches from website
 		params = {"apikey": self.apikey}
 		response = requests.get(url = self.api_matches, params = params).json()
@@ -85,7 +85,8 @@ class IPL(commands.Cog):
 		"""Get info about last match and upcoming matches"""
 
 		# Fetch details first
-		last_match_details, last_match_details_2, next_match_details, next_match_details_2 = self.update()
+		last_match_details, last_match_details_2, \
+		next_match_details, next_match_details_2 = self.fetch_matches()
 
 		embed = discord.Embed(
 			color = 0x25dbf4,					# Blue
@@ -140,11 +141,15 @@ class IPL(commands.Cog):
 		await ctx.send(embed = embed)
 
 	async def fetch_score(self, match_details):
+		# Set up params
 		params = {"apikey": self.apikey, "unique_id": match_details["unique_id"]}
 		response = requests.get(url = self.api_score, params = params)
 		data = response.json()
 
+		# If the First Match too hasn't started
 		if (data["matchStarted"] == False):
+
+			# Send a cute dog image/gif
 			dog_api = "https://api.thedogapi.com/v1/images/search"
 			response_dog = requests.get(dog_api).json()[0]
 
@@ -158,7 +163,8 @@ class IPL(commands.Cog):
 			)
 			embed.set_image(url = response_dog["url"])
 			return embed
-		
+
+		# Differentiate between the first team and the second team		
 		index_v = data["score"].find("v")
 		if (data["score"][-1] != "*"):
 			current_batting = data["team-1"]
@@ -187,15 +193,66 @@ class IPL(commands.Cog):
 	async def score(self, ctx):
 		"""See live score"""
 
-		last_match_details, last_match_details_2, next_match_details, next_match_details_2 = self.update()
+		last_match_details, last_match_details_2, \
+		next_match_details, next_match_details_2 = self.fetch_score()
 
+		# Check if there is second match
 		if (next_match_details_2 != False):
+			# If the second match has indeed started
 			if (next_match_details_2["matchStarted"] != False):
 				match_details = next_match_details_2
-			else:
-				match_details = next_match_details_2
+
+		# Else in all other cases go with the first match of the day
 		else:
 			match_details = next_match_details
 
 		embed = await self.fetch_score(match_details)
+		await ctx.send(embed = embed)
+
+	async def fetch_standings(self):
+		# Fetch standings from the database
+
+		self.cursor.execute("SELECT * FROM STANDINGS")
+		data = self.cursor.fetchall()
+
+		current_standings = {}
+
+		for user in data:
+			# user = (user, points)
+			# Fetch username
+			user_info = await self.bot.get_user(user[0])
+			username = user_info.name
+
+			# Make a dictionary of the form
+			# {username: points}
+			current_standings[username] = user[1]
+
+		embed_string_name = ""
+		embed_string_points = ""
+		for user in current_standings:
+			embed_string_name += f"\n{user}\n"
+			embed_string_points += f"\n : \t {current_standings[user]}\n"
+
+		embed = discord.Embed(
+			color = 0x07f223,							# Green
+			title = "Sattebaaz Championship",
+		)
+		embed.add_field(
+			name = "Current Standings",
+			value = f"```\n{embed_string_name}```",
+			inline = True
+		)
+		embed.add_field(
+			name = "Points",
+			value = f"```\n{embed_string_points}```",
+			inline = True
+		)
+		embed.set_thumbnail(url = self.ipl_logo)
+		return embed
+
+	@commands.command()
+	async def standings(self, ctx):
+		"""Get current standings of Sattebaaz Championship"""
+
+		embed = await self.fetch_standings()
 		await ctx.send(embed = embed)
