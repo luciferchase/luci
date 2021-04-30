@@ -7,3 +7,4 @@ APScheduler
 aiohttp
 bs4
 psycopg2-binary
+discord-pretty-help

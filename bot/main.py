@@ -1,6 +1,7 @@
 # Install all dependencies
 import discord
 from discord.ext import commands
+from pretty_help import DefaultMenu, PrettyHelp
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -29,7 +30,8 @@ intents = discord.Intents.all()
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-bot = commands.Bot(command_prefix = "luci ", case_insensitive = True, intents = intents)
+bot = commands.Bot(command_prefix = ["luci ", "Luci "], case_insensitive = True, 
+	intents = intents, help_command = PrettyHelp())
 
 logging.basicConfig(level = logging.WARNING)
 
@@ -112,12 +114,6 @@ async def on_ready():
 
 	dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 	cursor = dbcon.cursor()
-
-	# Set hypesquad house of the bot
-	try:
-		await bot.user.edit(house = discord.HypeSquadHouse.bravery)
-	except:
-			log.error("Cannot set hypesquad house")
 
 	# Change botstatus from datatbase
 	try:
