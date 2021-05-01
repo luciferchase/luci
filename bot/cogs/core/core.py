@@ -8,7 +8,12 @@ import psycopg2
 class Core(commands.Cog):
 	"""Core commands. Most of them are owner only."""
 	def __init__(self, bot):
-		self.bot = bot	
+		self.bot = bot
+		DATABASE_URL = os.environ["DATABASE_URL"]
+
+		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
+		self.cursor = self.dbcon.cursor()
+	
 
 	@commands.command()
 	async def ping(self, ctx) :
@@ -20,18 +25,13 @@ class Core(commands.Cog):
 	async def sql(self, ctx, *query):
 		log = logging.getLogger("sql")
 
-		DATABASE_URL = os.environ["DATABASE_URL"]
-
-		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
-		cursor = dbcon.cursor()
-
 		query = " ".join(query)
 		print("Executing query:", query)
 		try:
-			cursor.execute(query)
+			self.cursor.execute(query)
 			await ctx.send("Query executed successfully")
 			try:
-				dbcon.commit()
+				self.dbcon.commit()
 			except:
 				pass
 		except:
@@ -39,7 +39,7 @@ class Core(commands.Cog):
 			await ctx.send("Query not executed. Check logs.")
 
 		try:
-			data = cursor.fetchall()
+			data = self.cursor.fetchall()
 			print(data)
 			await ctx.send(data)
 		except:
@@ -57,25 +57,20 @@ class Core(commands.Cog):
 		status, activity, *text = query
 		text = " ".join(text)
 
-		DATABASE_URL = os.environ["DATABASE_URL"]
-
-		dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
-		cursor = dbcon.cursor()
-
 		query = """CREATE TABLE IF NOT EXISTS botstatus(
 				status		TEXT	NOT NULL,
 				activity 	TEXT,
 				name 		TEXT)"""
-		cursor.execute(query)
-		dbcon.commit()
+		self.cursor.execute(query)
+		self.dbcon.commit()
 
-		cursor.execute("DELETE FROM botstatus")
-		dbcon.commit()
+		self.cursor.execute("DELETE FROM botstatus")
+		self.dbcon.commit()
 
 		query = f"""INSERT INTO botstatus VALUES
 				('{status}', '{activity}', '{text}')"""
-		cursor.execute(query)
-		dbcon.commit()
+		self.cursor.execute(query)
+		self.dbcon.commit()
 
 		if (status[0] == "o"):
 			status_class = discord.Status.online

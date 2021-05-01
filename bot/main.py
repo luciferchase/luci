@@ -94,11 +94,11 @@ async def schedule_ipl():
 	embed_id = await self.predict_code(next_match_details)
 
 	# Update database
-	self.cursor.execute("DELETE FROM predict")
+	cursor.execute("DELETE FROM predict")
 	query = """INSERT INTO predict VALUES
 			({})""".format(embed_id)
-	self.cursor.execute(query)
-	self.dbcon.commit()
+	cursor.execute(query)
+	dbcon.commit()
 
 	# If there is a second match on that day
 	if (next_match_details_2 != False):
@@ -107,8 +107,8 @@ async def schedule_ipl():
 		# Update database
 		query = """INSERT INTO predict VALUES
 				({})""".format(embed_id)
-		self.cursor.execute(query)
-		self.dbcon.commit()
+		cursor.execute(query)
+		dbcon.commit()
 
 # Core Commands
 @bot.event	
