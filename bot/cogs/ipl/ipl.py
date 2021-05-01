@@ -232,7 +232,8 @@ class IPL(commands.Cog):
 		leaderboard = [user for user in current_standings]
 
 		embed = discord.Embed(
-			title = "Current Standings"
+			title = "Current Standings",
+			color = 0x07f223
 		)
 		embed.set_thumbnail(url = self.ipl_logo)
 
@@ -342,12 +343,12 @@ class IPL(commands.Cog):
 
 		# Update points
 		for user in users:
+			print(user)
 			# First convert tuple into list
 			user = list(user)
 			if (user[0] in winners):
 				user[1] += 10
 
-		print(users)
 		# Update database
 		self.cursor.execute("DELETE FROM standings")
 		self.dbcon.commit()
