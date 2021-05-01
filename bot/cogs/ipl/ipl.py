@@ -367,7 +367,7 @@ class IPL(commands.Cog):
 		# Get last embed id
 		self.cursor.execute("SELECT * FROM predict")
 		data = self.cursor.fetchall()
-		embed_id = data[0]
+		embed_id = data[0][0]
 
 		winners = await self.update_points(last_match_details, embed_id)
 

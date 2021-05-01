@@ -230,6 +230,8 @@ async def on_message_delete(message):
 		mssg, author = message.content, message.author.id
 		data.append((mssg, author))
 
+	print(data)
+
 	# Update database
 	cursor.execute("DELETE FROM snipe")
 	cursor.execute("INSERT INTO snipe VALUES {}".format(data))
