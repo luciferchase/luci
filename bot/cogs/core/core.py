@@ -18,7 +18,7 @@ class Core(commands.Cog):
 	@commands.command()
 	async def ping(self, ctx) :
 		"""Ping Pong"""
-		await ctx.send(f"🏓 Pong with {str(round(bot.latency, 3))}")
+		await ctx.send(f"🏓 Pong with {str(round(self.bot.latency, 3))}")
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
@@ -67,10 +67,11 @@ class Core(commands.Cog):
 		self.cursor.execute("DELETE FROM botstatus")
 		self.dbcon.commit()
 
-		query = f"""INSERT INTO botstatus VALUES
-				('{status}', '{activity}', '{text}')"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
+		try:
+			query = f"""INSERT INTO botstatus VALUES
+					('{status}', '{activity}', '{text}')"""
+			self.cursor.execute(query)
+			self.dbcon.commit()
 
 		if (status[0] == "o"):
 			status_class = discord.Status.online
