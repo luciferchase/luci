@@ -342,19 +342,21 @@ class IPL(commands.Cog):
 			winners = team_2
 
 		# Update points
-		for user in users:
-			# First convert tuple into list
-			user = list(user)
+		for i in range(len(users)):
+			user = users[i]
 			if (user[0] in winners):
+				# First convert tuple into list
+				user = list(user)
 				user[1] += 10
-				print(user)
-
+				# Update main list
+				users[i] = tuple(user)
+				
 		# Update database
 		self.cursor.execute("DELETE FROM standings")
 		self.dbcon.commit()
 
 		for user in users:
-			self.cursor.execute("INSERT INTO standings VALUES {}".format(tuple(user)))
+			self.cursor.execute("INSERT INTO standings VALUES {}".format(user))
 			self.dbcon.commit()
 
 		return winners
