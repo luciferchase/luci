@@ -21,9 +21,6 @@ class IPL(commands.Cog):
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
-		self.cursor.execute("DELETE FROM predict")
-		self.cursor.execute("INSERT INTO predict VALUES (837517369675874314)")
-
 		# Links for image url of all the teams and the ipl logo
 		self.image_url = {
 			"Kolkata Knight Riders": "https://hdsportsnews.com/wp-content/uploads/2020/01/kolkata-knight-riders-kkr-2020-team-squad-players-live-score-time-table-point-table-schedule-auction-match-fixture-venue-highlight-1280x720.jpg",			
@@ -373,7 +370,7 @@ class IPL(commands.Cog):
 
 		# If there was another match yesterday
 		if (last_match_details_2 != False):
-			embed_id = data[1]
+			embed_id = data[1][0]
 			second_winners = await self.update_points(last_match_details_2, embed_id)
 
 		embed = discord.Embed(
@@ -382,7 +379,7 @@ class IPL(commands.Cog):
 		)
 		embed.add_field(
 			name = "Last match was won by ...",
-			value = self.last_match_details["winner_team"],
+			value = last_match_details["winner_team"],
 			inline = True
 		)
 		embed.add_field(
@@ -396,7 +393,7 @@ class IPL(commands.Cog):
 		if (last_match_details_2 != False):
 			embed.add_field(
 				name = "Second match was won by ...",
-				value = self.last_match_details_2["winner_team"],
+				value = last_match_details_2["winner_team"],
 				inline = True
 			)
 			embed.add_field(
