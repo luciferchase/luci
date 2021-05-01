@@ -226,6 +226,13 @@ async def on_message_delete(message):
 		# Add new message to the top of the stack
 		mssg, author = message.content, message.author.id
 		data.append((mssg, author))
+	else:
+		mssg, author = message.content, message.author.id
+		data.append((mssg, author))
+
+	# Update database
+	cursor.execute("DELETE FROM snipe")
+	cursor.execute("INSERT INTO snipe VALUES {}".format(data))
 
 # Run the bot
 bot.run(BOT_TOKEN)

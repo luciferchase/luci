@@ -142,7 +142,7 @@ class Core(commands.Cog):
 				await ctx.send("Cannot change bot avatar. Check logs.")
 
 	@commands.command()
-	async def snipe(self, ctx, message, number = 1):
+	async def snipe(self, ctx, number = 1):
 		# Fetch last deleted message from database
 		self.cursor.execute("SELECT * FROM snipe")
 		data = self.cursor.fetchall()
@@ -153,11 +153,11 @@ class Core(commands.Cog):
 		# Fetch deleted message author
 		author = await self.bot.get_user(data[number[1]])
 		embed = discord.Embed(description = data[number[0]])
-		embed.set_footer(
-			text = f"Asked by {message.author.name}#{message.author.discriminator}", 
-			icon_url = message.author.avatar_url
-		)
-		embed.set_author(name= f"<@{author}>")
+		# embed.set_footer(
+		# 	text = f"Asked by {message.author.name}#{message.author.discriminator}", 
+		# 	icon_url = message.author.avatar_url
+		# )
+		embed.set_author(name = f"<@{author.mention}>")
 		await message.channel.send(embed = embed)
 
 # Not in use though

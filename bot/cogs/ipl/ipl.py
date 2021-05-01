@@ -21,6 +21,9 @@ class IPL(commands.Cog):
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
+		self.cursor.execute("DELETE FROM predict")
+		self.cursor.execute("INSERT INTO predict VALUES (837517369675874314)")
+
 		# Links for image url of all the teams and the ipl logo
 		self.image_url = {
 			"Kolkata Knight Riders": "https://hdsportsnews.com/wp-content/uploads/2020/01/kolkata-knight-riders-kkr-2020-team-squad-players-live-score-time-table-point-table-schedule-auction-match-fixture-venue-highlight-1280x720.jpg",			
