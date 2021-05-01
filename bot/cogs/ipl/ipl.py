@@ -277,6 +277,9 @@ class IPL(commands.Cog):
 		# Set Channel
 		channel = self.bot.get_channel(756701639544668160)
 
+		allowed_mentions = discord.AllowedMentions(everyone = True)
+		await channel.send(content = "@everyone", allowed_mentions = allowed_mentions)
+
 		embed = discord.Embed(
 			color = 0x19f0e2,						# Cyan
 			title = "Sattebaaz Championship",
@@ -350,7 +353,7 @@ class IPL(commands.Cog):
 				user[1] += 10
 				# Update main list
 				users[i] = tuple(user)
-				
+
 		# Update database
 		self.cursor.execute("DELETE FROM standings")
 		self.dbcon.commit()
