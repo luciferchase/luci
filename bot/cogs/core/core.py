@@ -13,8 +13,6 @@ class Core(commands.Cog):
 
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
-		self.dbcon.rollback()
-	
 
 	@commands.command()
 	async def ping(self, ctx) :

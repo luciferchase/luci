@@ -29,8 +29,10 @@ intents = discord.Intents.all()
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-bot = commands.Bot(command_prefix = ["luci ", "Luci "], case_insensitive = True, 
-	intents = intents, help_command = PrettyHelp(color = 0xf34949, sort_commands = True))
+bot = commands.Bot(command_prefix = commands.when_mentioned_or["luci ", "Luci "], case_insensitive = True, 
+	intents = intents, self_bot = False, owner_id = 707557256220115035, strip_after_prefix = True, 
+	help_command = PrettyHelp(color = 0xf34949, sort_commands = True),
+	description = "A General-Purpose Discord Bot Created by luciferchase#6310")
 
 # Set up logging
 logging.basicConfig(level = logging.WARNING)
@@ -210,7 +212,32 @@ async def on_member_join(member):
 		embed.set_image(url = member.avatar_url)
 		await channel.send(embed = embed)
 
-# Add last 5 message to database
+@bot.event
+async def on_member_remove(member):
+	channel = member.guild.system_channel
+		
+	if channel is not None:
+		embed = discord.Embed(
+			title = "Sed lyf",
+			description = f"{member.name} has left {member.guild.name} 🥺"
+		)
+		embed.set_thumbnail(url = member.guild.icon_url)
+		embed.set_image(url = member.avatar_url)
+		await channel.send(embed = embed)
+
+@bot.event
+async def on_invite_create(invite):
+	# Fetch dm id to me
+	dm = await create_dm(707557256220115035)
+
+	embed = discord.Embed(
+		title = f"Invite Created by {invite.inviter}",
+		description = f"Channel: {invite.channel}"
+						f"Used so far: {invite.uses}"
+	)
+	await dm.send(embed = embed)
+
+# Add last 5 deleted message to database
 @bot.event
 async def on_message_delete(message):
 	query = """CREATE TABLE IF NOT EXISTS snipe(
@@ -223,6 +250,8 @@ async def on_message_delete(message):
 	cursor.execute("SELECT * FROM snipe")
 	data = cursor.fetchall()
 
+	print(message.content, message.author.id)
+
 	# Check if there are more than 5 messages in the database
 	if (len(data) >= 5):
 		# Remove the oldest message
@@ -234,8 +263,6 @@ async def on_message_delete(message):
 	else:
 		mssg, author = message.content, message.author.id
 		data.append((mssg, author))
-
-	print(data)
 
 	# Update database
 	cursor.execute("DELETE FROM snipe")
