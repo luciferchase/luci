@@ -13,6 +13,7 @@ class Core(commands.Cog):
 
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
+		self.dbcon.rollback()
 	
 
 	@commands.command()
@@ -72,6 +73,8 @@ class Core(commands.Cog):
 					('{status}', '{activity}', '{text}')"""
 			self.cursor.execute(query)
 			self.dbcon.commit()
+		except:
+			await ctx.send("Cannot add it status to database. Check logs.")
 
 		if (status[0] == "o"):
 			status_class = discord.Status.online
