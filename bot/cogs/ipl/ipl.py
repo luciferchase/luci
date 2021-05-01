@@ -343,9 +343,11 @@ class IPL(commands.Cog):
 
 		# Update points
 		for user in users:
-			print(user)
 			# First convert tuple into list
 			user = list(user)
+			print(user)
+			print(user[0])
+			print(user[0] in winners)
 			if (user[0] in winners):
 				user[1] += 10
 
