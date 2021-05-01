@@ -339,7 +339,7 @@ class IPL(commands.Cog):
 			winners = team_1
 		else:
 			winners = team_2
-
+		print(winners)
 		# Update points
 		for user in users:
 			# First convert tuple into list
@@ -406,7 +406,7 @@ class IPL(commands.Cog):
 				inline = False
 			)
 
-		embed.set_image(url = self.image_url[self.last_match_details["winner_team"]])
+		embed.set_image(url = self.image_url[last_match_details["winner_team"]])
 		embed.set_thumbnail(url = self.ipl_logo)
 		return embed
 
