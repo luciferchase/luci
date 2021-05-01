@@ -237,32 +237,15 @@ class IPL(commands.Cog):
 		)
 		embed.set_thumbnail(url = self.ipl_logo)
 
+		emojies = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣"]
+
 		# Add fields to the embed
 		for index in range(len(leaderboard)):
-			if (index == 0):
-				embed.add_field(
-					name = f":first_place: {leaderboard[index]}",
-					value = f"Points: {current_standings[leaderboard[index]]}",
-					inline = False
-				)
-			elif (index == 1):
-				embed.add_field(
-					name = f":second_place: {leaderboard[index]}",
-					value = f"Points: {current_standings[leaderboard[index]]}",
-					inline = False
-				)
-			elif (index == 2):
-				embed.add_field(
-					name = f":third_place: {leaderboard[index]}",
-					value = f"Points: {current_standings[leaderboard[index]]}",
-					inline = False
-				)
-			else:
-				embed.add_field(
-					name = f"➡️ {leaderboard[index]}",
-					value = f"Points: {current_standings[leaderboard[index]]}",
-					inline = False
-				)
+			embed.add_field(
+				name = f"{emojies[index]} {leaderboard[index]}",
+				value = f"Points: {current_standings[leaderboard[index]]}",
+				inline = False
+			)
 		return embed
 
 	@commands.command()
@@ -283,8 +266,7 @@ class IPL(commands.Cog):
 		)
 		embed.add_field(
 			name = "Who do you think will win today's match?",
-			value = f':regional_indicator_a: {match_details["team-1"]}\n\
-			:regional_indicator_b: {match_details["team-2"]}'
+			value = f':regional_indicator_a: {match_details["team-1"]}\n:regional_indicator_b: {match_details["team-2"]}'
 		)
 		embed.set_thumbnail(url = self.ipl_logo)
 
