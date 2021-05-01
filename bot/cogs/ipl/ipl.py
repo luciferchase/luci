@@ -339,7 +339,7 @@ class IPL(commands.Cog):
 			winners = team_1
 		else:
 			winners = team_2
-		print(winners)
+
 		# Update points
 		for user in users:
 			# First convert tuple into list
@@ -347,6 +347,7 @@ class IPL(commands.Cog):
 			if (user[0] in winners):
 				user[1] += 10
 
+		print(users)
 		# Update database
 		self.cursor.execute("DELETE FROM standings")
 		self.dbcon.commit()
