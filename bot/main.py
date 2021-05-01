@@ -33,7 +33,14 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 bot = commands.Bot(command_prefix = ["luci ", "Luci "], case_insensitive = True, 
 	intents = intents, help_command = PrettyHelp(color = 0xf34949, sort_commands = True))
 
+# Set up logging
 logging.basicConfig(level = logging.WARNING)
+
+# Set up database
+DATABASE_URL = os.environ["DATABASE_URL"]
+
+dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
+cursor = dbcon.cursor()
 
 # Register Cogs
 bot.add_cog(aki.Aki(bot))
@@ -112,11 +119,6 @@ async def on_ready():
 
 	log = logging.getLogger("on_ready")
 
-	DATABASE_URL = os.environ["DATABASE_URL"]
-
-	dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
-	cursor = dbcon.cursor()
-
 	# Change botstatus from datatbase
 	try:
 		cursor.execute("SELECT * FROM botstatus")
@@ -192,17 +194,40 @@ async def on_member_join(member):
 	channel = member.guild.system_channel
 		
 	if channel is not None:
+		await channel.send(f"@{member.mention}")
 		embed = discord.Embed(
 			title = f"Welcome {member.name}", 
-			description = f"Aap aayen hai {member.guild.name} ki bagiyaaan mein"
-							"phool khile hai gulshan gulshan"
-							"Phulllll khile hai gulshan gulshaannnnnnnnn"
-							"Phool khile hai iss bagiyaan mein"
+			description = f"Aap aayen hai {member.guild.name} ki bagiyaaan mein \n"
+							"phool khile hai gulshan gulshan \n"
+							"Phulllll khile hai gulshan gulshaannnnnnnnn \n"
+							"Phool khile hai iss bagiyaan mein \n"
 							"Aap aayein hai gulshan gulshan"
 		) 
 		embed.set_thumbnail(url = member.guild.icon_url)
 		embed.set_image(url = member.avatar_url)
 		await channel.send(embed = embed)
+
+# Add last 5 message to database
+@bot.event
+async def on_message_delete(message):
+	query = """CREATE TABLE IF NOT EXISTS snipe(
+			mssg TEXT NOT NULL,
+			author	TEXT NOT NULL)"""
+	cursor.execute(query)
+	dbcon.commit()
+
+	# FIFO - Removes the first message from end and adds the new message to the top of the stack
+	cursor.execute("SELECT * FROM snipe")
+	data = cursor.fetchall()
+
+	# Check if there are more than 5 messages in the database
+	if (len(data) >= 5):
+		# Remove the oldest message
+		del data[0]
+
+		# Add new message to the top of the stack
+		mssg, author = message.content, message.author.id
+		data.append((mssg, author))
 
 # Run the bot
 bot.run(BOT_TOKEN)
