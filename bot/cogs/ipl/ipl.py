@@ -367,6 +367,9 @@ class IPL(commands.Cog):
 		embed_id = data[0][0]
 
 		winners = await self.update_points(last_match_details, embed_id)
+		for i in range(len(winners)):
+			user = self.bot.get_user(winners[i])
+			winners[i] = user
 
 		# If there was another match yesterday
 		if (last_match_details_2 != False):
@@ -384,7 +387,7 @@ class IPL(commands.Cog):
 		)
 		embed.add_field(
 			name = "Winning sattebaaz",
-			value = "`{}`".format("\n".join(str(winner.name + "#" + winner.discriminator)\
+			value = "`{}`".format("\n".join((winner.name + "#" + winner.discriminator)\
 				for winner in winners)),
 			inline = False
 		)
