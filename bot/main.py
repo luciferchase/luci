@@ -91,6 +91,11 @@ async def schedule_ipl():
 	# Make polls for todays match
 	*_, next_match_details, next_match_details_2 = IPL.fetch_matches()
 
+	channel = self.bot.get_channel(756701639544668160)
+
+	allowed_mentions = discord.AllowedMentions(everyone = True)
+	await channel.send(content = "@everyone", allowed_mentions = allowed_mentions)
+
 	embed_id = await self.predict_code(next_match_details)
 
 	# Update database

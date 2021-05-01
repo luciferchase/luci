@@ -127,7 +127,7 @@ class Core(commands.Cog):
 		"""Change bot name.
 		"""
 		log = logging.getLogger("botavatar")
-		with open(f"/app/bot/avatar{which}.png", "rb") as avatar:
+		with open(f"/app/bot/avatars/avatar{which}.png", "rb") as avatar:
 			avatar_image = avatar.read()
 			try:
 				await self.bot.user.edit(avatar = avatar_image)

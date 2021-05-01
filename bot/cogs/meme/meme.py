@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-import requests
+import aiohttp
 import json
 import random
 import logging
@@ -11,37 +11,34 @@ class Meme(commands.Cog):
 	""" Get memes"""
 
 	# Different func so that I could schedule it
-	async def meme_code(self, endpoint = ""):
+	async def meme_code(self, endpoint = "dankmemes"):
 		log = logging.getLogger("meme")
 		dog_api = "https://api.thedogapi.com/v1/images/search"
 
 		api = "https://meme-api.herokuapp.com/gimme"
-		if (endpoint != ""):
-			response = requests.get(api + "/" + endpoint).json()
-		else:
-			response = requests.get(api + "/" + "dankmemes").json()
+		async with aiohttp.ClientSession() as session:
+			async with session.get(api) as response:
+				if response.status == 200:
+					response = response.json()
+					
+				else:
+					log.warning(f"Subreddit Requested: {endpoint}")
+					log.error(f'Status Code: {response["code"]}')
+					log.error(f'Error: {response["message"]}')
 
-		if ("code" in response):
-			log.warning(f"Subreddit Requested: {endpoint}")
-			log.error(f'Status Code: {response["code"]}')
-			log.error(f'Error: {response["message"]}')
-
-			response_dog = requests.get(dog_api).json()[0]
-
-			embed = discord.Embed(
-				title = "Bruh...",
-				color = 0xea1010						# Red
-			)
-			embed.add_field(
-				name = response["message"],
-				value = "Try again maybe? Anyway here is a cute doggo ❤"
-			)
-			embed.set_image(url = response_dog["url"])
-			return embed
-		
-		elif (response["nsfw"]):
-			response = requests.get(self.api)
-		
+					async with aiohttp.ClientSession() as error_session:
+						async with error_session.get(dog_api),json() as response:
+							embed = discord.Embed(
+								title = "Bruh...",
+								color = 0xea1010						# Red
+							)
+							embed.add_field(
+								name = response["message"],
+								value = "Try again maybe? Anyway here is a cute doggo ❤"
+							)
+							embed.set_image(url = response_dog["url"])
+							return embed
+				
 		embed = discord.Embed(
 			color = 0x06f9f5,							# Blue-ish
 			title = response["title"],
