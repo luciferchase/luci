@@ -138,6 +138,12 @@ class Core(commands.Cog):
 		except:
 			pass
 
+	# Command to rollback to last transaction when there is a issue with psycopg2
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def rollback(self):
+		self.dbcon.rollback()
+
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def botname(self, ctx, name):
