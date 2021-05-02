@@ -49,7 +49,7 @@ bot.add_cog(photo.Photo())
 # bot.add_cog(testing.Testing())
 
 # Start scheduled commands
-scheduler = schedule_jobs.Scheduler().schedule()
+scheduler = schedule_jobs.Scheduler(bot).schedule()
 scheduler.start()
 
 # Run the bot
