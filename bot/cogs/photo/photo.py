@@ -13,6 +13,10 @@ class Photo(commands.Cog):
 
 	def __init__(self):
 		self.log = logging.getLogger("red.cogsbylucifer.photo")
+
+		self.unsplash_api = "https://api.unsplash.com"
+		self.bing_api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-IN"
+
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 		self.cat_api = "https://api.thecatapi.com/v1/images/search"
 		self.fox_api = "https://randomfox.ca/floof/"
@@ -23,13 +27,12 @@ class Photo(commands.Cog):
 
 		self.unsplash_client_id = os.getenv("UNSPLASH_API_KEY")
 	
-	@commands.command()
+	@commands.command(aliases = ["photu", "image", "img"])
 	async def photo(self, ctx, *query):
 		""" Get a photo from Unsplash. 
 			For eg. `luci photo messi`
 			Default to a random photo
 		"""
-		api = "https://api.unsplash.com"
 		endpoint_list = {
 			"search": "/search/photos",
 			"random": "/photos/random"
@@ -45,7 +48,7 @@ class Photo(commands.Cog):
 		else:
 			endpoint = endpoint_list["random"]
 
-		response = requests.get(url = api + endpoint, params = params)
+		response = requests.get(url = self.unsplash_api + endpoint, params = params)
 		data = response.json()
 
 		if (len(query) != 0):
@@ -90,6 +93,8 @@ class Photo(commands.Cog):
 				likes[photo["id"]] = photo["likes"]
 			
 			photo_info = [photo for photo in data["results"] if photo["id"] == max(likes)][0]
+
+		# In case there is no particular photo requested, get a random photo
 		else:
 			photo_info = data
 
@@ -120,9 +125,8 @@ class Photo(commands.Cog):
 	async def wallpaper(self, ctx):
 		""" Get Bing's daily wallpaper of the day
 		"""
-		api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-IN"
 
-		response = requests.get(api)
+		response = requests.get(self.bing_api)
 		data = response.json()
 
 		await ctx.send(data["images"][0]["title"])
@@ -131,12 +135,9 @@ class Photo(commands.Cog):
 		await wallpaper.add_reaction("❤️")
 		await wallpaper.add_reaction("👍")
 		await wallpaper.add_reaction("👎")
-		
-	@commands.command()
-	async def dog(self, ctx):
-		""" Get a random dog pic
-		"""
-		response = requests.get(self.dog_api).json()[0]
+
+	async def send_photo(self, api, ctx = commands.Context):
+		response = requests.get(api).json()[0]
 
 		embed = discord.Embed(
 			title = "Here is a cute doggo ❤",
@@ -144,81 +145,45 @@ class Photo(commands.Cog):
 		)
 		embed.set_image(url = response["url"])
 		await ctx.send(embed = embed)
-	
+			
+	@commands.command()
+	async def dog(self, ctx):
+		""" Get a random dog pic
+		"""
+		self.send_photo(self.dog_api)
+
 	@commands.command()
 	async def cat(self, ctx):
 		""" Get a random cat pic
 		"""
-		response = requests.get(self.cat_api).json()[0]
+		self.send_photo(self.cat_api)
 
-		embed = discord.Embed(
-			title = "Here is a cute cat ❤",
-			color = 0xf34949			# Red
-		)
-		embed.set_image(url = response["url"])
-		await ctx.send(embed = embed)
-	
 	@commands.command()
 	async def fox(self, ctx):
 		""" Get a random fox pic
 		"""
-		response = requests.get(self.fox_api).json()
-
-		embed = discord.Embed(
-			title = "Here is a cute fox ❤",
-			color = 0xf34949			# Red
-		)
-		embed.set_image(url = response["image"])
-		await ctx.send(embed = embed)
+		self.send_photo(self.fox_api)
 
 	@commands.command()
 	async def panda(self, ctx):
 		""" Get a random panda pic
 		"""
-		response = requests.get(self.panda_api).json()
-
-		embed = discord.Embed(
-			title = "Here is a cute panda ❤",
-			color = 0xf34949			# Red
-		)
-		embed.set_image(url = response["link"])
-		await ctx.send(embed = embed)
+		self.send_photo(self.panda_api)
 
 	@commands.command()
 	async def redpanda(self, ctx):
 		""" Get a random red panda pic
 		"""
-		response = requests.get(self.red_panda_api).json()
-
-		embed = discord.Embed(
-			title = "Here is a cute red panda ❤",
-			color = 0xf34949			# Red
-		)
-		embed.set_image(url = response["link"])
-		await ctx.send(embed = embed)
+		self.send_photo(self.red_panda_api)
 
 	@commands.command()
 	async def birb(self, ctx):
 		""" Get a random bird pic
 		"""
-		response = requests.get(self.birb_api).json()
-
-		embed = discord.Embed(
-			title = "Here is a cute birb ❤",
-			color = 0xf34949			# Red
-		)
-		embed.set_image(url = response["link"])
-		await ctx.send(embed = embed)
+		self.send_photo(self.birb_api)
 
 	@commands.command()
 	async def koala(self, ctx):
 		""" Get a random koala pic
 		"""
-		response = requests.get(self.koala_api).json()
-
-		embed = discord.Embed(
-			title = "Here is a cute koala ❤",
-			color = 0xf34949			# Red
-		)
-		embed.set_image(url = response["link"])
-		await ctx.send(embed = embed)
+		self.send_photo(self.koala_api)

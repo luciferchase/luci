@@ -9,20 +9,105 @@ class Core(commands.Cog):
 	"""Core commands. Most of them are owner only."""
 	def __init__(self, bot):
 		self.bot = bot
+
+		# Set up database
 		DATABASE_URL = os.environ["DATABASE_URL"]
 
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
+	# Core Commands
+	@commands.Cog.listener()	
+	async def on_ready(self):
+		print("Connected to discord")
+
+	@commands.Cog.listener()
+	async def on_member_join(self, member):
+		channel = member.guild.system_channel
+			
+		if channel is not None:
+			await channel.send(f"@{member.mention}")
+			
+			embed = discord.Embed(
+				title = f"Welcome {member.name}", 
+				description = f"Aap aayen hai {member.guild.name} ki bagiyaaan mein \n"
+								"phool khile hai gulshan gulshan \n"
+								"Phulllll khile hai gulshan gulshaannnnnnnnn \n"
+								"Phool khile hai iss bagiyaan mein \n"
+								"Aap aayein hai gulshan gulshan",
+				color = 0xf34949
+			) 
+			embed.set_thumbnail(url = member.guild.icon_url)
+			embed.set_image(url = member.avatar_url)
+			await channel.send(embed = embed)
+
+	@commands.Cog.listener()
+	async def on_member_remove(self, member):
+		channel = member.guild.system_channel
+			
+		if channel is not None:
+			embed = discord.Embed(
+				title = "Sed lyf",
+				description = f"{member.name} has left {member.guild.name} 🥺",
+				color = 0xf34949
+			)
+			embed.set_thumbnail(url = member.guild.icon_url)
+			embed.set_image(url = member.avatar_url)
+			await channel.send(embed = embed)
+
+	@commands.Cog.listener()
+	async def on_invite_create(self, invite):
+		# Fetch dm id to me
+		dm = await self.bot.create_dm(707557256220115035)
+
+		embed = discord.Embed(
+			title = f"Invite Created by {invite.inviter}",
+			description = f"Channel: {invite.channel}",
+			color = 0xf34949
+		)
+		await dm.send(embed = embed)
+
+	# Add last 5 deleted message to database
+	@commands.Cog.listener()
+	async def on_message_delete(self, message):
+		query = """CREATE TABLE IF NOT EXISTS snipe(
+				mssg TEXT NOT NULL,
+				author	TEXT NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
+		# FIFO - Removes the first message from end and adds the new message to the top of the stack
+		self.cursor.execute("SELECT * FROM snipe")
+		data = self.cursor.fetchall()
+
+		print(message.content, message.author.id)
+
+		# Check if there are more than 5 messages in the database
+		if (len(data) >= 5):
+			# Remove the oldest message
+			del data[0]
+
+			# Add new message to the top of the stack
+			mssg, author = message.content, message.author.id
+			data.append((mssg, author))
+		else:
+			mssg, author = message.content, message.author.id
+			data.append((mssg, author))
+
+		# Update database
+		self.cursor.execute("DELETE FROM snipe")
+		self.cursor.execute("INSERT INTO snipe VALUES {}".format(data))
+
 	@commands.command()
 	async def ping(self, ctx) :
 		"""Ping Pong"""
-		await ctx.send(f"🏓 Pong with {str(round(self.bot.latency, 3))}")
+		await ctx.send(f"🏓 Pong in {str(round(self.bot.latency, 3))} s")
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def sql(self, ctx, *query):
 		log = logging.getLogger("sql")
+		dm = await self.bot.create_dm(707557256220115035)
 
 		query = " ".join(query)
 		print("Executing query:", query)
@@ -40,74 +125,10 @@ class Core(commands.Cog):
 		try:
 			data = self.cursor.fetchall()
 			print(data)
-			await ctx.send(data)
+			await ctx.send("Data send in DM")
+			await dm.send(data)
 		except:
 			pass
-
-	@commands.is_owner()
-	@commands.command(hidden = True, aliases = ["status", "bs"])
-	async def botstatus(self, ctx, *query):
-		"""Set botstatus `luci <status> <activity> <text>`
-		`status` can be: online[o], idle[i], dnd[d]
-		`activity` can be : playing[p], listening[l], watching[w], competing[c]
-		"""
-		log = logging.getLogger("botstatus")
-
-		status, activity, *text = query
-		text = " ".join(text)
-
-		query = """CREATE TABLE IF NOT EXISTS botstatus(
-				status		TEXT	NOT NULL,
-				activity 	TEXT,
-				name 		TEXT)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-
-		self.cursor.execute("DELETE FROM botstatus")
-		self.dbcon.commit()
-
-		try:
-			query = f"""INSERT INTO botstatus VALUES
-					('{status}', '{activity}', '{text}')"""
-			self.cursor.execute(query)
-			self.dbcon.commit()
-		except:
-			await ctx.send("Cannot add it status to database. Check logs.")
-
-		if (status[0] == "o"):
-			status_class = discord.Status.online
-		elif (status[0] == "i"):
-			status_class = discord.Status.idle
-		elif (status[0] == "d"):
-			status_class = discord.Status.dnd
-
-		if (activity[0] == "p"):
-			activity_type = discord.Game(name = text)
-		elif (activity[0] == "l"):
-			activity_type = discord.Activity(
-					type = discord.ActivityType.listening,
-					name = text
-					)
-		elif (activity[0] == "w"):
-			activity_type = discord.Activity(
-					type = discord.ActivityType.watching,
-					name = text
-					)
-		elif (activity[0] == "c"):
-			activity_type = discord.Activity(
-					type = discord.ActivityType.competing,
-					name = text
-					)
-		try:
-			await self.bot.change_presence(
-				status = status_class, 
-				activity = activity_type
-				)
-			print("Activity set successfully")
-			await ctx.send("Activity set successfully")
-		except:
-			log.warning("Cannot set activity")
-			await ctx.send("Cannot set activity")
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
@@ -129,6 +150,7 @@ class Core(commands.Cog):
 		"""Change bot name.
 		"""
 		log = logging.getLogger("botavatar")
+		
 		with open(f"/app/bot/avatars/avatar{which}.png", "rb") as avatar:
 			avatar_image = avatar.read()
 			try:
@@ -150,12 +172,15 @@ class Core(commands.Cog):
 		# Fetch deleted message author
 		author = await self.bot.get_user(data[number[1]])
 		embed = discord.Embed(description = data[number[0]])
-		# embed.set_footer(
-		# 	text = f"Asked by {message.author.name}#{message.author.discriminator}", 
-		# 	icon_url = message.author.avatar_url
-		# )
+		embed.set_footer(
+			text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
+			icon_url = ctx.author.avatar_url
+		)
 		embed.set_author(name = f"<@{author.mention}>")
 		await message.channel.send(embed = embed)
+
+
+
 
 # Not in use though
 class Help(commands.Cog):
