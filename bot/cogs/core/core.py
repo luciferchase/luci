@@ -67,7 +67,7 @@ class Core(commands.Cog):
 	async def on_invite_create(self, invite):
 		# Create a dm with me
 		luci = self.bot.get_user(707557256220115035)
-		dm = await luci.create_dm(707557256220115035)
+		dm = await luci.create_dm()
 
 		embed = discord.Embed(
 			title = f"Invite Created by {invite.inviter}",
@@ -119,7 +119,7 @@ class Core(commands.Cog):
 		
 		# Create a dm with me
 		luci = self.bot.get_user(707557256220115035)
-		dm = await luci.create_dm(707557256220115035)
+		dm = await luci.create_dm()
 
 		query = " ".join(query)
 		print("Executing query:", query)
@@ -188,7 +188,7 @@ class Core(commands.Cog):
 		number -= 1
 
 		# Fetch deleted message author
-		author = await self.bot.get_user(data[number][1])
+		author = self.bot.get_user(data[number][1])
 		embed = discord.Embed(description = data[number][0])
 		embed.set_footer(
 			text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
