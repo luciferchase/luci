@@ -34,7 +34,7 @@ class Core(commands.Cog):
 		channel = member.guild.system_channel
 			
 		if channel is not None:
-			await channel.send(f"@{member.mention}")
+			await channel.send(member.mention)
 			
 			embed = discord.Embed(
 				title = f"Welcome {member.name}", 
