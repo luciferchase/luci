@@ -196,7 +196,7 @@ class Core(commands.Cog):
 		# 	icon_url = ctx.author.avatar_url
 		# )
 		# embed.set_author(name = f"<@{author.mention}>")
-		await message.channel.send(embed = embed)
+		await ctx.send(embed = embed)
 
 
 
