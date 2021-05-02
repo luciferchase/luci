@@ -13,7 +13,7 @@ import psycopg2
 from cogs.aki import aki
 from cogs.avatar import avatar
 from cogs.comics import comics
-from cogs.core import core
+from cogs.core import core, botstatus, schedule_jobs
 from cogs.conversationgames import conversationgames
 from cogs.ipl import ipl
 from cogs.math import math
@@ -37,8 +37,8 @@ logging.basicConfig(level = logging.WARNING)
 # Register Cogs
 bot.add_cog(aki.Aki(bot))
 bot.add_cog(avatar.Avatar())
+bot.add_cog(botstatus.Botstatus(bot))
 bot.add_cog(comics.Comics(bot))
-bot.add_cog(core.Botstatus(bot))
 bot.add_cog(core.Core(bot))
 # bot.add_cog(core.Help(bot))
 bot.add_cog(conversationgames.ConversationGames())
@@ -49,7 +49,7 @@ bot.add_cog(photo.Photo())
 # bot.add_cog(testing.Testing())
 
 # Start scheduled commands
-scheduler = core.schedule.Scheduler().schedule()
+scheduler = schedule_jobs.Scheduler().schedule()
 scheduler.start()
 
 # Run the bot
