@@ -27,7 +27,7 @@ class Core(commands.Cog):
 		await self.bot.wait_until_ready()
 
 		# Set status
-		await Botstatus().set_botstatus_on_ready()
+		await Botstatus(self.bot).set_botstatus_on_ready()
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
