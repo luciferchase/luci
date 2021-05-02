@@ -5,6 +5,8 @@ import logging
 import os
 import psycopg2
 
+from cogs.core.botstatus import Botstatus
+
 class Core(commands.Cog):
 	"""Core commands. Most of them are owner only."""
 	def __init__(self, bot):
@@ -20,6 +22,12 @@ class Core(commands.Cog):
 	@commands.Cog.listener()	
 	async def on_ready(self):
 		print("Connected to discord")
+
+		# Wait till bot has done all its internal stuff
+		await self.bot.wait_until_ready()
+
+		# Set status
+		await Botstatus().set_botstatus_on_ready()
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
