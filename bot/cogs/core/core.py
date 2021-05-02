@@ -65,8 +65,9 @@ class Core(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_invite_create(self, invite):
-		# Fetch dm id to me
-		dm = await self.bot.create_dm(707557256220115035)
+		# Create a dm with me
+		luci = self.bot.get_user(707557256220115035)
+		dm = await luci.create_dm(707557256220115035)
 
 		embed = discord.Embed(
 			title = f"Invite Created by {invite.inviter}",
@@ -88,8 +89,6 @@ class Core(commands.Cog):
 		self.cursor.execute("SELECT * FROM snipe")
 		data = self.cursor.fetchall()
 
-		print(message.content, message.author.id)
-
 		# Check if there are more than 5 messages in the database
 		if (len(data) >= 5):
 			# Remove the oldest message
@@ -104,7 +103,9 @@ class Core(commands.Cog):
 
 		# Update database
 		self.cursor.execute("DELETE FROM snipe")
-		self.cursor.execute("INSERT INTO snipe VALUES {}".format(data))
+
+		for i in data:
+			self.cursor.execute("INSERT INTO snipe VALUES {}".format(i))
 
 	@commands.command()
 	async def ping(self, ctx) :
@@ -115,7 +116,10 @@ class Core(commands.Cog):
 	@commands.command(hidden = True)
 	async def sql(self, ctx, *query):
 		log = logging.getLogger("sql")
-		dm = await self.bot.create_dm(707557256220115035)
+		
+		# Create a dm with me
+		luci = self.bot.get_user(707557256220115035)
+		dm = await luci.create_dm(707557256220115035)
 
 		query = " ".join(query)
 		print("Executing query:", query)
@@ -141,7 +145,7 @@ class Core(commands.Cog):
 	# Command to rollback to last transaction when there is a issue with psycopg2
 	@commands.is_owner()
 	@commands.command(hidden = True)
-	async def rollback(self):
+	async def rollback(self, ctx):
 		self.dbcon.rollback()
 
 	@commands.is_owner()
@@ -184,8 +188,8 @@ class Core(commands.Cog):
 		number -= 1
 
 		# Fetch deleted message author
-		author = await self.bot.get_user(data[number[1]])
-		embed = discord.Embed(description = data[number[0]])
+		author = await self.bot.get_user(data[number][1])
+		embed = discord.Embed(description = data[number][0])
 		embed.set_footer(
 			text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
 			icon_url = ctx.author.avatar_url

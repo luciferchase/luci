@@ -90,13 +90,13 @@ class Botstatus(commands.Cog):
 
 		activity_type = {
 			"p": discord.Game(name = data[2]),
-			"l": discord.Activity(type = discord.ActivityType.listening, name = data[2]),
-			"w": discord.Activity(type = discord.ActivityType.watching, name = data[2]),
-			"c": discord.Activity(type = discord.ActivityType.competing, name = data[2])
+			"l": discord.Activity(type = discord.ActivityType.listening, name = text),
+			"w": discord.Activity(type = discord.ActivityType.watching, name = text),
+			"c": discord.Activity(type = discord.ActivityType.competing, name = text)
 		}
 
 		try:
-			await self.bot.change_presence(status = status_class[status[0]], activity = activity_type[activity[0]])
+			await self.bot.change_presence(status = status_class[status], activity = activity_type[activity])
 			print("Activity set successfully")
 			await ctx.send("Activity set successfully")
 		except:

@@ -19,7 +19,7 @@ class Scheduler(commands.Cog):
 	
 	# Scheduled events
 	async def schedule_meme(self):
-		channel = self.bot.get_channel(738994505302409298)
+		channel = self.bot.get_channel(835113922172026881)
 		embed = await meme.Meme().meme_code()
 		meme_embed = await channel.send(embed = embed)
 		await meme_embed.add_reaction("😂")
@@ -100,7 +100,7 @@ class Scheduler(commands.Cog):
 		scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
 		# Add jobs to scheduler
-		scheduler.add_job(self.schedule_meme, CronTrigger.from_crontab("* * * * *")) # Every hour
+		scheduler.add_job(self.schedule_meme, CronTrigger.from_crontab("30 * * * *")) # Every hour
 
 		# Because we are 05:30 hrs ahead of GMT, every cron is set 05:30 hrs behind
 		scheduler.add_job(self.schedule_wallpaper, CronTrigger.from_crontab("30 02 * * *")) # Each day at 0800 hrs
