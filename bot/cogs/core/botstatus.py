@@ -89,7 +89,7 @@ class Botstatus(commands.Cog):
 		}
 
 		activity_type = {
-			"p": discord.Game(name = data[2]),
+			"p": discord.Game(name = text),
 			"l": discord.Activity(type = discord.ActivityType.listening, name = text),
 			"w": discord.Activity(type = discord.ActivityType.watching, name = text),
 			"c": discord.Activity(type = discord.ActivityType.competing, name = text)

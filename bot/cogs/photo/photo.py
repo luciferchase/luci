@@ -150,19 +150,19 @@ class Photo(commands.Cog):
 	async def dog(self, ctx):
 		""" Get a random dog pic
 		"""
-		self.send_photo(self.dog_api)
+		await self.send_photo(self.dog_api)
 
 	@commands.command()
 	async def cat(self, ctx):
 		""" Get a random cat pic
 		"""
-		self.send_photo(self.cat_api)
+		await self.send_photo(self.cat_api)
 
 	@commands.command()
 	async def fox(self, ctx):
 		""" Get a random fox pic
 		"""
-		self.send_photo(self.fox_api)
+		await self.send_photo(self.fox_api)
 
 	@commands.command()
 	async def panda(self, ctx):
@@ -174,16 +174,16 @@ class Photo(commands.Cog):
 	async def redpanda(self, ctx):
 		""" Get a random red panda pic
 		"""
-		self.send_photo(self.red_panda_api)
+		await self.send_photo(self.red_panda_api)
 
-	@commands.command()
+	@commands.command(aliases = ["bird"])
 	async def birb(self, ctx):
 		""" Get a random bird pic
 		"""
-		self.send_photo(self.birb_api)
+		await self.send_photo(self.birb_api)
 
 	@commands.command()
 	async def koala(self, ctx):
 		""" Get a random koala pic
 		"""
-		self.send_photo(self.koala_api)
+		await self.send_photo(self.koala_api)
