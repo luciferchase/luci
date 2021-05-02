@@ -137,7 +137,7 @@ class Core(commands.Cog):
 		try:
 			data = self.cursor.fetchall()
 			print(data)
-			await ctx.send("Data send in DM")
+			await ctx.send("Data sent in DM")
 			await dm.send(data)
 		except:
 			pass
@@ -180,16 +180,17 @@ class Core(commands.Cog):
 
 	@commands.command()
 	async def snipe(self, ctx, number = 1):
+		"""See upto last deleted message
+		For eg: `luci snipe` gets the last deleted message
+		Also:  `luci snipe 2` gets the second last deleted message and so on."""
+		
 		# Fetch last deleted message from database
 		self.cursor.execute("SELECT * FROM snipe")
 		data = self.cursor.fetchall()
 
-		# Shift number by 1 less
-		number -= 1
-
 		# Fetch deleted message author
-		author = self.bot.get_user(data[number][1])
-		embed = discord.Embed(description = data[number][0])
+		author = self.bot.get_user(data[-number][1])
+		embed = discord.Embed(description = data[-number][0])
 		embed.set_footer(
 			text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
 			icon_url = ctx.author.avatar_url
