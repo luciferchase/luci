@@ -191,11 +191,11 @@ class Core(commands.Cog):
 		# Fetch deleted message author
 		author = self.bot.get_user(data[-number][1])
 		embed = discord.Embed(description = data[-number][0])
-		embed.set_footer(
-			text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
-			icon_url = ctx.author.avatar_url
-		)
-		embed.set_author(name = f"<@{author.mention}>")
+		# embed.set_footer(
+		# 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
+		# 	icon_url = ctx.author.avatar_url
+		# )
+		# embed.set_author(name = f"<@{author.mention}>")
 		await message.channel.send(embed = embed)
 
 
