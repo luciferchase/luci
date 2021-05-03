@@ -392,8 +392,8 @@ class IPL(commands.Cog):
 			)
 			embed.add_field(
 				name = "Winning sattebaaz",
-				value = "`{}`".format("\n".join(str(winner.name + "#" + winner.discriminator)\
-					for winner in second_winners)),
+				value = "`{}`".format("\n".join((winner.name + "#" + winner.discriminator)\
+				for winner in winners)),
 				inline = False
 			)
 
