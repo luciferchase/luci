@@ -243,7 +243,7 @@ class Core(commands.Cog):
 		You can omit options to make it automatically a two option poll
 		"""
 
-		message = list(message)
+		message = " ".join(message)
 		time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
 		# Get index of question and options separator "|"
