@@ -263,12 +263,14 @@ class Core(commands.Cog):
 				await ctx.send("Bruh! Please give maximum 26 options 🤦‍♂️")
 				return
 
+			options_string = ""
 			for index in range(len(options)):
 				options_string += f":regional_indicator_{chr(97 + index)}: {options[index]}\n"
 
 			embed = discord.Embed(
 				title = question,
-				description = options_string
+				description = options_string,
+				color = 0x00FFFF
 			)
 			embed.set_footer(text = time)
 			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
@@ -280,10 +282,11 @@ class Core(commands.Cog):
 			
 		# Else by default make a dual option poll
 		else:
-			question = " ".join(message)
+			question = "".join(message)
 
 			embed = discord.Embed(
 				title = question,
+				color = 0x00FFFF
 			)
 			embed.set_footer(text = time)
 			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
