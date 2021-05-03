@@ -278,7 +278,7 @@ class Core(commands.Cog):
 			poll_embed = await ctx.send(embed = embed)
 
 			for i in range(len(options)):
-				await poll_embed.add_reaction(f":regional_indicator_{chr(97 + i)}")
+				await poll_embed.add_reaction(f":regional_indicator_{chr(97 + i)}:")
 			
 		# Else by default make a dual option poll
 		else:
