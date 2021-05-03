@@ -194,6 +194,7 @@ class Core(commands.Cog):
 				log.error("Cannot change bot name")
 				await ctx.send("Cannot change bot avatar. Check logs.")
 
+	@commands.guild_only()
 	@commands.command()
 	async def snipe(self, ctx, number = 1):
 		"""See upto last deleted message
@@ -230,8 +231,62 @@ class Core(commands.Cog):
 		 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
 		 	icon_url = ctx.author.avatar_url
 		)
-		embed.set_author(name = f"Author: **{author.name}#{author.discriminator}**", icon_url = author.avatar_url)
+		embed.set_author(name = f"Author: {author.name}", icon_url = author.avatar_url)
 		await ctx.send(embed = embed)
+
+	@commands.guild_only()
+	@commands.command()
+	async def poll(self, ctx, *message):
+		"""Do a poll.
+		Syntax: luci poll <question> |option 1|option 2|option 3|...
+		For eg: luci poll Is @luci geh? |Yes|No|You are geh|
+		You can omit options to make it automatically a two option poll
+		"""
+		
+		time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+
+		# Get index of question and options separator "|"
+		index = message.find("|")
+
+		# Check if there are any options or not
+		if (index != -1):
+			# Get question and options from the message
+			question = message[:message.find("|")]
+			options = [option for option in message[message.find("|") + 1:].split("|") if option != ""]
+
+			# Check if there are more than 26 options
+			if (len(options) > 26):
+				await ctx.send("Bruh! Please give maximum 26 options 🤦‍♂️")
+				return
+
+			for index in range(len(options)):
+				options_string += f":regional_indicator_{chr(97 + index)}: {options[index]}\n"
+
+			embed = discord.Embed(
+				title = question,
+				description = options_string
+			)
+			embed.set_footer(text = time)
+			embed.set_author(name = author.name, icon_url = author.avatar_url)
+
+			poll_embed = await message.edit(embed = embed)
+
+			for i in range(len(options)):
+				await poll_embed.add_reaction(f":regional_indicator_{chr(97 + i)}")
+			
+		# Else by default make a dual option poll
+		else:
+			question = " ".join(message)
+
+			embed = discord.Embed(
+				title = question,
+			)
+			embed.set_footer(text = time)
+			embed.set_author(name = author.name, icon_url = author.avatar_url)
+
+			poll_embed = await message.edit(embed = embed)
+			await poll_embed.add_reaction("👍")
+			await poll_embed.add_reaction("👎")
 
 
 
