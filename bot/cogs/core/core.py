@@ -80,8 +80,10 @@ class Core(commands.Cog):
 	# Add last 5 deleted message to database
 	@commands.Cog.listener()
 	async def on_message_delete(self, message):
+		# Check if the message was a poll or shout which was automatically deleted by the bot
 		# Check the message is deleted by an actual user and not by a bot
-		if (message.author.bot == True):
+		if (message.author.bot == True or \
+			"luci poll" in message.content.lower() or "luci shout" in message.content.lower()):
 			return
 
 		# Create table
@@ -201,9 +203,19 @@ class Core(commands.Cog):
 		For eg: `luci snipe` gets the last deleted message
 		Also:  `luci snipe 2` gets the second last deleted message and so on."""
 		
+		# Check if number is not more 5
+		if (number > 5):
+			await ctx.send("Bruh! Can get last 5 messages only. Get a life bro 🤦‍♂️")
+			return
+
 		# Fetch last deleted message from database
 		self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {ctx.channel.id}")
 		data = self.cursor.fetchall()
+
+		# If there are no messages deleted in this channel
+		if (data == []):
+			await ctx.send(embed = discord.Embed(title = "No messages deleted in this channel", color = 0xf34949))
+			return
 
 		# Configure channel where message was deleted
 		channel = self.bot.get_channel(data[-number][2])
@@ -237,9 +249,9 @@ class Core(commands.Cog):
 	@commands.guild_only()
 	@commands.command()
 	async def poll(self, ctx, *message):
-		"""Do a poll.
+		"""Do a poll
 		Syntax: luci poll <question> |option 1|option 2|option 3|...
-		For eg: luci poll Is @luci geh? |Yes|No|You are geh|
+		For eg: luci poll Is luci geh? |Yes|No|You are geh|
 		You can omit options to make it automatically a two option poll
 		"""
 
@@ -297,6 +309,20 @@ class Core(commands.Cog):
 			poll_embed = await ctx.send(embed = embed)
 			await poll_embed.add_reaction("👍")
 			await poll_embed.add_reaction("👎")
+
+	@commands.command(aliases = ["emojify", "cry"])
+	async def shout(self, ctx, *message):
+		"""Convert a message into emojies"""
+		
+		final_message = []
+
+		message_string = ""
+		for word in message:
+			for letter in word:
+				message_string += f":regional_indicator_{letter.lower()}:"
+			final_message.append(message_string)
+
+		await ctx.send(" ".join(final_message))
 
 
 
