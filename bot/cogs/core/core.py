@@ -212,17 +212,17 @@ class Core(commands.Cog):
 
 		embed = discord.Embed(title = data[-number][0], color = 0xf34949)
 		embed.add_field(
-			name = "Deleted on",
+			name = "Deleted on:",
 			value = f"{data[-number][3]} | {data[-number][4]}",
 			inline = True
 		)
 		embed.add_field(
-			name = "In",
+			name = "In:",
 			value = channel.mention,
 			inline = True
 		)
 		embed.add_field(
-			name = "By",
+			name = "By:",
 			value = author.mention,
 			inline = True
 		)
@@ -230,7 +230,7 @@ class Core(commands.Cog):
 		 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
 		 	icon_url = ctx.author.avatar_url
 		)
-		embed.set_author(name = author.name, icon_url = author.avatar_url)
+		embed.set_author(name = f"Author: **{author.name}#{author.discriminator}**", icon_url = author.avatar_url)
 		await ctx.send(embed = embed)
 
 
