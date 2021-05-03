@@ -212,10 +212,19 @@ class Core(commands.Cog):
 
 		embed = discord.Embed(title = data[-number][0], color = 0xf34949)
 		embed.add_field(
-			name = "Info",
-			value = f"**Deleted on** {data[-number][3]} | {data[-number][4]}\n \
-			**in** {channel.mention}\n \
-			**by** {author.mention}"
+			name = "Deleted on",
+			value = f"{data[-number][3]} | {data[-number][4]}",
+			inline = True
+		)
+		embed.add_field(
+			name = "In",
+			value = channel.mention,
+			inline = True
+		)
+		embed.add_field(
+			name = "By",
+			value = author.mention,
+			inline = True
 		)
 		embed.set_footer(
 		 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
