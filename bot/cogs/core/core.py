@@ -209,10 +209,13 @@ class Core(commands.Cog):
 
 		# Fetch deleted message author
 		author = self.bot.get_user(data[-number][1])
-		embed = discord.Embed(title = data[-number][0])
+
+		embed = discord.Embed(title = data[-number][0], color = 0xf34949)
 		embed.add_field(
 			name = "Info",
-			value = f"Deleted on {data[-number][3]} | {data[-number][4]}\n in {channel.mention}"
+			value = f"**Deleted on** {data[-number][3]} | {data[-number][4]}\n \
+			**in** {channel.mention}\n \
+			**by** {author.mention}"
 		)
 		embed.set_footer(
 		 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
