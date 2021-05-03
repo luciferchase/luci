@@ -86,10 +86,11 @@ class Core(commands.Cog):
 
 		# Create table
 		query = """CREATE TABLE IF NOT EXISTS snipe(
-				mssg_id 	TEXT 		NOT NULL,
-				author_id 	BIGINT 		NOT NULL,
-				channel_id 	BIGINT 		NOT NULL,
-				deleted_at	TIMESTAMP 	NOT NULL)"""
+				mssg_id 	TEXT 	NOT NULL,
+				author_id 	BIGINT 	NOT NULL,
+				channel_id 	BIGINT 	NOT NULL,
+				deleted_on	TEXT 	NOT NULL,
+				deleted_at 	TEXT	NOT NULL)"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
 
@@ -103,13 +104,15 @@ class Core(commands.Cog):
 			del data[0]
 
 			# Add new message to the top of the stack
-			mssg, author, channel, timestamp = message.content, message.author.id, \
-			message.channel.id, datetime.today()
+			mssg, author, channel, deleted_on, deleted_at = message.content, message.author.id, \
+			message.channel.id, datetime.now().strftime("%m/%d/%Y"), datetime.now().strftime("%H:%M:%S")
+			
 			data.append((mssg, author, channel, timestamp))
 		
 		else:
-			mssg, author, channel, timestamp = message.content, message.author.id, \
-			message.channel.id, datetime.today()
+			mssg, author, channel, deleted_on, deleted_at = message.content, message.author.id, \
+			message.channel.id, datetime.now().strftime("%m/%d/%Y"), datetime.now().strftime("%H:%M:%S")
+			
 			data.append((mssg, author, channel, timestamp))
 			
 		# Update database
