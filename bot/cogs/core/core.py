@@ -242,7 +242,8 @@ class Core(commands.Cog):
 		For eg: luci poll Is @luci geh? |Yes|No|You are geh|
 		You can omit options to make it automatically a two option poll
 		"""
-		
+
+		message = list(message)
 		time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
 		# Get index of question and options separator "|"
