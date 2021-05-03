@@ -273,7 +273,7 @@ class Core(commands.Cog):
 			embed.set_footer(text = time)
 			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
 
-			poll_embed = await ctx.edit(embed = embed)
+			poll_embed = await ctx.send(embed = embed)
 
 			for i in range(len(options)):
 				await poll_embed.add_reaction(f":regional_indicator_{chr(97 + i)}")
@@ -288,7 +288,7 @@ class Core(commands.Cog):
 			embed.set_footer(text = time)
 			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
 
-			poll_embed = await ctx.edit(embed = embed)
+			poll_embed = await ctx.send(embed = embed)
 			await poll_embed.add_reaction("👍")
 			await poll_embed.add_reaction("👎")
 
