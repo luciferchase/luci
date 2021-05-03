@@ -313,13 +313,17 @@ class Core(commands.Cog):
 	@commands.command(aliases = ["emojify", "cry"])
 	async def shout(self, ctx, *message):
 		"""Convert a message into emojies"""
+
+		# Delete original message
+		await ctx.message.delete()
+		await ctx.send(message)
 		
 		final_message = []
 
 		message_string = ""
 		for word in message:
 			for letter in word:
-				message_string += f":regional_indicator_{letter.lower()}:"
+				message_string += f":regional_indicator_{letter.lower()}: "
 			final_message.append(message_string)
 
 		await ctx.send(" ".join(final_message))
