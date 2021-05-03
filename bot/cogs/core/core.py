@@ -95,6 +95,8 @@ class Core(commands.Cog):
 		# Fetch data from the table according to channel id
 		self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {message.channel.id}")
 		data = self.cursor.fetchall()
+
+		print(message.created_at)
 		
 		# Check if there are more than 5 messages in the database
 		if (len(data) >= 5):
