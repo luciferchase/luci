@@ -263,9 +263,12 @@ class Core(commands.Cog):
 				await ctx.send("Bruh! Please give maximum 26 options 🤦‍♂️")
 				return
 
+			reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "J", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
+			"🇶", "🇷", "🇸", "🇹", "🇺", "🇻", "🇼", "🇽", "🇾", "🇿"]
+
 			options_string = ""
 			for index in range(len(options)):
-				options_string += f":regional_indicator_{chr(97 + index)}: {options[index]}\n"
+				options_string += f"{reactions[index]} {options[index]}\n"
 
 			embed = discord.Embed(
 				title = question,
@@ -277,8 +280,8 @@ class Core(commands.Cog):
 
 			poll_embed = await ctx.send(embed = embed)
 
-			for i in range(len(options)):
-				await poll_embed.add_reaction(f":regional_indicator_{chr(97 + i)}:")
+			for index in range(len(options)):
+				await poll_embed.add_reaction(reactions[index])
 			
 		# Else by default make a dual option poll
 		else:
