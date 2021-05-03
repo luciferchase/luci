@@ -243,17 +243,17 @@ class Core(commands.Cog):
 		You can omit options to make it automatically a two option poll
 		"""
 
-		message = " ".join(message)
+		message_string = " ".join(message)
 		time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
 		# Get index of question and options separator "|"
-		index = message.find("|")
+		index = message_string.find("|")
 
 		# Check if there are any options or not
 		if (index != -1):
 			# Get question and options from the message
-			question = message[:message.find("|")]
-			options = [option for option in message[message.find("|") + 1:].split("|") if option != ""]
+			question = message_string[:message_string.find("|")]
+			options = [option for option in message_string[message_string.find("|") + 1:].split("|") if option != ""]
 
 			# Check if there are more than 26 options
 			if (len(options) > 26):
@@ -268,7 +268,7 @@ class Core(commands.Cog):
 				description = options_string
 			)
 			embed.set_footer(text = time)
-			embed.set_author(name = author.name, icon_url = author.avatar_url)
+			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
 
 			poll_embed = await message.edit(embed = embed)
 
@@ -277,13 +277,11 @@ class Core(commands.Cog):
 			
 		# Else by default make a dual option poll
 		else:
-			question = " ".join(message)
-
 			embed = discord.Embed(
-				title = question,
+				title = message_string,
 			)
 			embed.set_footer(text = time)
-			embed.set_author(name = author.name, icon_url = author.avatar_url)
+			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
 
 			poll_embed = await message.edit(embed = embed)
 			await poll_embed.add_reaction("👍")
