@@ -243,9 +243,8 @@ class Core(commands.Cog):
 		You can omit options to make it automatically a two option poll
 		"""
 
-		# Get original message to edit
-		channel = self.bot.get_channel(ctx.message.channel.id)
-		og_message = await channel.fetch_message(ctx.message.id)
+		# Delete original message
+		await ctx.message.delete()
 
 		message = " ".join(message)
 		time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
@@ -274,7 +273,7 @@ class Core(commands.Cog):
 			embed.set_footer(text = time)
 			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
 
-			poll_embed = await og_message.edit(embed = embed)
+			poll_embed = await ctx.edit(embed = embed)
 
 			for i in range(len(options)):
 				await poll_embed.add_reaction(f":regional_indicator_{chr(97 + i)}")
@@ -289,7 +288,7 @@ class Core(commands.Cog):
 			embed.set_footer(text = time)
 			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
 
-			poll_embed = await og_message.edit(embed = embed)
+			poll_embed = await ctx.edit(embed = embed)
 			await poll_embed.add_reaction("👍")
 			await poll_embed.add_reaction("👎")
 
