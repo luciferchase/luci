@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+from datetime import datetime
 import logging
 import os
 import psycopg2
@@ -103,7 +104,7 @@ class Core(commands.Cog):
 
 			# Add new message to the top of the stack
 			mssg, author, channel, timestamp = message.content, message.author.id, \
-			message.channel.id, message.created_at
+			message.channel.id, datetime.now()
 			data.append((mssg, author, channel, timestamp))
 		
 		else:
@@ -199,11 +200,20 @@ class Core(commands.Cog):
 		self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {ctx.channel.id}")
 		data = self.cursor.fetchall()
 
+		# Configure datetime and channel when message was deleted
+		date = str(data[-number][3])[:10]
+		time = str(data[-number][3])[11:16]
+		channel = self.bot.get_channel(data[-number][2])
+
 		# Fetch deleted message author
 		author = self.bot.get_user(data[-number][1])
 		embed = discord.Embed(
 			title = ":dart: Sniped",
 			description = data[-number][0]
+		)
+		embed.add_field(
+			name = "Info:",
+			value = f"Deleted on {date} | {time}\n in {channel.mention}"
 		)
 		embed.set_footer(
 		 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
