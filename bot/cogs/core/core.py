@@ -244,7 +244,7 @@ class Core(commands.Cog):
 		"""
 
 		# Get original message to edit
-		channel = self.bot.get_channel(ctx.message.channel)
+		channel = self.bot.get_channel(ctx.message.channel.id)
 		og_message = await channel.fetch_message(ctx.message.id)
 
 		message = " ".join(message)
