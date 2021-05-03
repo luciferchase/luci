@@ -316,7 +316,6 @@ class Core(commands.Cog):
 
 		# Delete original message
 		await ctx.message.delete()
-		await ctx.send(message)
 		
 		final_message = []
 
