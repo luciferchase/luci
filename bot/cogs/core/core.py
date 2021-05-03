@@ -209,19 +209,16 @@ class Core(commands.Cog):
 
 		# Fetch deleted message author
 		author = self.bot.get_user(data[-number][1])
-		embed = discord.Embed(
-			title = ":dart: Sniped",
-			description = data[-number][0]
-		)
+		embed = discord.Embed(title = data[-number][0])
 		embed.add_field(
-			name = "Info:",
+			name = "Info",
 			value = f"Deleted on {data[-number][3]} | {data[-number][4]}\n in {channel.mention}"
 		)
 		embed.set_footer(
 		 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
 		 	icon_url = ctx.author.avatar_url
 		)
-		embed.set_author(name = f"<@{author.mention}>")
+		embed.set_author(name = author.name, icon_url = author.avatar_url)
 		await ctx.send(embed = embed)
 
 
