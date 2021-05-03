@@ -96,8 +96,6 @@ class Core(commands.Cog):
 		# Fetch data from the table according to channel id
 		self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {message.channel.id}")
 		data = self.cursor.fetchall()
-
-		timestamp = datetime.now()
 		
 		# Check if there are more than 5 messages in the database
 		if (len(data) >= 5):
@@ -105,13 +103,13 @@ class Core(commands.Cog):
 			del data[0]
 
 			# Add new message to the top of the stack
-			mssg, author, channel= message.content, message.author.id, \
-			message.channel.id
+			mssg, author, channel, timestamp = message.content, message.author.id, \
+			message.channel.id, datetime.today()
 			data.append((mssg, author, channel, timestamp))
 		
 		else:
-			mssg, author, channel= message.content, message.author.id, \
-			message.channel.id
+			mssg, author, channel, timestamp = message.content, message.author.id, \
+			message.channel.id, datetime.today()
 			data.append((mssg, author, channel, timestamp))
 			
 		# Update database
