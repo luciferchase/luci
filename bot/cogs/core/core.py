@@ -113,7 +113,7 @@ class Core(commands.Cog):
 			mssg, author, channel, deleted_on, deleted_at = message.content, message.author.id, \
 			message.channel.id, datetime.now().strftime("%m/%d/%Y"), datetime.now().strftime("%H:%M:%S")
 			
-			data.append((mssg, author, channel, timestamp, deleted_on, deleted_at))
+			data.append((mssg, author, channel, deleted_on, deleted_at))
 			
 		# Update database
 		self.cursor.execute(f"DELETE FROM snipe WHERE channel_id = {message.channel.id}")
