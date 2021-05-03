@@ -48,11 +48,10 @@ bot.add_cog(meme.Meme())
 bot.add_cog(photo.Photo())
 # bot.add_cog(testing.Testing())
 
-<<<<<<< HEAD
 # Start scheduled commands
 scheduler = schedule_jobs.Scheduler(bot).schedule()
 scheduler.start()
-=======
+
 # Scheduled events
 async def schedule_meme():
 	channel = bot.get_channel(835113922172026881)
@@ -264,7 +263,7 @@ async def on_message_delete(message):
 	# Update database
 	cursor.execute("DELETE FROM snipe")
 	cursor.execute("INSERT INTO snipe VALUES {}".format(data))
->>>>>>> 305ffdfb871250926fc42b2860bc2e52c431760d
+
 
 # Run the bot
 bot.run(BOT_TOKEN)
