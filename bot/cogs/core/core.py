@@ -320,8 +320,9 @@ class Core(commands.Cog):
 		
 		final_message = []
 
-		message_string = ""
 		for word in message:
+			message_string = ""
+
 			for letter in word:
 				message_string += f":regional_indicator_{letter.lower()}: "
 			final_message.append(message_string)
