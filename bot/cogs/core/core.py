@@ -79,30 +79,40 @@ class Core(commands.Cog):
 	# Add last 5 deleted message to database
 	@commands.Cog.listener()
 	async def on_message_delete(self, message):
+		# Check the message is deleted by an actual user and not by a bot
+		if (message.author.bot == True):
+			return
+
+		# Create table
 		query = """CREATE TABLE IF NOT EXISTS snipe(
-				mssg TEXT NOT NULL,
-				author	TEXT NOT NULL)"""
+				mssg_id 	TEXT 		NOT NULL,
+				author_id 	BIGINT 		NOT NULL,
+				channel_id 	BIGINT 		NOT NULL,
+				deleted_at	TIMESTAMP 	NOT NULL)"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
 
-		# FIFO - Removes the first message from end and adds the new message to the top of the stack
-		self.cursor.execute("SELECT * FROM snipe")
+		# Fetch data from the table according to channel id
+		self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {message.channel.id}")
 		data = self.cursor.fetchall()
-
+		
 		# Check if there are more than 5 messages in the database
 		if (len(data) >= 5):
 			# Remove the oldest message
 			del data[0]
 
 			# Add new message to the top of the stack
-			mssg, author = message.content, message.author.id
-			data.append((mssg, author))
+			mssg, author, channel, timestamp = message.content, message.author.id, \
+			message.channel.id, message.created_at
+			data.append((mssg, author, channel, timestamp))
+		
 		else:
-			mssg, author = message.content, message.author.id
-			data.append((mssg, author))
-
+			mssg, author, channel, timestamp = message.content, message.author.id, \
+			message.channel.id, message.created_at
+			data.append((mssg, author, channel, timestamp))
+			
 		# Update database
-		self.cursor.execute("DELETE FROM snipe")
+		self.cursor.execute(f"DELETE FROM snipe WHERE channel_id = {message.channel.id}")
 
 		for i in data:
 			self.cursor.execute("INSERT INTO snipe VALUES {}".format(i))
@@ -185,17 +195,20 @@ class Core(commands.Cog):
 		Also:  `luci snipe 2` gets the second last deleted message and so on."""
 		
 		# Fetch last deleted message from database
-		self.cursor.execute("SELECT * FROM snipe")
+		self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {ctx.channel.id}")
 		data = self.cursor.fetchall()
 
 		# Fetch deleted message author
 		author = self.bot.get_user(data[-number][1])
-		embed = discord.Embed(description = data[-number][0])
-		# embed.set_footer(
-		# 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
-		# 	icon_url = ctx.author.avatar_url
-		# )
-		# embed.set_author(name = f"<@{author.mention}>")
+		embed = discord.Embed(
+			title = ":dart: Sniped",
+			description = data[-number][0]
+		)
+		embed.set_footer(
+		 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
+		 	icon_url = ctx.author.avatar_url
+		)
+		embed.set_author(name = f"<@{author.mention}>")
 		await ctx.send(embed = embed)
 
 
