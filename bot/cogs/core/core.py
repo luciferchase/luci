@@ -109,9 +109,8 @@ class Core(commands.Cog):
 		
 		else:
 			mssg, author, channel, timestamp = message.content, message.author.id, \
-			message.channel.id, message.created_at
+			message.channel.id, datetime.now()
 			data.append((mssg, author, channel, timestamp))
-			print(data)
 			
 		# Update database
 		self.cursor.execute(f"DELETE FROM snipe WHERE channel_id = {message.channel.id}")
