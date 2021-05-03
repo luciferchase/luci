@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 import os
 import psycopg2
@@ -97,6 +97,12 @@ class Core(commands.Cog):
 		# Fetch data from the table according to channel id
 		self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {message.channel.id}")
 		data = self.cursor.fetchall()
+
+		# Configure date, time
+		deleted_on = datetime.now().strftime("%m/%d/%Y")
+
+		# Add 5:30 hours to GMT
+		deleted_at = (datetime.now() + timedelta(hours = 5, minutes = 30)).strftime("%H:%M:%S")
 		
 		# Check if there are more than 5 messages in the database
 		if (len(data) >= 5):
@@ -104,15 +110,11 @@ class Core(commands.Cog):
 			del data[0]
 
 			# Add new message to the top of the stack
-			mssg, author, channel, deleted_on, deleted_at = message.content, message.author.id, \
-			message.channel.id, datetime.now().strftime("%m/%d/%Y"), datetime.now().strftime("%H:%M:%S")
-			
+			mssg, author, channel= message.content, message.author.id, message.channel.id
 			data.append((mssg, author, channel, deleted_on, deleted_at))
 		
 		else:
-			mssg, author, channel, deleted_on, deleted_at = message.content, message.author.id, \
-			message.channel.id, datetime.now().strftime("%m/%d/%Y"), datetime.now().strftime("%H:%M:%S")
-			
+			mssg, author, channel= message.content, message.author.id, message.channel.id
 			data.append((mssg, author, channel, deleted_on, deleted_at))
 			
 		# Update database
@@ -213,7 +215,7 @@ class Core(commands.Cog):
 		)
 		embed.add_field(
 			name = "Info:",
-			value = f"Deleted on {data[3]} | {data[4]}\n in {channel.mention}"
+			value = f"Deleted on {data[-number][3]} | {data[-number][4]}\n in {channel.mention}"
 		)
 		embed.set_footer(
 		 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
