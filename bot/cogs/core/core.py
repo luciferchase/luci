@@ -107,13 +107,13 @@ class Core(commands.Cog):
 			mssg, author, channel, deleted_on, deleted_at = message.content, message.author.id, \
 			message.channel.id, datetime.now().strftime("%m/%d/%Y"), datetime.now().strftime("%H:%M:%S")
 			
-			data.append((mssg, author, channel, timestamp))
+			data.append((mssg, author, channel, deleted_on, deleted_at))
 		
 		else:
 			mssg, author, channel, deleted_on, deleted_at = message.content, message.author.id, \
 			message.channel.id, datetime.now().strftime("%m/%d/%Y"), datetime.now().strftime("%H:%M:%S")
 			
-			data.append((mssg, author, channel, timestamp))
+			data.append((mssg, author, channel, timestamp, deleted_on, deleted_at))
 			
 		# Update database
 		self.cursor.execute(f"DELETE FROM snipe WHERE channel_id = {message.channel.id}")
@@ -202,9 +202,7 @@ class Core(commands.Cog):
 		self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {ctx.channel.id}")
 		data = self.cursor.fetchall()
 
-		# Configure datetime and channel when message was deleted
-		date = str(data[-number][3])[:10]
-		time = str(data[-number][3])[11:16]
+		# Configure channel where message was deleted
 		channel = self.bot.get_channel(data[-number][2])
 
 		# Fetch deleted message author
@@ -215,7 +213,7 @@ class Core(commands.Cog):
 		)
 		embed.add_field(
 			name = "Info:",
-			value = f"Deleted on {date} | {time}\n in {channel.mention}"
+			value = f"Deleted on {data[3]} | {data[4]}\n in {channel.mention}"
 		)
 		embed.set_footer(
 		 	text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
