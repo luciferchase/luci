@@ -164,7 +164,12 @@ class Core(commands.Cog):
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def rollback(self, ctx):
-		self.dbcon.rollback()
+		try:
+			self.dbcon.rollback()
+			await ctx.send("Successfully rollbacked to last transaction")
+		except:
+			await ctx.send("Rollback not successfull. Check logs.")
+			return
 
 	@commands.is_owner()
 	@commands.command(hidden = True)
@@ -261,6 +266,12 @@ class Core(commands.Cog):
 		message = " ".join(message)
 		time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
 
+		# CHeck if there is an actual question given or not
+		if (len(message) == 0):
+			await ctx.send("Bruh! Send a question atlease 🤦‍♂️")
+			await ctx.send_help()
+			return
+
 		# Get index of question and options separator "|"
 		index = message.find("|")
 
@@ -327,6 +338,26 @@ class Core(commands.Cog):
 			final_message.append(message_string)
 
 		await ctx.send(" ".join(final_message))
+
+	@commands.command(aliases = "PM")
+	async def dm(self, ctx, userid: int, *message: str):
+		"""DM a user
+		Syntax: luci dm 707557256220115035 you are geh"""
+		try:
+			user_to_dm = self.bot.get_user(userid)
+			dm_channel = await user_to_dm.create_dm()
+		except:
+			await ctx.send("User not found. Is the user even real?")
+			await ctx.send_help()
+			return
+
+		message = " ".join(message)
+
+		embed = discord.Embed(title = "Direct Message", description = message)
+		embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+		embed.set_footer(text = ctx.message.created_at)
+
+		await dm_channel.send(embed = embed)
 
 
 

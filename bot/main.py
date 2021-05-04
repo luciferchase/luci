@@ -12,6 +12,7 @@ import psycopg2
 # Install all cogs
 from cogs.aki import aki
 from cogs.avatar import avatar
+from cogs.bigmoji import bigmoji
 from cogs.comics import comics
 from cogs.core import core, botstatus, schedule_jobs
 from cogs.conversationgames import conversationgames
@@ -37,6 +38,7 @@ logging.basicConfig(level = logging.WARNING)
 # Register Cogs
 bot.add_cog(aki.Aki(bot))
 bot.add_cog(avatar.Avatar())
+bot.add_cog(bigmoji.bigmoji(bot))
 bot.add_cog(botstatus.Botstatus(bot))
 bot.add_cog(comics.Comics(bot))
 bot.add_cog(core.Core(bot))
