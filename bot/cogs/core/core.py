@@ -138,7 +138,10 @@ class Core(commands.Cog):
 
 			# Send attachments
 			if (message.attachments != None):
-				embed.set_image(url = message.attachments[0].url)
+				try:
+					embed.set_image(url = message.attachments[0].url)
+				except:
+					pass
 
 			await self.dm_channel.send(embed = embed)
 			await message.author.send(f"Message sent to {self.luciferchase.name}")
