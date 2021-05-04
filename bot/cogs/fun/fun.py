@@ -6,7 +6,7 @@ class Fun(commands.Cog):
 	"""Various fun commands"""
 
 	@commands.command(aliases = ["nda"])
-	async def alphanato(self, ctx, *args = "all"):
+	async def alphanato(self, ctx, *args):
 		"""Get military phonetics of every letter in english alphabet.
 		Usage: You can get all the phonetics by simply calling `luci nda` or `luci alphanato`
 		
@@ -19,7 +19,7 @@ class Fun(commands.Cog):
 
 		message_string = ""
 
-		if (args == "all"):
+		if (args is None):
 			for index in range(26):
 				message_string += f"{chr(97 + index)}: {phonetics[index]}\n"
 
