@@ -19,7 +19,7 @@ class Core(commands.Cog):
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
-	# Core Commands
+	# Events
 	@commands.Cog.listener()	
 	async def on_ready(self):
 		print("Connected to discord")
@@ -125,81 +125,37 @@ class Core(commands.Cog):
 		for i in data:
 			self.cursor.execute("INSERT INTO snipe VALUES {}".format(i))
 
+	# Fun, "for all" commands
 	@commands.command()
 	async def ping(self, ctx) :
 		"""Ping Pong"""
 		await ctx.send(f"🏓 Pong in {str(round(self.bot.latency, 3))} s")
 
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def sql(self, ctx, *query):
-		log = logging.getLogger("sql")
-		
-		# Create a dm with me
-		luci = self.bot.get_user(707557256220115035)
-		dm = await luci.create_dm()
-
-		query = " ".join(query)
-		print("Executing query:", query)
+	@commands.command(aliases = ["pm", "DM"])
+	async def dm(self, ctx, userid: int, *message: str):
+		"""DM a user
+		Syntax: luci dm 707557256220115035 you are geh"""
 		try:
-			self.cursor.execute(query)
-			await ctx.send("Query executed successfully")
-			try:
-				self.dbcon.commit()
-			except:
-				pass
+			user_to_dm = self.bot.get_user(userid)
+			dm_channel = await user_to_dm.create_dm()
 		except:
-			log.error(f"{query} not executed successfully")
-			await ctx.send("Query not executed. Check logs.")
-
-		try:
-			data = self.cursor.fetchall()
-			print(data)
-			await ctx.send("Data sent in DM")
-			await dm.send(data)
-		except:
-			pass
-
-	# Command to rollback to last transaction when there is a issue with psycopg2
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def rollback(self, ctx):
-		try:
-			self.dbcon.rollback()
-			await ctx.send("Successfully rollbacked to last transaction")
-		except:
-			await ctx.send("Rollback not successfull. Check logs.")
+			await ctx.send("User not found. Is the user even real?")
+			await ctx.send_help()
 			return
 
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def botname(self, ctx, name):
-		"""Change bot name.
-		   Syntax: `luci botname <name>`
-		"""
-		log = logging.getLogger("botname")
-		try:
-			await self.bot.user.edit(username = name)
-			await ctx.send("Bot name changed successfully")
-		except:
-			log.error("Cannot change bot name")
-			await ctx.send("Error. Bot name not changed. Check logs.")
+		message = " ".join(message)
 
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def botavatar(self, ctx, which = ""):
-		"""Change bot name.
-		"""
-		log = logging.getLogger("botavatar")
-		
-		with open(f"/app/bot/avatars/avatar{which}.png", "rb") as avatar:
-			avatar_image = avatar.read()
-			try:
-				await self.bot.user.edit(avatar = avatar_image)
-				await ctx.send("Bot avatar chaned successfully")
-			except:
-				log.error("Cannot change bot name")
-				await ctx.send("Cannot change bot avatar. Check logs.")
+		embed = discord.Embed(title = "Direct Message", description = message)
+		embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+		embed.set_footer(text = ctx.message.created_at)
+
+		try:
+			await dm_channel.send(embed = embed)
+			await ctx.send(f"DM Sent successfully to {user_to_dm.name}")
+		except:
+			await ctx.send("DM not sent. Have you done eveything correctly?")
+			await ctx.send_help()
+
 
 	@commands.guild_only()
 	@commands.command()
@@ -339,26 +295,80 @@ class Core(commands.Cog):
 
 		await ctx.send(" ".join(final_message))
 
-	@commands.command(aliases = "PM")
-	async def dm(self, ctx, userid: int, *message: str):
-		"""DM a user
-		Syntax: luci dm 707557256220115035 you are geh"""
+	# Dev commands, "owner only"
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def sql(self, ctx, *query):
+		log = logging.getLogger("sql")
+		
+		# Create a dm with me
+		luci = self.bot.get_user(707557256220115035)
+		dm = await luci.create_dm()
+
+		query = " ".join(query)
+		print("Executing query:", query)
 		try:
-			user_to_dm = self.bot.get_user(userid)
-			dm_channel = await user_to_dm.create_dm()
+			self.cursor.execute(query)
+			await ctx.send("Query executed successfully")
+			try:
+				self.dbcon.commit()
+			except:
+				pass
 		except:
-			await ctx.send("User not found. Is the user even real?")
-			await ctx.send_help()
+			log.error(f"{query} not executed successfully")
+			await ctx.send("Query not executed. Check logs.")
+
+		try:
+			data = self.cursor.fetchall()
+			print(data)
+			await ctx.send("Data sent in DM")
+			await dm.send(data)
+		except:
+			pass
+
+	# Command to rollback to last transaction when there is a issue with psycopg2
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def rollback(self, ctx):
+		try:
+			self.dbcon.rollback()
+			await ctx.send("Successfully rollbacked to last transaction")
+		except:
+			await ctx.send("Rollback not successfull. Check logs.")
 			return
 
-		message = " ".join(message)
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def botname(self, ctx, name):
+		"""Change bot name.
+		   Syntax: `luci botname <name>`
+		"""
+		log = logging.getLogger("botname")
+		try:
+			await self.bot.user.edit(username = name)
+			await ctx.send("Bot name changed successfully")
+		except:
+			log.error("Cannot change bot name")
+			await ctx.send("Error. Bot name not changed. Check logs.")
 
-		embed = discord.Embed(title = "Direct Message", description = message)
-		embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
-		embed.set_footer(text = ctx.message.created_at)
+	@commands.is_owner()
+	@commands.command(hidden = True)
+	async def botavatar(self, ctx, which = ""):
+		"""Change bot name.
+		"""
+		log = logging.getLogger("botavatar")
+		
+		with open(f"/app/bot/avatars/avatar{which}.png", "rb") as avatar:
+			avatar_image = avatar.read()
+			try:
+				await self.bot.user.edit(avatar = avatar_image)
+				await ctx.send("Bot avatar chaned successfully")
+			except:
+				log.error("Cannot change bot name")
+				await ctx.send("Cannot change bot avatar. Check logs.")
 
-		await dm_channel.send(embed = embed)
-
+	
+	
 
 
 
