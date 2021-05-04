@@ -16,6 +16,7 @@ from cogs.bigmoji import bigmoji
 from cogs.comics import comics
 from cogs.core import core, botstatus, schedule_jobs
 from cogs.conversationgames import conversationgames
+from cogs.fun import fun
 from cogs.ipl import ipl
 from cogs.math import math
 from cogs.meme import meme
@@ -44,6 +45,7 @@ bot.add_cog(comics.Comics(bot))
 bot.add_cog(core.Core(bot))
 # bot.add_cog(core.Help(bot))
 bot.add_cog(conversationgames.ConversationGames())
+bot.add_cog(fun.Fun())
 bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
