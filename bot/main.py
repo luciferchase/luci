@@ -13,15 +13,17 @@ import psycopg2
 from cogs.aki import aki
 from cogs.avatar import avatar
 from cogs.bigmoji import bigmoji
+from cogs.botstatus import botstatus
 from cogs.comics import comics
-from cogs.core import core, botstatus, schedule_jobs
+from cogs.core import core, schedule_jobs
 from cogs.conversationgames import conversationgames
-from cogs.fun import fun, tictactoe
+from cogs.fun import fun
 from cogs.ipl import ipl
 from cogs.math import math
 from cogs.meme import meme
 from cogs.photo import photo
 # from cogs.testing import testing
+from cogs.tictactoe import tictactoe
 
 # Get Members intent
 intents = discord.Intents.all()

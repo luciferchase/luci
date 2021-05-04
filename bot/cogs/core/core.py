@@ -5,8 +5,9 @@ from datetime import datetime, timedelta
 import logging
 import os
 import psycopg2
+from discordpy_slash import slash
 
-from cogs.core.botstatus import Botstatus
+from cogs.botstatus.botstatus import Botstatus
 
 class Core(commands.Cog):
 	"""Core commands. Most of them are owner only."""
@@ -29,6 +30,9 @@ class Core(commands.Cog):
 
 		# Set status
 		await Botstatus(self.bot).set_botstatus_on_ready()
+
+		# Sync slash commands
+		await slash.sync_all_commands(self.bot)
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
