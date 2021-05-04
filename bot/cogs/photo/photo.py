@@ -156,7 +156,7 @@ class Photo(commands.Cog):
 		response = requests.get(self.cat_api).json()[0]
 
 		embed = discord.Embed(
-			title = "Here is a cute cat ❤",
+			title = "Here is a cute catto ❤",
 			color = 0xf34949			# Red
 		)
 		embed.set_image(url = response["url"])

@@ -128,16 +128,17 @@ class Core(commands.Cog):
 			self.cursor.execute("INSERT INTO snipe VALUES {}".format(i))
 
 	@commands.Cog.listener()
-	async def on_message(self, ctx, message):
+	async def on_message(self, message):
 		# Forward all messages to me if the message is not from a guils, or by a bot or by me
 		if (not message.guild or not message.author.bot or message.author != self.luciferchase):
 			
-			embed = discord.Embed(title = "Direct Message", description = message, color = 0x00FFFF)
-			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
-			embed.set_footer(text = ctx.message.created_at)
+			embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
+			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
+			embed.set_footer(text = message.created_at)
+			embed.set_image(url = message.attachments[0].url)
 
 			await self.dm_channel.send(embed = embed)
-			await ctx.send(f"Message sent to {self.luciferchase.name}")
+			await message.author.send(f"Message sent to {self.luciferchase.name}")
 
 	# Fun, "for all" commands
 	@commands.command()
