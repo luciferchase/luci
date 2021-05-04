@@ -136,7 +136,7 @@ class Photo(commands.Cog):
 		await wallpaper.add_reaction("👍")
 		await wallpaper.add_reaction("👎")
 
-	async def send_photo(self, api, ctx = commands.Context):
+	async def send_photo(self, api):
 		response = requests.get(api).json()[0]
 
 		embed = discord.Embed(
@@ -144,46 +144,53 @@ class Photo(commands.Cog):
 			color = 0xf34949			# Red
 		)
 		embed.set_image(url = response["url"])
-		await ctx.send(embed = embed)
+		return embed
 			
-	@commands.command()
+	@commands.command(aliases = ["doggo"])
 	async def dog(self, ctx):
 		""" Get a random dog pic
 		"""
-		await self.send_photo(self.dog_api)
+		embed = self.send_photo(self.dog_api)
+		await ctx.send(embed = embed)
 
-	@commands.command()
+	@commands.command(aliases = ["cato"])
 	async def cat(self, ctx):
 		""" Get a random cat pic
 		"""
-		await self.send_photo(self.cat_api)
+		embed = self.send_photo(self.cat_api)
+		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def fox(self, ctx):
 		""" Get a random fox pic
 		"""
-		await self.send_photo(self.fox_api)
+		embed = self.send_photo(self.fox_api)
+		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def panda(self, ctx):
 		""" Get a random panda pic
 		"""
-		self.send_photo(self.panda_api)
+		embed = self.send_photo(self.panda_api)
+		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def redpanda(self, ctx):
 		""" Get a random red panda pic
 		"""
-		await self.send_photo(self.red_panda_api)
+		embed = self.send_photo(self.red_panda_api)
+		await ctx.send(embed = embed)
 
 	@commands.command(aliases = ["bird"])
 	async def birb(self, ctx):
 		""" Get a random bird pic
 		"""
-		await self.send_photo(self.birb_api)
+		embed = self.send_photo(self.birb_api)
+		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def koala(self, ctx):
 		""" Get a random koala pic
 		"""
-		await self.send_photo(self.koala_api)
+		embed = self.send_photo(self.koala_api)
+		await ctx.send(embed = embed)

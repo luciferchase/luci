@@ -38,7 +38,7 @@ logging.basicConfig(level = logging.WARNING)
 # Register Cogs
 bot.add_cog(aki.Aki(bot))
 bot.add_cog(avatar.Avatar())
-bot.add_cog(bigmoji.bigmoji(bot))
+bot.add_cog(bigmoji.Bigmoji(bot))
 bot.add_cog(botstatus.Botstatus(bot))
 bot.add_cog(comics.Comics(bot))
 bot.add_cog(core.Core(bot))
