@@ -82,6 +82,10 @@ class Core(commands.Cog):
 		# Create a dm with me
 		luci = self.bot.get_user(707557256220115035)
 		dm_channel = await luci.create_dm()
+		print(message.guild)
+		print(message.guild is None)
+		print(message.author.bot)
+		print(message.author)
 
 		# Forward all messages to me if the message is not from a guils, or by a bot or by me
 		if (message.guild is None or message.author.bot == False or message.author != luci):
@@ -98,7 +102,7 @@ class Core(commands.Cog):
 					pass
 
 			await dm_channel.send(embed = embed)
-			await message.author.send(f"Message sent to {self.luciferchase.name}")
+			await message.author.send(f"Message sent to {luci.name}")
 
 
 	# Add last 5 deleted message to database
@@ -159,12 +163,15 @@ class Core(commands.Cog):
 	async def dm(self, ctx, userid: int, *message: str):
 		"""DM a user
 		Syntax: luci dm 707557256220115035 you are geh"""
+		if (userid is None or message is None):
+			await ctx.send("Bruh! Give a user atlease")
+			await ctx.invoke("help", "dm")
 		try:
 			user_to_dm = self.bot.get_user(int(userid))
 			dm_channel = await user_to_dm.create_dm()
 		except:
 			await ctx.send("User not found. Is the user even real?")
-			await self.bot.invoke("help", "dm")
+			await ctx.invoke("help", "dm")
 			return
 
 		message = " ".join(message)
@@ -178,7 +185,7 @@ class Core(commands.Cog):
 			await ctx.send(f"DM Sent successfully to {user_to_dm.name}")
 		except:
 			await ctx.send("DM not sent. Have you done eveything correctly?")
-			await self.bot.invoke("help", "dm")
+			await ctx.invoke("help", "dm")
 
 
 	@commands.guild_only()
@@ -249,7 +256,7 @@ class Core(commands.Cog):
 		# CHeck if there is an actual question given or not
 		if (len(message) == 0):
 			await ctx.send("Bruh! Send a question atlease 🤦‍♂️")
-			await self.bot.invoke("help dm")
+			await ctx.invoke("help", "dm")
 			return
 
 		# Get index of question and options separator "|"
