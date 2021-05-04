@@ -130,7 +130,7 @@ class Core(commands.Cog):
 	@commands.Cog.listener()
 	async def on_message(self, message):
 		# Forward all messages to me if the message is not from a guils, or by a bot or by me
-		if (not message.guild or not message.author.bot or message.author != self.luciferchase):
+		if (message.guild == False or message.author.bot == False or message.author != self.luciferchase):
 			
 			embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
 			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)

@@ -15,7 +15,7 @@ class Photo(commands.Cog):
 		self.log = logging.getLogger("red.cogsbylucifer.photo")
 
 		self.unsplash_api = "https://api.unsplash.com"
-		self.bing_api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-IN"
+		self.bing_api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-GB"
 
 		self.dog_api = "https://api.thedogapi.com/v1/images/search"
 		self.cat_api = "https://api.thecatapi.com/v1/images/search"
