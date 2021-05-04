@@ -84,7 +84,7 @@ class Core(commands.Cog):
 		dm = await luci.create_dm()
 
 		# Forward all messages to me if the message is not from a guils, or by a bot or by me
-		if (message.guild is None or message.author.bot == False or message.author != self.luciferchase):
+		if (message.guild is None or message.author.bot == False or message.author != luci):
 			
 			embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
 			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
@@ -164,7 +164,7 @@ class Core(commands.Cog):
 			dm_channel = await user_to_dm.create_dm()
 		except:
 			await ctx.send("User not found. Is the user even real?")
-			await self.bot.invoke("help dm")
+			await self.bot.invoke("help", "dm")
 			return
 
 		message = " ".join(message)
