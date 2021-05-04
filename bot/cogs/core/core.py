@@ -82,17 +82,9 @@ class Core(commands.Cog):
 		# Create a dm with me
 		luci = self.bot.get_user(707557256220115035)
 		dm_channel = await luci.create_dm()
-		print(luci)
-		print(message.author)
-		print(message.author != luci)
-		print(message.guild is None or not message.author.bot or message.author != luci)
-		print(message.attachments)
-		return
-
 		
 		# Forward all messages to me if the message is not from a guils, or by a bot or by me
-		if (message.guild is None or not message.author.bot \
-			or (str(message.author.name + "#" + message.author.discriminator) != "luciferchase#6310")):
+		if (message.guild is None and not message.author.bot and message.author != luci):
 			
 			embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
 			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
