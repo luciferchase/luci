@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+import requests
+
 
 class Fun(commands.Cog):
 	"""Various fun commands"""
@@ -19,7 +21,7 @@ class Fun(commands.Cog):
 
 		message_string = ""
 
-		if (args is None):
+		if (args == ()):
 			for index in range(26):
 				message_string += f"{chr(97 + index)}: {phonetics[index]}\n"
 
@@ -27,4 +29,13 @@ class Fun(commands.Cog):
 			for letter in args:
 				message_string += f"{letter}: {''.join([word for word in phonetics if word[0].lower() == letter])}\n"
 
-		await ctx.send(f"```ml{message_string}```")
+		await ctx.send(f"```ml\n{message_string}```")
+
+	@commands.command()
+	async def catfact(self, ctx):
+		"""Get a random catfact"""
+
+		fact = requests.get("https://catfact.ninja/fact").json()["fact"]
+		
+		embed = discord.Embed(title = "Catfact ❤", description = fact)
+		await ctx.send(embed = embed)
