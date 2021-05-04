@@ -16,7 +16,7 @@ from cogs.bigmoji import bigmoji
 from cogs.comics import comics
 from cogs.core import core, botstatus, schedule_jobs
 from cogs.conversationgames import conversationgames
-from cogs.fun import fun
+from cogs.fun import fun, tictactoe
 from cogs.ipl import ipl
 from cogs.math import math
 from cogs.meme import meme
@@ -51,6 +51,7 @@ bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
 bot.add_cog(photo.Photo())
 # bot.add_cog(testing.Testing())
+bot.add_cog(tictactoe.TTT(bot))
 
 # Start scheduled commands
 scheduler = schedule_jobs.Scheduler(bot).schedule()

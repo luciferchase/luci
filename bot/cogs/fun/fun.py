@@ -23,7 +23,7 @@ class Fun(commands.Cog):
 
 		if (args == ()):
 			for index in range(26):
-				message_string += f"{chr(97 + index)}: {phonetics[index]}\n"
+				message_string += f"{chr(65 + index)}: {phonetics[index]}\n"
 
 		else:
 			for letter in args:
@@ -37,5 +37,5 @@ class Fun(commands.Cog):
 
 		fact = requests.get("https://catfact.ninja/fact").json()["fact"]
 		
-		embed = discord.Embed(title = "Catfact ❤", description = fact)
+		embed = discord.Embed(title = "Catfact ❤", description = fact, color = 0x00ffff)
 		await ctx.send(embed = embed)
