@@ -161,13 +161,13 @@ class Core(commands.Cog):
 		Syntax: luci dm 707557256220115035 you are geh"""
 		if (userid is None or message is None):
 			await ctx.send("Bruh! Give a user atlease")
-			await ctx.invoke(self.bot.get_command("help"), "dm")
+			# await ctx.invoke(self.bot.get_command("help"), "dm")
 		try:
 			user_to_dm = self.bot.get_user(int(userid))
 			dm_channel = await user_to_dm.create_dm()
 		except:
 			await ctx.send("User not found. Is the user even real?")
-			await ctx.invoke(self.bot.get_command("help"), "dm")
+			# await ctx.invoke(self.bot.get_command("help"), "dm")
 			return
 
 		message = " ".join(message)
@@ -181,7 +181,7 @@ class Core(commands.Cog):
 			await ctx.send(f"DM Sent successfully to {user_to_dm.name}")
 		except:
 			await ctx.send("DM not sent. Have you done eveything correctly?")
-			await ctx.invoke(self.bot.get_command("help"), "dm")
+			# await ctx.invoke(self.bot.get_command("help"), "dm")
 
 
 	@commands.guild_only()
@@ -252,7 +252,7 @@ class Core(commands.Cog):
 		# CHeck if there is an actual question given or not
 		if (len(message) == 0):
 			await ctx.send("Bruh! Send a question atlease 🤦‍♂️")
-			await ctx.invoke(self.bot.get_command("help"), "dm")
+			# await ctx.invoke(self.bot.get_command("help"), "dm")
 			return
 
 		# Get index of question and options separator "|"
