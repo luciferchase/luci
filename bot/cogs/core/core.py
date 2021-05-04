@@ -15,7 +15,6 @@ class Core(commands.Cog):
 		
 		# Create a dm with me
 		self.luciferchase = self.bot.get_user(707557256220115035)
-		self.dm_channel = await self.luciferchase.create_dm()
 
 		# Set up database
 		DATABASE_URL = os.environ["DATABASE_URL"]
@@ -71,6 +70,7 @@ class Core(commands.Cog):
 	@commands.Cog.listener()
 	async def on_invite_create(self, invite):
 		# Create a dm with me
+		dm_channel = await self.luciferchase.create_dm()
 
 		embed = discord.Embed(
 			title = f"Invite Created by {invite.inviter}",
@@ -128,7 +128,7 @@ class Core(commands.Cog):
 			self.cursor.execute("INSERT INTO snipe VALUES {}".format(i))
 
 	@commands.Cog.listener()
-	async def on_message(self, message):
+	async def on_message(self, ctx, message):
 		# Forward all messages to me if the message is not from a guils, or by a bot or by me
 		if (not message.guild or not message.author.bot or message.author != self.luciferchase):
 			
@@ -137,6 +137,7 @@ class Core(commands.Cog):
 			embed.set_footer(text = ctx.message.created_at)
 
 			await self.dm_channel.send(embed = embed)
+			await ctx.send(f"Message sent to {self.luciferchase.name}")
 
 	# Fun, "for all" commands
 	@commands.command()
@@ -313,6 +314,7 @@ class Core(commands.Cog):
 	@commands.command(hidden = True)
 	async def sql(self, ctx, *query):
 		log = logging.getLogger("sql")
+		dm_channel = await self.luciferchase.create_dm()
 		
 		query = " ".join(query)
 		print("Executing query:", query)
