@@ -135,7 +135,10 @@ class Core(commands.Cog):
 			embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
 			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
 			embed.set_footer(text = message.created_at)
-			embed.set_image(url = message.attachments[0].url)
+
+			# Send attachments
+			if (message.attachments != None):
+				embed.set_image(url = message.attachments[0].url)
 
 			await self.dm_channel.send(embed = embed)
 			await message.author.send(f"Message sent to {self.luciferchase.name}")
