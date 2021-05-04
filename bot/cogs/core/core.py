@@ -135,9 +135,8 @@ class Core(commands.Cog):
 	async def dm(self, ctx, userid: int, *message: str):
 		"""DM a user
 		Syntax: luci dm 707557256220115035 you are geh"""
-		print(userid, message)
 		try:
-			user_to_dm = self.bot.get_user(userid)
+			user_to_dm = self.bot.get_user(int(userid))
 			dm_channel = await user_to_dm.create_dm()
 		except:
 			await ctx.send("User not found. Is the user even real?")
