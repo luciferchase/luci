@@ -140,12 +140,12 @@ class Core(commands.Cog):
 			dm_channel = await user_to_dm.create_dm()
 		except:
 			await ctx.send("User not found. Is the user even real?")
-			await self.bot.invoke("help dm")
+			await ctx.invoke(self.bot.get_command("help"), query = "dm")
 			return
 
 		message = " ".join(message)
 
-		embed = discord.Embed(title = "Direct Message", description = message)
+		embed = discord.Embed(title = "Direct Message", description = message, color = 0x00FFFF)
 		embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
 		embed.set_footer(text = ctx.message.created_at)
 
@@ -154,7 +154,7 @@ class Core(commands.Cog):
 			await ctx.send(f"DM Sent successfully to {user_to_dm.name}")
 		except:
 			await ctx.send("DM not sent. Have you done eveything correctly?")
-			await self.bot.invoke("help dm")
+			await ctx.invoke(self.bot.get_command("help"), query = "dm")
 
 
 	@commands.guild_only()
@@ -225,7 +225,7 @@ class Core(commands.Cog):
 		# CHeck if there is an actual question given or not
 		if (len(message) == 0):
 			await ctx.send("Bruh! Send a question atlease 🤦‍♂️")
-			await self.bot.invoke("help dm")
+			await ctx.invoke(self.bot.get_command("help"), query = "poll")
 			return
 
 		# Get index of question and options separator "|"

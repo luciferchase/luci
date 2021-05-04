@@ -150,28 +150,28 @@ class Photo(commands.Cog):
 	async def dog(self, ctx):
 		""" Get a random dog pic
 		"""
-		embed = self.send_photo(self.dog_api)
+		embed = await self.send_photo(self.dog_api)
 		await ctx.send(embed = embed)
 
 	@commands.command(aliases = ["cato"])
 	async def cat(self, ctx):
 		""" Get a random cat pic
 		"""
-		embed = self.send_photo(self.cat_api)
+		embed = await self.send_photo(self.cat_api)
 		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def fox(self, ctx):
 		""" Get a random fox pic
 		"""
-		embed = self.send_photo(self.fox_api)
+		embed = await self.send_photo(self.fox_api)
 		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def panda(self, ctx):
 		""" Get a random panda pic
 		"""
-		embed = self.send_photo(self.panda_api)
+		embed = await self.send_photo(self.panda_api)
 		await ctx.send(embed = embed)
 
 	@commands.command()
@@ -185,12 +185,12 @@ class Photo(commands.Cog):
 	async def birb(self, ctx):
 		""" Get a random bird pic
 		"""
-		embed = self.send_photo(self.birb_api)
+		embed = await self.send_photo(self.birb_api)
 		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def koala(self, ctx):
 		""" Get a random koala pic
 		"""
-		embed = self.send_photo(self.koala_api)
+		embed = await self.send_photo(self.koala_api)
 		await ctx.send(embed = embed)
