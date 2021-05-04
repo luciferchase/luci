@@ -12,6 +12,10 @@ class Core(commands.Cog):
 	"""Core commands. Most of them are owner only."""
 	def __init__(self, bot):
 		self.bot = bot
+		
+		# Create a dm with me
+		self.luciferchase = self.bot.get_user(707557256220115035)
+		self.dm_channel = await self.luciferchase.create_dm()
 
 		# Set up database
 		DATABASE_URL = os.environ["DATABASE_URL"]
@@ -67,15 +71,13 @@ class Core(commands.Cog):
 	@commands.Cog.listener()
 	async def on_invite_create(self, invite):
 		# Create a dm with me
-		luci = self.bot.get_user(707557256220115035)
-		dm = await luci.create_dm()
 
 		embed = discord.Embed(
 			title = f"Invite Created by {invite.inviter}",
 			description = f"Channel: {invite.channel}",
 			color = 0xf34949
 		)
-		await dm.send(embed = embed)
+		await dm_channel.send(embed = embed)
 
 	# Add last 5 deleted message to database
 	@commands.Cog.listener()
@@ -124,6 +126,17 @@ class Core(commands.Cog):
 
 		for i in data:
 			self.cursor.execute("INSERT INTO snipe VALUES {}".format(i))
+
+	@commands.Cog.listener()
+	async def on_message(self, message):
+		# Forward all messages to me if the message is not from a guils, or by a bot or by me
+		if (not message.guild or not message.author.bot or message.author != self.luciferchase):
+			
+			embed = discord.Embed(title = "Direct Message", description = message, color = 0x00FFFF)
+			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+			embed.set_footer(text = ctx.message.created_at)
+
+			await self.dm_channel.send(embed = embed)
 
 	# Fun, "for all" commands
 	@commands.command()
@@ -301,10 +314,6 @@ class Core(commands.Cog):
 	async def sql(self, ctx, *query):
 		log = logging.getLogger("sql")
 		
-		# Create a dm with me
-		luci = self.bot.get_user(707557256220115035)
-		dm = await luci.create_dm()
-
 		query = " ".join(query)
 		print("Executing query:", query)
 		try:
@@ -322,7 +331,7 @@ class Core(commands.Cog):
 			data = self.cursor.fetchall()
 			print(data)
 			await ctx.send("Data sent in DM")
-			await dm.send(data)
+			await self.dm_channel.send(data)
 		except:
 			pass
 
