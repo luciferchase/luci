@@ -129,8 +129,10 @@ class Core(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_message(self, message):
+		dm_channel = await self.luciferchase.create_dm()
+
 		# Forward all messages to me if the message is not from a guils, or by a bot or by me
-		if (message.guild == False or message.author.bot == False or message.author != self.luciferchase):
+		if (message.guild is None or message.author.bot == False or message.author != self.luciferchase):
 			
 			embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
 			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
@@ -143,7 +145,7 @@ class Core(commands.Cog):
 				except:
 					pass
 
-			await self.dm_channel.send(embed = embed)
+			await dm_channel.send(embed = embed)
 			await message.author.send(f"Message sent to {self.luciferchase.name}")
 
 	# Fun, "for all" commands
