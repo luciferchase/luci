@@ -131,7 +131,7 @@ class Core(commands.Cog):
 		"""Ping Pong"""
 		await ctx.send(f"🏓 Pong in {str(round(self.bot.latency, 3))} s")
 
-	@commands.command(aliases = ["pm", "DM"])
+	@commands.command(aliases = ["pm"])
 	async def dm(self, ctx, userid: int, *message: str):
 		"""DM a user
 		Syntax: luci dm 707557256220115035 you are geh"""
