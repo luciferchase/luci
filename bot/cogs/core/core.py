@@ -12,9 +12,6 @@ class Core(commands.Cog):
 	"""Core commands. Most of them are owner only."""
 	def __init__(self, bot):
 		self.bot = bot
-		
-		# Create a dm with me
-		self.luciferchase = self.bot.get_user(707557256220115035)
 
 		# Set up database
 		DATABASE_URL = os.environ["DATABASE_URL"]
@@ -70,14 +67,39 @@ class Core(commands.Cog):
 	@commands.Cog.listener()
 	async def on_invite_create(self, invite):
 		# Create a dm with me
-		dm_channel = await self.luciferchase.create_dm()
+		luci = self.bot.get_user(707557256220115035)
+		dm = await luci.create_dm()
 
 		embed = discord.Embed(
 			title = f"Invite Created by {invite.inviter}",
 			description = f"Channel: {invite.channel}",
 			color = 0xf34949
 		)
-		await dm_channel.send(embed = embed)
+		await dm.send(embed = embed)
+
+	@commands.Cog.listener()
+	async def on_message(self, message):
+		# Create a dm with me
+		luci = self.bot.get_user(707557256220115035)
+		dm = await luci.create_dm()
+
+		# Forward all messages to me if the message is not from a guils, or by a bot or by me
+		if (message.guild is None or message.author.bot == False or message.author != self.luciferchase):
+			
+			embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
+			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
+			embed.set_footer(text = message.created_at)
+
+			# Send attachments
+			if (message.attachments != None):
+				try:
+					embed.set_image(url = message.attachments[0].url)
+				except:
+					pass
+
+			await dm_channel.send(embed = embed)
+			await message.author.send(f"Message sent to {self.luciferchase.name}")
+
 
 	# Add last 5 deleted message to database
 	@commands.Cog.listener()
@@ -127,27 +149,6 @@ class Core(commands.Cog):
 		for i in data:
 			self.cursor.execute("INSERT INTO snipe VALUES {}".format(i))
 
-	@commands.Cog.listener()
-	async def on_message(self, message):
-		dm_channel = await self.luciferchase.create_dm()
-
-		# Forward all messages to me if the message is not from a guils, or by a bot or by me
-		if (message.guild is None or message.author.bot == False or message.author != self.luciferchase):
-			
-			embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
-			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
-			embed.set_footer(text = message.created_at)
-
-			# Send attachments
-			if (message.attachments != None):
-				try:
-					embed.set_image(url = message.attachments[0].url)
-				except:
-					pass
-
-			await dm_channel.send(embed = embed)
-			await message.author.send(f"Message sent to {self.luciferchase.name}")
-
 	# Fun, "for all" commands
 	@commands.command()
 	async def ping(self, ctx) :
@@ -163,12 +164,12 @@ class Core(commands.Cog):
 			dm_channel = await user_to_dm.create_dm()
 		except:
 			await ctx.send("User not found. Is the user even real?")
-			await ctx.invoke(self.bot.get_command("help"), query = "dm")
+			await self.bot.invoke("help dm")
 			return
 
 		message = " ".join(message)
 
-		embed = discord.Embed(title = "Direct Message", description = message, color = 0x00FFFF)
+		embed = discord.Embed(title = "Direct Message", description = message)
 		embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
 		embed.set_footer(text = ctx.message.created_at)
 
@@ -177,7 +178,7 @@ class Core(commands.Cog):
 			await ctx.send(f"DM Sent successfully to {user_to_dm.name}")
 		except:
 			await ctx.send("DM not sent. Have you done eveything correctly?")
-			await ctx.invoke(self.bot.get_command("help"), query = "dm")
+			await self.bot.invoke("help", "dm")
 
 
 	@commands.guild_only()
@@ -248,7 +249,7 @@ class Core(commands.Cog):
 		# CHeck if there is an actual question given or not
 		if (len(message) == 0):
 			await ctx.send("Bruh! Send a question atlease 🤦‍♂️")
-			await ctx.invoke(self.bot.get_command("help"), query = "poll")
+			await self.bot.invoke("help dm")
 			return
 
 		# Get index of question and options separator "|"
@@ -323,8 +324,11 @@ class Core(commands.Cog):
 	@commands.command(hidden = True)
 	async def sql(self, ctx, *query):
 		log = logging.getLogger("sql")
-		dm_channel = await self.luciferchase.create_dm()
 		
+		# Create a dm with me
+		luci = self.bot.get_user(707557256220115035)
+		dm = await luci.create_dm()
+
 		query = " ".join(query)
 		print("Executing query:", query)
 		try:
@@ -342,7 +346,7 @@ class Core(commands.Cog):
 			data = self.cursor.fetchall()
 			print(data)
 			await ctx.send("Data sent in DM")
-			await self.dm_channel.send(data)
+			await dm.send(data)
 		except:
 			pass
 
