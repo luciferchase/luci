@@ -135,12 +135,13 @@ class Core(commands.Cog):
 	async def dm(self, ctx, userid: int, *message: str):
 		"""DM a user
 		Syntax: luci dm 707557256220115035 you are geh"""
+		print(userid, message)
 		try:
 			user_to_dm = self.bot.get_user(userid)
 			dm_channel = await user_to_dm.create_dm()
 		except:
 			await ctx.send("User not found. Is the user even real?")
-			await ctx.send_help()
+			await self.bot.invoke("help dm")
 			return
 
 		message = " ".join(message)
@@ -154,7 +155,7 @@ class Core(commands.Cog):
 			await ctx.send(f"DM Sent successfully to {user_to_dm.name}")
 		except:
 			await ctx.send("DM not sent. Have you done eveything correctly?")
-			await ctx.send_help()
+			await self.bot.invoke("help dm")
 
 
 	@commands.guild_only()
@@ -225,7 +226,7 @@ class Core(commands.Cog):
 		# CHeck if there is an actual question given or not
 		if (len(message) == 0):
 			await ctx.send("Bruh! Send a question atlease 🤦‍♂️")
-			await ctx.send_help()
+			await self.bot.invoke("help dm")
 			return
 
 		# Get index of question and options separator "|"
