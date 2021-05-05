@@ -79,6 +79,7 @@ class Core(commands.Cog):
 			description = f"Channel: {invite.channel}",
 			color = 0xf34949
 		)
+		embed.add_footer(text = invite.created_at)
 		await dm.send(embed = embed)
 
 	@commands.Cog.listener()

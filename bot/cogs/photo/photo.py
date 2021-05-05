@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+import aiohttp
 from datetime import date, datetime
 import json
 import logging
@@ -26,6 +27,9 @@ class Photo(commands.Cog):
 		self.koala_api = "https://some-random-api.ml/img/koala"
 
 		self.unsplash_client_id = os.getenv("UNSPLASH_API_KEY")
+
+		# Initialize a session
+		self.session = aiohttp.ClientSession()
 	
 	@commands.command(aliases = ["photu", "image", "img"])
 	async def photo(self, ctx, *query):
@@ -48,87 +52,88 @@ class Photo(commands.Cog):
 		else:
 			endpoint = endpoint_list["random"]
 
-		response = requests.get(url = self.unsplash_api + endpoint, params = params)
-		data = response.json()
+		async with self.session.get(self.unsplash_api + endpoint, params = params) as response:
+			data = await response.json()
 
-		if (len(query) != 0):
-			if (str(response.status_code)[:2] == 40):
-				self.log.error(f"API Rate limit hit for this hour {datetime.now()}")
-				self.log.error(f"Status Code: {response.status_code}")
+			if (len(query) != 0):
+				if (str(response.status)[:2] == 40):
+					self.log.error(f"API Rate limit hit for this hour {datetime.now()}")
+					self.log.error(f"Status Code: {response.status}")
 
-				response = requests.get(self.dog_api).json()[0]
+					async with self.session.get(self.dog_api) as response:
+						data = await response.json()[0]
 
-				embed = discord.Embed(
-					title = "Sorry!",
-					color = 0xea1010			# Red
-				)
-				embed.add_field(
-					name = "50/50 Requests of this Hour reached. Try again next Hour.",
-					value = "Maybe give money to @luciferchase? Anyway here is a cute doggo ❤"
-				)
-				embed.set_image(url = response["url"])
-				await ctx.send(embed = embed)
-				return
-			
-			elif (data["results"] == []):
-				self.log.error(f"No photo found for the query : {' '.join(query)}")
+						embed = discord.Embed(
+							title = "Sorry!",
+							color = 0xea1010			# Red
+						)
+						embed.add_field(
+							name = "50/50 Requests of this Hour reached. Try again next Hour.",
+							value = "Maybe give money to @luciferchase? Anyway here is a cute doggo ❤"
+						)
+						embed.set_image(url = data["url"])
+						await ctx.send(embed = embed)
+						return
+					
+				elif (data["results"] == []):
+					self.log.error(f"No photo found for the query : {' '.join(query)}")
 
-				response = requests.get(self.dog_api).json()[0]
+					async with self.session.get(self.dog_api) as response:
+						data = await response.json()[0]
 
-				embed = discord.Embed(
-					title = "No Photo Found",
-					color = 0xea1010			# Red
-				)
-				embed.add_field(
-					name = f"No photo found for the query : `{' '.join(query)}`",
-					value = "Maybe change your query? Anyway here is a cute doggo ❤"
-				)
-				embed.set_image(url = response["url"])
-				await ctx.send(embed = embed)
-				return
+						embed = discord.Embed(
+							title = "No Photo Found",
+							color = 0xea1010			# Red
+						)
+						embed.add_field(
+							name = f"No photo found for the query : `{' '.join(query)}`",
+							value = "Maybe change your query? Anyway here is a cute doggo ❤"
+						)
+						embed.set_image(url = data["url"])
+						await ctx.send(embed = embed)
+						return
 
-			likes = {}
+				likes = {}
 
-			for photo in data["results"]:
-				likes[photo["id"]] = photo["likes"]
-			
-			photo_info = [photo for photo in data["results"] if photo["id"] == max(likes)][0]
+				for photo in data["results"]:
+					likes[photo["id"]] = photo["likes"]
+				
+				photo_info = [photo for photo in data["results"] if photo["id"] == max(likes)][0]
 
-		# In case there is no particular photo requested, get a random photo
-		else:
-			photo_info = data
-
-		if (photo_info["description"] == None):
-			if (photo_info["alt_description"] != None):
-				photo_info["description"] = photo_info["alt_description"]
+			# In case there is no particular photo requested, get a random photo
 			else:
-				photo_info["description"] = "Photo"
+				photo_info = data
 
-		embed = discord.Embed(
-			title = f"{' '.join(query)}".title(),
-			description = f'{photo_info["description"][:50]}...',
-			url = photo_info["urls"]["regular"],
-			color = 0xf5009b					# Pinkish
-		)
-		embed.set_author(
-			name = photo_info["user"]["name"],
-			url = f'https://unsplash.com/@{photo_info["user"]["username"]}',
-			icon_url = photo_info["user"]["profile_image"]["large"]
-		)
-		embed.set_thumbnail(url = photo_info["user"]["profile_image"]["large"])
-		embed.set_image(url = photo_info["urls"]["full"])
-		embed.set_footer(text = f"❤️ {photo_info['likes']}")
+			if (photo_info["description"] == None):
+				if (photo_info["alt_description"] != None):
+					photo_info["description"] = photo_info["alt_description"]
+				else:
+					photo_info["description"] = "Photo"
 
-		await ctx.send(embed = embed)
+			embed = discord.Embed(
+				title = f"{' '.join(query)}".title(),
+				description = f'{photo_info["description"][:50]}...',
+				url = photo_info["urls"]["regular"],
+				color = 0xf5009b					# Pinkish
+			)
+			embed.set_author(
+				name = photo_info["user"]["name"],
+				url = f'https://unsplash.com/@{photo_info["user"]["username"]}',
+				icon_url = photo_info["user"]["profile_image"]["large"]
+			)
+			embed.set_thumbnail(url = photo_info["user"]["profile_image"]["large"])
+			embed.set_image(url = photo_info["urls"]["full"])
+			embed.set_footer(text = f"❤️ {photo_info['likes']}")
+
+			await ctx.send(embed = embed)
 
 	@commands.command()
 	async def wallpaper(self, ctx):
 		""" Get Bing's daily wallpaper of the day
 		"""
-
-		response = requests.get(self.bing_api)
-		data = response.json()
-
+		async with self.session.get(self.bing_api) as response:
+			data = await response.json()
+		
 		await ctx.send(data["images"][0]["title"])
 		
 		wallpaper = await ctx.send(f'http://bing.com{data["images"][0]["url"]}')
@@ -140,89 +145,96 @@ class Photo(commands.Cog):
 	async def dog(self, ctx):
 		""" Get a random dog pic
 		"""
-		response = requests.get(self.dog_api).json()[0]
+		async with self.session.get(self.dog_api) as response:
+			data = await response.json()[0]
 
 		embed = discord.Embed(
 			title = "Here is a cute doggo ❤",
 			color = 0xf34949			# Red
 		)
-		embed.set_image(url = response["url"])
+		embed.set_image(url = data["url"])
 		await ctx.send(embed = embed)
 	
 	@commands.command(aliases = ["catto"])
 	async def cat(self, ctx):
 		""" Get a random cat pic
 		"""
-		response = requests.get(self.cat_api).json()[0]
+		async with self.session.get(self.cat_api) as response:
+			data = await response.json()[0]
 
 		embed = discord.Embed(
 			title = "Here is a cute catto ❤",
 			color = 0xf34949			# Red
 		)
-		embed.set_image(url = response["url"])
+		embed.set_image(url = data["url"])
 		await ctx.send(embed = embed)
 	
 	@commands.command()
 	async def fox(self, ctx):
 		""" Get a random fox pic
 		"""
-		response = requests.get(self.fox_api).json()
+		async with self.session.get(self._api) as response:
+			data = await response.json()
 
 		embed = discord.Embed(
 			title = "Here is a cute fox ❤",
 			color = 0xf34949			# Red
 		)
-		embed.set_image(url = response["image"])
+		embed.set_image(url = data["image"])
 		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def panda(self, ctx):
 		""" Get a random panda pic
 		"""
-		response = requests.get(self.panda_api).json()
+		async with self.session.get(self._api) as response:
+			data = await response.json()
 
 		embed = discord.Embed(
 			title = "Here is a cute panda ❤",
 			color = 0xf34949			# Red
 		)
-		embed.set_image(url = response["link"])
+		embed.set_image(url = data["link"])
 		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def redpanda(self, ctx):
 		""" Get a random red panda pic
 		"""
-		response = requests.get(self.red_panda_api).json()
+		async with self.session.get(self._api) as response:
+			data = await response.json()
 
 		embed = discord.Embed(
 			title = "Here is a cute red panda ❤",
 			color = 0xf34949			# Red
 		)
-		embed.set_image(url = response["link"])
+		embed.set_image(url = data["link"])
 		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def birb(self, ctx):
 		""" Get a random bird pic
 		"""
-		response = requests.get(self.birb_api).json()
+		async with self.session.get(self._api) as response:
+			data = await response.json()
 
 		embed = discord.Embed(
 			title = "Here is a cute birb ❤",
 			color = 0xf34949			# Red
 		)
-		embed.set_image(url = response["link"])
+		embed.set_image(url = data["link"])
 		await ctx.send(embed = embed)
 
 	@commands.command()
 	async def koala(self, ctx):
 		""" Get a random koala pic
 		"""
-		response = requests.get(self.koala_api).json()
+		async with self.session.get(self._api) as response:
+			data = await response.json()
 
 		embed = discord.Embed(
 			title = "Here is a cute koala ❤",
 			color = 0xf34949			# Red
 		)
-		embed.set_image(url = response["link"])
+		embed.set_image(url = data["link"])
 		await ctx.send(embed = embed)
