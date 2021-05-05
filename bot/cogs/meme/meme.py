@@ -43,25 +43,26 @@ class Meme(commands.Cog):
 				status_code = data["code"]
 				status_message = data["message"]
 
-		# Else send a random dog photo
-		async with self.session.get(self.dog_api) as response:
+				# Else send a random dog photo
+				async with self.session.get(self.dog_api) as response:
 
-			log.warning(f"Subreddit Requested: {endpoint}")
-			log.error(f'Status Code: {status_code}')
-			log.error(f'Error: {status_message}')
+					log.warning(f"Subreddit Requested: {endpoint}")
+					log.error(f'Status Code: {status_code}')
+					log.error(f'Error: {status_message}')
 
-			data = await response.json()[0]
+					data = await response.json()
+					data = data[0]
 
-			embed = discord.Embed(
-				title = "Bruh...",
-				color = 0xea1010						# Red
-			)
-			embed.add_field(
-				name = status_message,
-				value = "Try again maybe? Anyway here is a cute doggo ❤"
-			)
-			embed.set_image(url = data["url"])
-			await ctx.send(embed = embed)
+					embed = discord.Embed(
+						title = "Bruh...",
+						color = 0xea1010						# Red
+					)
+					embed.add_field(
+						name = status_message,
+						value = "Try again maybe? Anyway here is a cute doggo ❤"
+					)
+					embed.set_image(url = data["url"])
+					await ctx.send(embed = embed)
 
 	@commands.command()
 	async def memespam(self, ctx, endpoint = "dankmemes", count = 5):
@@ -73,7 +74,8 @@ class Meme(commands.Cog):
 		async with self.session.get(self.meme_api + str(count)) as response:
 			# If the query was successfull
 			if (response.status == 200):
-				data = await response.json()["memes"]
+				data = await response.json()
+				data = data["memes"]
 
 				for meme in data:
 					embed = discord.Embed(
@@ -89,20 +91,21 @@ class Meme(commands.Cog):
 					status_code = data["code"]
 					status_message = data["message"]
 
-			# Else send a random dog photo
-			async with self.session.get(self.dog_api) as response:
-				log.error(f'Status Code: {status_code}')
-				log.error(f'Error: {status_message}')
+					# Else send a random dog photo
+					async with self.session.get(self.dog_api) as response:
+						log.error(f'Status Code: {status_code}')
+						log.error(f'Error: {status_message}')
 
-				data = await response.json()[0]
+						data = await response.json()
+						data = data[0]
 
-				embed = discord.Embed(
-					title = "Bruh...",
-					color = 0xea1010						# Red
-				)
-				embed.add_field(
-					name = status_message,
-					value = "Try again maybe? Anyway here is a cute doggo ❤"
-				)
-				embed.set_image(url = data["url"])
-				await ctx.send(embed = embed)
+						embed = discord.Embed(
+							title = "Bruh...",
+							color = 0xea1010						# Red
+						)
+						embed.add_field(
+							name = status_message,
+							value = "Try again maybe? Anyway here is a cute doggo ❤"
+						)
+						embed.set_image(url = data["url"])
+						await ctx.send(embed = embed)

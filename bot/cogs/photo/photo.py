@@ -61,7 +61,8 @@ class Photo(commands.Cog):
 					self.log.error(f"Status Code: {response.status}")
 
 					async with self.session.get(self.dog_api) as response:
-						data = await response.json()[0]
+						data = await response.json()
+						data = data[0]
 
 						embed = discord.Embed(
 							title = "Sorry!",
@@ -79,7 +80,8 @@ class Photo(commands.Cog):
 					self.log.error(f"No photo found for the query : {' '.join(query)}")
 
 					async with self.session.get(self.dog_api) as response:
-						data = await response.json()[0]
+						data = await response.json()
+						data = data[0]
 
 						embed = discord.Embed(
 							title = "No Photo Found",
@@ -146,7 +148,8 @@ class Photo(commands.Cog):
 		""" Get a random dog pic
 		"""
 		async with self.session.get(self.dog_api) as response:
-			data = await response.json()[0]
+			data = await response.json()
+			data = data[0]
 
 		embed = discord.Embed(
 			title = "Here is a cute doggo ❤",
@@ -160,7 +163,8 @@ class Photo(commands.Cog):
 		""" Get a random cat pic
 		"""
 		async with self.session.get(self.cat_api) as response:
-			data = await response.json()[0]
+			data = await response.json()
+			data = data[0]
 
 		embed = discord.Embed(
 			title = "Here is a cute catto ❤",
@@ -173,7 +177,7 @@ class Photo(commands.Cog):
 	async def fox(self, ctx):
 		""" Get a random fox pic
 		"""
-		async with self.session.get(self._api) as response:
+		async with self.session.get(self.fox_api) as response:
 			data = await response.json()
 
 		embed = discord.Embed(
@@ -187,7 +191,7 @@ class Photo(commands.Cog):
 	async def panda(self, ctx):
 		""" Get a random panda pic
 		"""
-		async with self.session.get(self._api) as response:
+		async with self.session.get(self.panda_api) as response:
 			data = await response.json()
 
 		embed = discord.Embed(
@@ -201,7 +205,7 @@ class Photo(commands.Cog):
 	async def redpanda(self, ctx):
 		""" Get a random red panda pic
 		"""
-		async with self.session.get(self._api) as response:
+		async with self.session.get(self.red_panda_api) as response:
 			data = await response.json()
 
 		embed = discord.Embed(
@@ -215,7 +219,7 @@ class Photo(commands.Cog):
 	async def birb(self, ctx):
 		""" Get a random bird pic
 		"""
-		async with self.session.get(self._api) as response:
+		async with self.session.get(self.birb_api) as response:
 			data = await response.json()
 
 		embed = discord.Embed(
@@ -229,7 +233,7 @@ class Photo(commands.Cog):
 	async def koala(self, ctx):
 		""" Get a random koala pic
 		"""
-		async with self.session.get(self._api) as response:
+		async with self.session.get(self.koala_api) as response:
 			data = await response.json()
 
 		embed = discord.Embed(
