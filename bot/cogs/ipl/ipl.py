@@ -1,16 +1,19 @@
 import discord
 from discord.ext import commands
 
+import aiohttp
 from datetime import date, timedelta
 import os
 import psycopg2
-import requests
 
 class IPL(commands.Cog):
 	"""Get info about today's as well as last match in IPL. See current score and play Sattebaaz Championship"""
 
 	def __init__(self, bot):
 		self.bot = bot
+
+		# Initialize a client session
+		self.session = aiohttp.ClientSession()
 
 		self.api_matches = "https://cricapi.com/api/matches?"
 		self.api_score = "https://cricapi.com/api/cricketScore?"
@@ -20,6 +23,18 @@ class IPL(commands.Cog):
 		DATABASE_URL = os.environ['DATABASE_URL']
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
+
+		# Create tables
+		query = """CREATE TABLE IF NOT EXISTS predict
+				(embed_id 	BIGINT	NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
+		query = """CREATE TABLE IF NOT EXISTS standings(
+				user_id		BIGINT	NOT NULL,
+				points		INT 	NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
 
 		# Links for image url of all the teams and the ipl logo
 		self.image_url = {
@@ -36,49 +51,57 @@ class IPL(commands.Cog):
 		self.ipl_logo = "https://img.etimg.com/thumb/width-1200,height-900,imgsize-121113,resizemode-1,msid-81376248/ipl-2021-from-april-9-six-venues-no-home-games-no-spectators.jpg"
 
 	# Update details of last match and upcoming match
-	def fetch_matches(self):
+	async def fetch_matches(self):
 		# Fetch matches from website
 		params = {"apikey": self.apikey}
-		response = requests.get(url = self.api_matches, params = params).json()
 
-		# Details about the last match
-		last_match = []
+		async with self.session.get(self.api_matches, params = params) as response:
+			data = await response.json()
 
-		# Details about the todays match
-		next_match = []
+			# Details about the last match
+			last_match = []
 
-		for match in response["matches"]:
-			# If last match id is similar to IPL matches' ID and date was yesterday 
-			# then add the match to last match list
+			# Details about the todays match
+			next_match = []
 
-			if (str(match["unique_id"])[:-2] == "12540"\
-			 and match["date"][:10] == str(date.today() - timedelta(days = 1))):
-				# date.today() - timedelta(days = 1) yields yesterday's date
+			for match in data["matches"]:
+				# If last match id is similar to IPL matches' ID and date was yesterday 
+				# then add the match to last match list
 
-				last_match.append(match)
+				if (str(match["unique_id"])[:-2] == "12540"\
+				 and match["date"][:10] == str(date.today() - timedelta(days = 1))):
+					# date.today() - timedelta(days = 1) yields yesterday's date
 
-			# If date is todays date
-			if (str(match["unique_id"])[:-2] == "12540"\
-			 and match["date"][:10] == str(date.today())):
-				next_match.append(match)
-			
-		# On normal days, there should be only one last match and second match should be False
-		last_match_details = last_match[0]
-		last_match_details_2 = False
+					last_match.append(match)
 
-		# However when there were two matches yesterday, add it to last match details 2
-		if (len(last_match) > 1):
-			last_match_details_2 = last_match[1]
+				# If date is todays date
+				if (str(match["unique_id"])[:-2] == "12540"\
+				 and match["date"][:10] == str(date.today())):
+					next_match.append(match)
+				
+			# On normal days, there should be only one last match and second match should be False
+			last_match_details = last_match[0]
+			last_match_details_2 = False
 
-		# Similarly make details of next match also
-		next_match_details = next_match[0]
-		next_match_details_2 = False
+			# However when there were two matches yesterday, add it to last match details 2
+			if (len(last_match) > 1):
+				last_match_details_2 = last_match[1]
 
-		if (len(next_match) > 1):
-			next_match_details_2 = next_match[1]
+				# Invert the last match and second last match
+				last_match_details, last_match_details_2 = last_match_details_2, last_match_details
 
-		# Return the details
-		return (last_match_details, last_match_details_2, next_match_details, next_match_details_2)
+			# Similarly make details of next match also
+			next_match_details = next_match[0]
+			next_match_details_2 = False
+
+			if (len(next_match) > 1):
+				next_match_details_2 = next_match[1]
+
+				# Invert again
+				next_match_details, next_match_details_2 = next_match_details_2, next_match_details
+
+			# Return the details
+			return (last_match_details, last_match_details_2, next_match_details, next_match_details_2)
 
 	@commands.command()
 	async def ipl(self, ctx):
@@ -140,61 +163,65 @@ class IPL(commands.Cog):
 		embed.set_thumbnail(url = self.ipl_logo)
 		await ctx.send(embed = embed)
 
-	def fetch_score(self, match_details):
+	async def fetch_score(self, match_details):
 		# Set up params
 		params = {"apikey": self.apikey, "unique_id": match_details["unique_id"]}
-		response = requests.get(url = self.api_score, params = params)
-		data = response.json()
 
-		# If the First Match too hasn't started
-		if (data["matchStarted"] == False):
+		async with self.session.get(self.api_score, params = params) as response:
+			data = await response.json()
 
-			# Send a cute dog image/gif
-			dog_api = "https://api.thedogapi.com/v1/images/search"
-			response_dog = requests.get(dog_api).json()[0]
+			# If the First Match too hasn't started
+			if (data["matchStarted"] == False):
+
+				# Send a cute dog image/gif
+				dog_api = "https://api.thedogapi.com/v1/images/search"
+
+				async with self.session.get(dog_api) as response:
+					response_dog = await response.json()
+					response_dog = response_dog[0]
+
+					embed = discord.Embed(
+						title = "Bruh...",
+						color = 0xea1010			# Red
+					)
+					embed.add_field(
+						name = "The match has not even started yet 🤦‍♂️",
+						value = "Wait till the match starts? Anyway here is a cute doggo ❤"
+					)
+					embed.set_image(url = response_dog["url"])
+					return embed
+
+			# Differentiate between the first team and the second team		
+			index_v = data["score"].find("v")
+			if (data["score"][-1] != "*"):
+				current_batting = data["team-1"]
+			else:
+				current_batting = data["team-2"]
 
 			embed = discord.Embed(
-				title = "Bruh...",
-				color = 0xea1010			# Red
+				title = "Live Score",
+				color = 0x25dbf4,					# Blue
 			)
 			embed.add_field(
-				name = "The match has not even started yet 🤦‍♂️",
-				value = "Wait till the match starts? Anyway here is a cute doggo ❤"
+				name = "Team A",
+				value = data["score"][:index_v],
+				inline = False
 			)
-			embed.set_image(url = response_dog["url"])
+			embed.add_field(
+				name = "Team B",
+				value = data["score"][index_v + 1:],
+				inline = False
+			)
+			embed.set_image(url = self.image_url[current_batting])
+			embed.set_thumbnail(url = self.ipl_logo)
 			return embed
-
-		# Differentiate between the first team and the second team		
-		index_v = data["score"].find("v")
-		if (data["score"][-1] != "*"):
-			current_batting = data["team-1"]
-		else:
-			current_batting = data["team-2"]
-
-		embed = discord.Embed(
-			title = "Live Score",
-			color = 0x25dbf4,					# Blue
-		)
-		embed.add_field(
-			name = "Team A",
-			value = data["score"][:index_v],
-			inline = False
-		)
-		embed.add_field(
-			name = "Team B",
-			value = data["score"][index_v + 1:],
-			inline = False
-		)
-		embed.set_image(url = self.image_url[current_batting])
-		embed.set_thumbnail(url = self.ipl_logo)
-		return embed
 
 	@commands.command()
 	async def score(self, ctx):
 		"""See live score"""
 		await ctx.trigger_typing()
 
-		*_, next_match_details, next_match_details_2 = self.fetch_matches()
+		*_, next_match_details, next_match_details_2 = await self.fetch_matches()
 
 		# Check if there is second match
 		if (next_match_details_2 != False):
@@ -206,7 +233,7 @@ class IPL(commands.Cog):
 		else:
 			match_details = next_match_details
 
-		embed = self.fetch_score(match_details)
+		embed = await self.fetch_score(match_details)
 		await ctx.send(embed = embed)
 
 	async def fetch_standings(self):
@@ -237,7 +264,7 @@ class IPL(commands.Cog):
 		)
 		embed.set_thumbnail(url = self.ipl_logo)
 
-		emojies = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣"]
+		emojies = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 		# Add fields to the embed
 		for index in range(len(leaderboard)):
@@ -279,7 +306,7 @@ class IPL(commands.Cog):
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def predict(self, ctx):
-		*_, next_match_details, next_match_details_2 = self.fetch_matches()
+		*_, next_match_details, next_match_details_2 = await self.fetch_matches()
 
 		channel = self.bot.get_channel(756701639544668160)
 
@@ -350,7 +377,7 @@ class IPL(commands.Cog):
 
 	async def show_points(self):
 		# Get last match's details
-		last_match_details, last_match_details_2, *_ = self.fetch_matches()
+		last_match_details, last_match_details_2, *_ = await self.fetch_matches()
 
 		# Get last embed id
 		self.cursor.execute("SELECT * FROM predict")
@@ -407,18 +434,3 @@ class IPL(commands.Cog):
 		"""Update points and show winners of last prediction(s)"""
 		embed = await self.show_points()
 		await ctx.send(embed = embed)
-		
-	@commands.is_owner()
-	@commands.command(hidden = True)
-	async def database(self, ctx):
-		query = """CREATE TABLE IF NOT EXISTS predict
-				(embed_id 	BIGINT	NOT NULL)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-
-		query = """CREATE TABLE IF NOT EXISTS standings(
-				user_id		BIGINT	NOT NULL,
-				points		INT 	NOT NULL)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-		await ctx.send("All tables created successfully")

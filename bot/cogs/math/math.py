@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from TagScriptEngine import Interpreter, adapter, block
 
-import requests
+import aiohttp
 import json
 import logging
 import time
@@ -20,16 +20,15 @@ class Math(commands.Cog):
 		]
 		self.engine = Interpreter(blocks)
 
-	async def red_delete_data_for_user(self, **kwargs):
-		return
-
+		# Initialize a session
+		self.session = aiohttp.ClientSession()
 	
 	@commands.command()
 	async def math(self, ctx, *expression):
 		""" Solve a math expression. Supports very complex problems too.
 			For eg. `luci math sin(pi/4)`
 		"""
-		log = logging.getLogger("red.cogsbylucifer.math")
+		log = logging.getLogger("math")
 
 		if (expression == ""):
 			embed = discord.Embed(
@@ -45,29 +44,31 @@ class Math(commands.Cog):
 		params = {
 			"expr": "".join(expression) 
 		}
-		response = requests.get(url = api, params = params)
-		end = time.monotonic()
 
-		if (str(response.status_code)[:2] == "40"):
-			log.info(expression)
-			log.error(response.text)
+		async with self.session.get(api, params = params) as response:
+			end = time.monotonic()
 
-		embed = discord.Embed(
-			color = 0xf34949,									# Red					
-			title = response.text
-		)
-		embed.add_field(
-			name = "Your Input:",
-			value = f'`{"".join(expression)}`',
-			inline = True
-		)
-		embed.add_field(
-			name = "Answer:",
-			value = response.text,
-			inline = True
-		)
-		embed.set_footer(text = f"Calculated in {round((end - start) * 1000, 3)} ms")
-		await ctx.send(embed = embed)
+			if (str(response.status_code) != 200):
+				log.info(expression)
+				log.error(response.text)
+				return
+
+			embed = discord.Embed(
+				color = 0xf34949,									# Red					
+				title = await response.text
+			)
+			embed.add_field(
+				name = "Your Input:",
+				value = f'`{"".join(expression)}`',
+				inline = True
+			)
+			embed.add_field(
+				name = "Answer:",
+				value = f"`{await response.text}`",
+				inline = True
+			)
+			embed.set_footer(text = f"Calculated in {round((end - start) * 1000, 3)} ms")
+			await ctx.send(embed = embed)
 
 	@commands.command(aliases=["calc"])
 	async def calculate(self, ctx, *, query):

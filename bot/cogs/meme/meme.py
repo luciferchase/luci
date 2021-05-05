@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 
 import aiohttp
-import requests
 import json
 import random
 import logging
@@ -75,10 +74,11 @@ class Meme(commands.Cog):
 
 		async with self.session.get(self.meme_api + endpoint + str(count)) as response:
 			data = await response.json()
-			data = data["memes"]
 
 			# If the query was successfull
 			if (response.status == 200):
+				data = data["memes"]
+
 				for meme in data:
 					embed = discord.Embed(
 						color = 0x06f9f5,							# Blue-ish

@@ -1,11 +1,13 @@
 import discord
 from discord.ext import commands
 
-import requests
-
+import aiohttp
 
 class Fun(commands.Cog):
 	"""Various fun commands"""
+	def __init__(self):
+		# Initialize a session
+		self.session = aiohttp.ClientSession()
 
 	@commands.command(aliases = ["nda", "nato"])
 	async def alphanato(self, ctx, *args):
@@ -34,8 +36,9 @@ class Fun(commands.Cog):
 	@commands.command()
 	async def catfact(self, ctx):
 		"""Get a random catfact"""
+		async with self.session.get("https://catfact.ninja/fact") as response:
+			data = await response.json()
+			fact = data["fact"]
 
-		fact = requests.get("https://catfact.ninja/fact").json()["fact"]
-		
-		embed = discord.Embed(title = "Catfact ❤", description = fact, color = 0x00ffff)
-		await ctx.send(embed = embed)
+			embed = discord.Embed(title = "Catfact ❤", description = fact, color = 0x00ffff)
+			await ctx.send(embed = embed)
