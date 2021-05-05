@@ -107,13 +107,12 @@ class Scheduler(commands.Cog):
 			"replace_existing": True,  # Very important for persistent data
 		}
 
-		scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
+		scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log, timezone = "Asia/Kolkata")
 
 		# Add jobs to scheduler
-		scheduler.add_job(self.schedule_meme, CronTrigger.from_crontab("30 * * * *")) # Every hour
+		scheduler.add_job(self.schedule_meme, CronTrigger.from_crontab("0 * * * *")) # Every hour
 
-		# Because we are 05:30 hrs ahead of GMT, every cron is set 05:30 hrs behind
-		scheduler.add_job(self.schedule_wallpaper, CronTrigger.from_crontab("30 02 * * *")) # Each day at 0800 hrs
+		scheduler.add_job(self.schedule_wallpaper, CronTrigger.from_crontab("0 8 * * *")) # Each day at 0800 hrs
 		# scheduler.add_job(self.schedule_ipl, CronTrigger.from_crontab("30 02 * * *"))
 
 		# Start the scheduler
