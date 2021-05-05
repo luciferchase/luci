@@ -71,6 +71,8 @@ class Meme(commands.Cog):
 		if (count > 50):
 			await ctx.send("Bruh! Get a life bro. Can't request more than 50 memes at a time 🤦‍♂️")
 
+		endpoint += "/"
+
 		async with self.session.get(self.meme_api + endpoint + str(count)) as response:
 			data = await response.json()
 			data = data["memes"]
