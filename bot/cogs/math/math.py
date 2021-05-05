@@ -48,7 +48,7 @@ class Math(commands.Cog):
 		async with self.session.get(api, params = params) as response:
 			end = time.monotonic()
 
-			if (str(response.status) != 200):
+			if (response.status != 200):
 				log.info(expression)
 				log.error(response.text)
 				return
