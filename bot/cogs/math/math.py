@@ -50,12 +50,12 @@ class Math(commands.Cog):
 
 			if (response.status != 200):
 				log.info(expression)
-				log.error(response.text)
+				log.error(await response.text())
 				return
 
 			embed = discord.Embed(
 				color = 0xf34949,									# Red					
-				title = await response.text
+				title = await response.text()
 			)
 			embed.add_field(
 				name = "Your Input:",
@@ -64,7 +64,7 @@ class Math(commands.Cog):
 			)
 			embed.add_field(
 				name = "Answer:",
-				value = f"`{await response.text}`",
+				value = f"`{await response.text()}`",
 				inline = True
 			)
 			embed.set_footer(text = f"Calculated in {round((end - start) * 1000, 3)} ms")
