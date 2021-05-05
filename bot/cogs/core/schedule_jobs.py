@@ -4,40 +4,50 @@ from discord.ext import commands
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
+import aiohttp
 import logging
 import os
 import psycopg2
-import requests
 
-from cogs.meme import meme
 from cogs.ipl import ipl
 
 class Scheduler(commands.Cog):
 	"""Schedule commands."""
 	def __init__(self, bot):
 		self.bot = bot
+
+		# Initialize session
+		self.session = aiohttp.ClientSession()
 	
 	# Scheduled events
 	async def schedule_meme(self):
-		channel = self.bot.get_channel(835113922172026881)
-		embed = await meme.Meme().meme_code()
-		meme_embed = await channel.send(embed = embed)
-		await meme_embed.add_reaction("😂")
+		async with self.session.get("https://meme-api.herokuapp.com/gimme/dankmemes") as response:
+			data = await response.json()
 
-	# Only a small function so leaving it here
+			channel = self.bot.get_channel(835113922172026881)
+		
+			embed = discord.Embed(
+				color = 0x06f9f5,							# Blue-ish
+				title = data["title"],
+				url = data["postLink"]
+			)
+			embed.set_image(url = data["url"])
+			embed.set_footer(text = f'👍 {data["ups"]}')
+			await channel.send(embed = embed)
+
 	async def schedule_wallpaper(self):
 		channel = self.bot.get_channel(738731755569414197)
 		api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US"
 
-		response = requests.get(api)
-		data = response.json()
+		async with self.session.get(api) as response:
+			data = await response.json()
 
-		await channel.send(data["images"][0]["title"])
-		
-		wallpaper = await channel.send(f'http://bing.com{data["images"][0]["url"]}')
-		await wallpaper.add_reaction("❤️")
-		await wallpaper.add_reaction("👍")
-		await wallpaper.add_reaction("👎")
+			await channel.send(data["images"][0]["title"])
+			
+			wallpaper = await channel.send(f'http://bing.com{data["images"][0]["url"]}')
+			await wallpaper.add_reaction("❤️")
+			await wallpaper.add_reaction("👍")
+			await wallpaper.add_reaction("👎")
 
 	async def schedule_ipl(self):
 		# Set up database
