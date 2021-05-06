@@ -409,8 +409,8 @@ class Core(commands.Cog):
 		# Change nickname
 		# First get member instance of the user
 		for member in self.bot.get_all_members():
-			if (member.id == afk_member.id)
-			await member.edit(nick = afk_member.nick[6:])
+			if (member.id == afk_member.id):
+				await member.edit(nick = afk_member.nick[6:])
 
 	# Dev commands, "owner only"
 	@commands.is_owner()
