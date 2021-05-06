@@ -125,7 +125,7 @@ class Core(commands.Cog):
 			nacho_emoji = self.bot.get_emoji(839499460874862655)
 
 			# If an AFK member is pinged
-			if (afk_member.mention in message):
+			if (afk_member.mention in message.content):
 				await ctx.send(f"{ping_emoji} :: {message.author.mention}, **{afk_member.nick}** is currently AFK. [Last seen {data[index][2]}]")
 
 				# Send a reason if present
