@@ -382,7 +382,10 @@ class Core(commands.Cog):
 		self.cursor.execute(query)
 		self.dbcon.commit()
 
-		await ctx.send(f"check: {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
+		# Get the check emote
+		check = get(self.bot.get_all_emojis(), name = "check")
+		
+		await ctx.send(f"{check} {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
 		await ctx.author.edit(nick = f"[AFK] {ctx.author.nick}")
 
 	# Dev commands, "owner only"
