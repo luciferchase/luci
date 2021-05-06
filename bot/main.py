@@ -29,7 +29,7 @@ from cogs.tictactoe import tictactoe
 intents = discord.Intents.all()
 
 # Configure help menu
-menu = DefaultMenu(page_left = "◀", page_right = "▶")
+menu = DefaultMenu(page_left = "⬅️", page_right = "➡️")
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")

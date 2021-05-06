@@ -32,7 +32,7 @@ class Core(commands.Cog):
 		await Botstatus(self.bot).set_botstatus_on_ready()
 
 		# Sync slash commands
-		await slash.sync_all_commands(self.bot)
+		# await slash.sync_all_commands(self.bot)
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
