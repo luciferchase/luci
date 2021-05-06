@@ -374,6 +374,15 @@ class Core(commands.Cog):
 	@commands.guild_only()
 	@commands.command()
 	async def afk(self, ctx, *message):
+		# First create a table if no afk table is present
+		query = """CREATE TABLE IF NOT EXITS afk(
+				member_id 	BIGINT 		NOT NULL 	PRIMARY_KEY,
+				message		TEXT,
+				last_seen	TEXT		NOT NULL,
+				guild_id	BIGINT		NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
 		# Insert data into the database
 		query = f"""INSERT INTO afk VALUES
 				({ctx.author.id}, '{" ".join(message)}', '{datetime.now().strftime("%m/%d/%Y %H:%M:%S")}', {ctx.guild.id})"""
