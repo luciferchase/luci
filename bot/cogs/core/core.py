@@ -85,7 +85,7 @@ class Core(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_message(self, message):
-		# If the message if from the bot itself then return
+		# If the message is from the bot itself then return
 		if (message.author == self.bot.user):
 			return
 
@@ -112,7 +112,7 @@ class Core(commands.Cog):
 
 		# First create a table if no afk table is present
 		query = """CREATE TABLE IF NOT EXISTS afk(
-				member_id 	BIGINT 		NOT NULL 	PRIMARY_KEY,
+				member_id 	BIGINT 		NOT NULL 	PRIMARY KEY,
 				message		TEXT,
 				last_seen	TEXT		NOT NULL,
 				guild_id	BIGINT		NOT NULL)"""
