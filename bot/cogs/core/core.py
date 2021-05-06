@@ -84,7 +84,7 @@ class Core(commands.Cog):
 		await dm.send(embed = embed)
 
 	@commands.Cog.listener()
-	async def on_message(self, message):
+	async def on_message(self, member: discord.Member, message):
 		# If the message is from the bot itself then return
 		if (message.author == self.bot.user):
 			return
@@ -139,7 +139,7 @@ class Core(commands.Cog):
 				self.dbcon.commit()
 
 				# Change nickname
-				await afk_member.edit(nick = afk_member.nick[6:])
+				await member.edit(nick = afk_member.nick[6:])
 
 				# Get the nacho emoji
 				await ctx.send(f"{blobwave_emoji} :: Welcome back, {afk_member.mention}! I've removed your AFK status. Enjoy {nacho_emoji}")
@@ -368,7 +368,7 @@ class Core(commands.Cog):
 
 	@commands.guild_only()
 	@commands.command()
-	async def afk(self, ctx, *message):
+	async def afk(self, ctx, member: discord.Member, *message):
 		# Create table if not exists
 		query = """CREATE TABLE IF NOT EXISTS afk(
 				member_id 	BIGINT	NOT NULL 	PRIMARY KEY,
@@ -397,13 +397,14 @@ class Core(commands.Cog):
 
 			await ctx.send(f"{blobwave_emoji} :: {ctx.author.mention} You are already set as AFK. Welcome back! {nacho_emoji}")
 		
+		print(message)
 		if (message != ""):
 			await ctx.send(f"{check_emoji} {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
 		else:
 			await ctx.send(f"{check_emoji} {ctx.author.mention} I have set you as AFK.")
 
 		# Change nickname
-		await ctx.author.edit(nick = f"[AFK] {ctx.author.nick}")
+		await member.edit(nick = f"[AFK] {member.nick}")
 
 	# Dev commands, "owner only"
 	@commands.is_owner()
