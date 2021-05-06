@@ -378,7 +378,7 @@ class Core(commands.Cog):
 	async def afk(self, ctx, *message):
 		# Insert data into the database
 		query = f"""INSERT INTO afk VALUES
-				({ctx.author.id}, {" ".join(message)}, {datetime.now().strftime("%m/%d/%Y %H:%M:%S")}, {ctx.guild.id})"""
+				({ctx.author.id}, '{" ".join(message)}', '{datetime.now().strftime("%m/%d/%Y %H:%M:%S")}', {ctx.guild.id})"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
 
