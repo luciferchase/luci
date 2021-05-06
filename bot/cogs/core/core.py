@@ -129,7 +129,7 @@ class Core(commands.Cog):
 				await ctx.send(f"{ping_emoji} :: {message.author.mention}, **{afk_member.nick}** is currently AFK. [Last seen {data[index][2]}]")
 
 				# Send a reason if present
-				if (data[index][1] != ""):
+				if (data[index][1] != None):
 					await ctx.send(f"**Reason:** {data[index][1]}")
 
 			# If an AFK member sends a message
@@ -389,8 +389,7 @@ class Core(commands.Cog):
 		# Insert data into the database
 		try:
 			query = f"""INSERT INTO afk VALUES
-					({ctx.author.id}, '{" ".join(message)}', '{datetime.now().strftime("%m/%d/%Y %H:%M:%S")}', \
-					{ctx.guild.id})"""
+					({ctx.author.id}, "{" ".join(message)}", "{datetime.now().strftime("%m/%d/%Y %H:%M:%S")}", {ctx.guild.id})"""
 			self.cursor.execute(query)
 			self.dbcon.commit()
 		
@@ -401,16 +400,16 @@ class Core(commands.Cog):
 			await ctx.send(f"{blobwave_emoji} :: {ctx.author.mention} You are already set as AFK. Welcome back! {nacho_emoji}")
 		
 		print(message)
-		if (message != ""):
-			await ctx.send(f"{check_emoji} {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
+		if (message != None):
+			await ctx.send(f"{check_emoji} :: {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
 		else:
-			await ctx.send(f"{check_emoji} {ctx.author.mention} I have set you as AFK.")
+			await ctx.send(f"{check_emoji} :: {ctx.author.mention} I have set you as AFK.")
 
 		# Change nickname
 		# First get member instance of the user
 		for member in self.bot.get_all_members():
-			if (member.id == afk_member.id):
-				await member.edit(nick = afk_member.nick[6:])
+			if (member.id == ctx.author.id):
+				await member.edit(nick = f"[AFK] {ctx.author.nick}")
 
 	# Dev commands, "owner only"
 	@commands.is_owner()
