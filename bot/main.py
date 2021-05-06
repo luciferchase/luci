@@ -33,10 +33,16 @@ menu = DefaultMenu(page_left = "⬅️", page_right = "➡️")
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-bot = commands.Bot(command_prefix = ["luci ", "Luci "], case_insensitive = True, strip_after_prefix = True, 
-	intents = intents, self_bot = False, owner_id = 707557256220115035,  
+bot = commands.Bot(
+	command_prefix = ["luci ", "Luci "], 
+	case_insensitive = True, 
+	strip_after_prefix = True, 
+	intents = intents, 
+	self_bot = False, 
+	owner_id = 707557256220115035,  
 	help_command = PrettyHelp(color = 0xf34949, sort_commands = True),
-	description = "A General-Purpose Discord Bot Created by luciferchase#6310")
+	description = "A General-Purpose Discord Bot Created by luciferchase#6310"
+)
 
 # Set up logging
 logging.basicConfig(level = logging.WARNING)

@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.utils import get
 
 from datetime import datetime, timedelta
 import logging
@@ -84,12 +85,16 @@ class Core(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_message(self, message):
-		# Create a dm with me
+		# If the message if from the bot itself then return
+		if (message.author == self.bot.user):
+			return
+
+		# Make a variable about me
 		luci = self.bot.get_user(707557256220115035)
-		dm_channel = await luci.create_dm()
 		
 		# Forward all messages to me if the message is not from a guils, or by a bot or by me
 		if (message.guild is None and not message.author.bot and message.author != luci):
+			dm_channel = await luci.create_dm()
 			
 			embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
 			embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
@@ -104,6 +109,47 @@ class Core(commands.Cog):
 
 			await dm_channel.send(embed = embed)
 			await message.channel.send(f"Message sent to {luci.name}")
+
+		# Check if the message is pinging an AFK member or an AFK member has returned
+		if (message.guild is not None and not message.author.bot):
+			# First create a table if no afk table is present
+			query = """CREATE TABLE IF NOT EXITS afk(
+					member_id 	BIGINT 		NOT NULL 	PRIMARY_KEY,
+					message		TEXT,
+					last_seen	TEXT		NOT NULL,
+					guild_id	BIGINT		NOT NULL)"""
+			self.cursor.execute(query)
+			self.dbcon.commit()
+
+			# Fetch all AFK members
+			self.cursor.execute(f"""SELECT * FROM afk WHERE guild_id = {message.guild.id}""")
+			data = self.cursor.fetchall()
+
+			for index in data:
+				afk_member = self.bot.get_user(data[index][0])
+
+				# If an AFK member is pinged
+				if (member.mention in message):
+					await ctx.send(f"ping:839468910734606356 :: {message.author.mention}, **{afk_member.nick}** is \
+						currently AFK. [Last seen {data[index][2]}]")
+
+					# Send a reason if present
+					if (data[index][1] != ""):
+						await ctx.send(f"**Reason:** {data[index][1]}")
+
+				# If an AFK member sends a message
+				if (message.author == afk_member):
+					# Remove from database
+					self.cursor.execute(f"""DELETE FROM afk WHERE member_id = {data[index][0]}""")
+					self.dbcon.commit()
+
+					# Change nickname
+					await afk_member.edit(nick = afk_member.nick[6:])
+
+					# Get the nacho emoji
+					nacho = get(self.bot.get_all_emojis(), name = "nacho")
+					await ctx.send(f"blobwave:839737122633023498 :: Welcome back, {afk_member.mention}! \
+						I've removed your AFK status. Enjoy {nacho}")
 
 
 	# Add last 5 deleted message to database
@@ -326,6 +372,18 @@ class Core(commands.Cog):
 			final_message.append(message_string)
 
 		await ctx.send(" ".join(final_message))
+
+	@commands.guild_only()
+	@commands.command()
+	async def afk(self, ctx, *message):
+		# Insert data into the database
+		query = f"""INSERT INTO afk VALUES
+				({ctx.author.id}, {" ".join(message)}, {datetime.now().strftime("%m/%d/%Y %H:%M:%S")}, {ctx.guild.id})"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
+		await ctx.send(f"check: {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
+		await ctx.author.edit(nick = f"[AFK] {ctx.author.nick}")
 
 	# Dev commands, "owner only"
 	@commands.is_owner()
