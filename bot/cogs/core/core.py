@@ -389,7 +389,7 @@ class Core(commands.Cog):
 		# Insert data into the database
 		try:
 			query = f"""INSERT INTO afk VALUES
-					({ctx.author.id}, "{" ".join(message)}", "{datetime.now().strftime("%m/%d/%Y %H:%M:%S")}", {ctx.guild.id})"""
+					({ctx.author.id}, '{" ".join(message)}', '{datetime.now().strftime("%m/%d/%Y %H:%M:%S")}', {ctx.guild.id})"""
 			self.cursor.execute(query)
 			self.dbcon.commit()
 		
