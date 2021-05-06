@@ -123,7 +123,10 @@ class Core(commands.Cog):
 		self.cursor.execute(f"""SELECT * FROM afk WHERE guild_id = {message.guild.id}""")
 		data = self.cursor.fetchall()
 
-		for index in data:
+		if (len(data) == 0):
+			return
+
+		for index in range(len(data)):
 			afk_member = self.bot.get_user(data[index][0])
 
 			# If an AFK member is pinged
@@ -145,9 +148,8 @@ class Core(commands.Cog):
 				await afk_member.edit(nick = afk_member.nick[6:])
 
 				# Get the nacho emoji
-				nacho = get(self.bot.get_all_emojis(), name = "nacho")
 				await ctx.send(f"blobwave:839737122633023498 :: Welcome back, {afk_member.mention}! \
-					I've removed your AFK status. Enjoy {nacho}")
+					I've removed your AFK status. Enjoy a:nacho:839499460874862655")
 
 
 	# Add last 5 deleted message to database
@@ -379,11 +381,9 @@ class Core(commands.Cog):
 				({ctx.author.id}, '{" ".join(message)}', '{datetime.now().strftime("%m/%d/%Y %H:%M:%S")}', {ctx.guild.id})"""
 		self.cursor.execute(query)
 		self.dbcon.commit()
-
-		# Get the check emote
-		check = get(self.bot.get_all_emojis(), name = "check")
 		
-		await ctx.send(f"{check} {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
+		await ctx.send(f"a:check:839713949436084246 {ctx.author.mention} I have set you as AFK. \
+			**Reason:** {' '.join(message)}")
 		await ctx.author.edit(nick = f"[AFK] {ctx.author.nick}")
 
 	# Dev commands, "owner only"
