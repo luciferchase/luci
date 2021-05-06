@@ -107,15 +107,15 @@ class TTT(commands.Cog):
 	@staticmethod
 	def _decode_move(emoji):
 		dict = {
-			"\u2196": 0,
-			"\u2B06": 1,
-			"\u2197": 2,
-			"\u2B05": 3,
-			"\u23FA": 4,
-			"\u27A1": 5,
-			"\u2199": 6,
-			"\u2B07": 7,
-			"\u2198": 8,
+			"↖️": 0,
+			"⬆️": 1,
+			"↗️": 2,
+			"⬅️": 3,
+			"⚪": 4,
+			"➡️": 5,
+			"↙️": 6,
+			"⬇️": 7,
+			"↘️": 8,
 		}
 		return dict[emoji] if emoji in dict else None
 
