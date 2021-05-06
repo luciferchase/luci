@@ -33,7 +33,9 @@ class Scheduler(commands.Cog):
 			)
 			embed.set_image(url = data["url"])
 			embed.set_footer(text = f'👍 {data["ups"]}')
-			await channel.send(embed = embed)
+			meme = await channel.send(embed = embed)
+			await meme.add_reaction("😂")
+			await meme.add_reaction("leo-1:748517015962255440")
 
 	async def schedule_wallpaper(self):
 		channel = self.bot.get_channel(738731755569414197)

@@ -21,7 +21,6 @@ class TTT(commands.Cog):
 		self.bot = bot
 		self.ttt_games = {}
 
-	@commands.guild_only()
 	@commands.bot_has_permissions(add_reactions=True)
 	@commands.max_concurrency(1, commands.BucketType.user)
 	@commands.command()
@@ -81,15 +80,15 @@ class TTT(commands.Cog):
 		return f"{author.mention}\n{self._table(self.ttt_games[author.id])}\n"
 
 	async def _make_buttons(self, msg):
-		await msg.add_reaction("\u2196")  # 0 tl
-		await msg.add_reaction("\u2B06")  # 1 t
-		await msg.add_reaction("\u2197")  # 2 tr
-		await msg.add_reaction("\u2B05")  # 3 l
-		await msg.add_reaction("\u23FA")  # 4 mid
-		await msg.add_reaction("\u27A1")  # 5 r
-		await msg.add_reaction("\u2199")  # 6 bl
-		await msg.add_reaction("\u2B07")  # 7 b
-		await msg.add_reaction("\u2198")  # 8 br
+		await msg.add_reaction("↖️")
+		await msg.add_reaction("⬆️")
+		await msg.add_reaction("↗️")
+		await msg.add_reaction("⬅️")
+		await msg.add_reaction("⚪")
+		await msg.add_reaction("➡️")
+		await msg.add_reaction("↙️")
+		await msg.add_reaction("⬇️")
+		await msg.add_reaction("↘️")
 
 	@commands.Cog.listener()
 	async def on_reaction_add(self, reaction, user):

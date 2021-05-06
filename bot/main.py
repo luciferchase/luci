@@ -18,7 +18,7 @@ from cogs.comics import comics
 from cogs.core import core, schedule_jobs
 from cogs.conversationgames import conversationgames
 from cogs.fun import fun
-from cogs.ipl import ipl
+# from cogs.ipl import ipl
 from cogs.math import math
 from cogs.meme import meme
 from cogs.photo import photo
@@ -27,6 +27,9 @@ from cogs.tictactoe import tictactoe
 
 # Get Members intent
 intents = discord.Intents.all()
+
+# Configure help menu
+menu = DefaultMenu(page_left = "◀", page_right = "▶")
 
 # Configure the bot
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -48,7 +51,7 @@ bot.add_cog(core.Core(bot))
 # bot.add_cog(core.Help(bot))
 bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(fun.Fun())
-bot.add_cog(ipl.IPL(bot))
+# bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
 bot.add_cog(photo.Photo())
