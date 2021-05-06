@@ -369,6 +369,20 @@ class Core(commands.Cog):
 	@commands.guild_only()
 	@commands.command()
 	async def afk(self, ctx, *message):
+		# Create table if not exists
+		query = """CREATE TABLE IF NOT EXISTS afk(
+				member_id 	BIGINT	NOT NULL 	PRIMARY KEY,
+				message		TEXT,
+				last_seen	TEXT	NOT NULL,
+				guild_id	BIGINT 	NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
+		# Get emojis
+		blobwave_emoji = self.bot.get_emoji(839737122633023498)
+		check_emoji = self.bot.get_emoji(839713949436084246)
+		nacho_emoji = self.bot.get_emoji(839499460874862655)
+
 		# Insert data into the database
 		try:
 			query = f"""INSERT INTO afk VALUES
@@ -376,12 +390,19 @@ class Core(commands.Cog):
 					{ctx.guild.id})"""
 			self.cursor.execute(query)
 			self.dbcon.commit()
+		
 		except:
-			await ctx.send(f"")
+			self.cursor.execute("DELETE FROM afk WHERE member_id = {}".format(ctx.author.id))
+			self.dbcon.commit()
 
-		check_emoji = self.bot.get_emoji(839713949436084246)
-			
-		await ctx.send(f"{check_emoji} {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
+			await ctx.send(f"{blobwave_emoji} :: {ctx.author.mention} You are already set as AFK. Welcome back! {nacho_emoji}")
+		
+		if (message != ""):
+			await ctx.send(f"{check_emoji} {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
+		else:
+			await ctx.send(f"{check_emoji} {ctx.author.mention} I have set you as AFK.")
+
+		# Change nickname
 		await ctx.author.edit(nick = f"[AFK] {ctx.author.nick}")
 
 	# Dev commands, "owner only"
