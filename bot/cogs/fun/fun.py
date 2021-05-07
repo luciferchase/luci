@@ -33,6 +33,7 @@ class Fun(commands.Cog):
 
 		await ctx.send(f"```ml\n{message_string}```")
 
+	
 	@commands.command()
 	async def catfact(self, ctx):
 		"""Get a random catfact"""
@@ -42,3 +43,136 @@ class Fun(commands.Cog):
 
 			embed = discord.Embed(title = "Catfact ❤", description = fact, color = 0x00ffff)
 			await ctx.send(embed = embed)
+
+	
+	@commands.command()
+	async def dogfact(self, ctx):
+		"""Get a random catfact"""
+		async with self.session.get("https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=1") as response:
+			data = await response.json()
+			fact = data[0]["fact"]
+
+			embed = discord.Embed(title = "Dogfact ❤", description = fact, color = 0x00ffff)
+			await ctx.send(embed = embed)
+	
+	
+	@commands.guild_only()
+	@commands.command()
+	async def poll(self, ctx, *message):
+		"""Do a poll
+		Syntax: luci poll <question> |option 1|option 2|option 3|...
+		For eg: luci poll Is luci geh? |Yes|No|You are geh|
+		You can omit options to make it automatically a two option poll
+		"""
+
+		# Delete original message
+		await ctx.message.delete()
+
+		message = " ".join(message)
+		time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+
+		# CHeck if there is an actual question given or not
+		if (len(message) == 0):
+			await ctx.send("Bruh! Send a question atlease 🤦‍♂️")
+			# await ctx.invoke(self.bot.get_command("help"), "dm")
+			return
+
+		# Get index of question and options separator "|"
+		index = message.find("|")
+
+		# Check if there are any options or not
+		if (index != -1):
+			# Get question and options from the message
+			question = message[:message.find("|")]
+			options = [option for option in message[message.find("|") + 1:].split("|") if option != ""]
+
+			# Check if there are more than 26 options
+			if (len(options) > 26):
+				await ctx.send("Bruh! Please give maximum 26 options 🤦‍♂️")
+				return
+
+			reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "J", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
+			"🇶", "🇷", "🇸", "🇹", "🇺", "🇻", "🇼", "🇽", "🇾", "🇿"]
+
+			options_string = ""
+			for index in range(len(options)):
+				options_string += f"{reactions[index]} {options[index]}\n"
+
+			embed = discord.Embed(
+				title = question,
+				description = options_string,
+				color = 0x00FFFF
+			)
+			embed.set_footer(text = time)
+			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+
+			poll_embed = await ctx.send(embed = embed)
+
+			for index in range(len(options)):
+				await poll_embed.add_reaction(reactions[index])
+			
+		# Else by default make a dual option poll
+		else:
+			question = "".join(message)
+
+			embed = discord.Embed(
+				title = question,
+				color = 0x00FFFF
+			)
+			embed.set_footer(text = time)
+			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+
+			poll_embed = await ctx.send(embed = embed)
+			await poll_embed.add_reaction("👍")
+			await poll_embed.add_reaction("👎")
+
+	
+	@commands.command(aliases = ["emojify", "cry"])
+	async def shout(self, ctx, *message):
+		"""Convert a message into emojies"""
+
+		# Delete original message
+		await ctx.message.delete()
+		
+		final_message = []
+
+		for word in message:
+			message_string = ""
+
+			for letter in word:
+				message_string += f":regional_indicator_{letter.lower()}: "
+			final_message.append(message_string)
+
+		await ctx.send(" ".join(final_message))
+
+
+	@commands.command()
+	async def insult(self, ctx, member: discord.Member = None):
+		"""Insult someone"""
+
+		if (member is None):
+			member = ctx.author
+
+		async with self.session.get("https://evilinsult.com/generate_insult.php") as response:
+			text = await response.text()
+
+			embed = discord.Embed(
+				title = f"{ctx.author.nick} insulted {member.nick}",
+				description = text,
+				color = 0xf34949
+			)
+			await ctx.send(embed = embed)
+
+
+	@commands.guild_only()
+	@commands.command(aliases = ["s"])
+	async def emote(self, ctx, emoji_name):
+		"""Send an animated emoji even if you don't have nitro"""
+
+		# First get all the emojies the bot has access
+		emojies = ctx.guild.emojis()
+
+		# Send emoji
+		for emoji in emojies:
+			if (emoji.name == emoji_name):
+				await ctx.invoke(command = "bigmoji", emoji = emoji)

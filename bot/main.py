@@ -10,6 +10,7 @@ import requests
 import psycopg2
 
 # Install all cogs
+from cogs.afk import afk
 from cogs.aki import aki
 from cogs.avatar import avatar
 from cogs.bigmoji import bigmoji
@@ -48,6 +49,7 @@ bot = commands.Bot(
 logging.basicConfig(level = logging.WARNING)
 
 # Register Cogs
+bot.add_cog(afk.AFK(bot))
 bot.add_cog(aki.Aki(bot))
 bot.add_cog(avatar.Avatar())
 bot.add_cog(bigmoji.Bigmoji(bot))

@@ -110,44 +110,6 @@ class Core(commands.Cog):
 			await dm_channel.send(embed = embed)
 			await message.channel.send(f"Message sent to {luci.name}")
 
-		# Fetch all AFK members
-		self.cursor.execute(f"""SELECT * FROM afk WHERE guild_id = {message.guild.id}""")
-		data = self.cursor.fetchall()
-
-		if (len(data) == 0):
-			return
-
-		for index in range(len(data)):
-			afk_member = self.bot.get_user(data[index][0])
-
-			ping_emoji = self.bot.get_emoji(839468910734606356)
-			blobwave_emoji = self.bot.get_emoji(839737122633023498)
-			nacho_emoji = self.bot.get_emoji(839499460874862655)
-
-			# If an AFK member is pinged
-			if (afk_member.mention in message.content):
-				await ctx.send(f"{ping_emoji} :: {message.author.mention}, **{afk_member.nick}** is currently AFK. [Last seen {data[index][2]}]")
-
-				# Send a reason if present
-				if (data[index][1] != None):
-					await ctx.send(f"**Reason:** {data[index][1]}")
-
-			# If an AFK member sends a message
-			if (message.author == afk_member):
-				# Remove from database
-				self.cursor.execute(f"""DELETE FROM afk WHERE member_id = {data[index][0]}""")
-				self.dbcon.commit()
-
-				# Change nickname
-				# First get member instance of the user
-				for member in self.bot.get_all_members():
-					if (member.id == afk_member.id):
-						await member.edit(nick = afk_member.nick[6:])
-
-				# Get the nacho emoji
-				await ctx.send(f"{blobwave_emoji} :: Welcome back, {afk_member.mention}! I've removed your AFK status. Enjoy {nacho_emoji}")
-
-
 	# Add last 5 deleted message to database
 	@commands.Cog.listener()
 	async def on_message_delete(self, message):
@@ -201,6 +163,7 @@ class Core(commands.Cog):
 	async def ping(self, ctx) :
 		"""Ping Pong"""
 		await ctx.send(f"🏓 Pong in {str(round(self.bot.latency, 3))} s")
+
 
 	@commands.command(aliases = ["pm"])
 	async def dm(self, ctx, userid: int, *message: str):
@@ -281,136 +244,7 @@ class Core(commands.Cog):
 		embed.set_author(name = f"Author: {author.name}", icon_url = author.avatar_url)
 		await ctx.send(embed = embed)
 
-	@commands.guild_only()
-	@commands.command()
-	async def poll(self, ctx, *message):
-		"""Do a poll
-		Syntax: luci poll <question> |option 1|option 2|option 3|...
-		For eg: luci poll Is luci geh? |Yes|No|You are geh|
-		You can omit options to make it automatically a two option poll
-		"""
-
-		# Delete original message
-		await ctx.message.delete()
-
-		message = " ".join(message)
-		time = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
-
-		# CHeck if there is an actual question given or not
-		if (len(message) == 0):
-			await ctx.send("Bruh! Send a question atlease 🤦‍♂️")
-			# await ctx.invoke(self.bot.get_command("help"), "dm")
-			return
-
-		# Get index of question and options separator "|"
-		index = message.find("|")
-
-		# Check if there are any options or not
-		if (index != -1):
-			# Get question and options from the message
-			question = message[:message.find("|")]
-			options = [option for option in message[message.find("|") + 1:].split("|") if option != ""]
-
-			# Check if there are more than 26 options
-			if (len(options) > 26):
-				await ctx.send("Bruh! Please give maximum 26 options 🤦‍♂️")
-				return
-
-			reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "J", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
-			"🇶", "🇷", "🇸", "🇹", "🇺", "🇻", "🇼", "🇽", "🇾", "🇿"]
-
-			options_string = ""
-			for index in range(len(options)):
-				options_string += f"{reactions[index]} {options[index]}\n"
-
-			embed = discord.Embed(
-				title = question,
-				description = options_string,
-				color = 0x00FFFF
-			)
-			embed.set_footer(text = time)
-			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
-
-			poll_embed = await ctx.send(embed = embed)
-
-			for index in range(len(options)):
-				await poll_embed.add_reaction(reactions[index])
-			
-		# Else by default make a dual option poll
-		else:
-			question = "".join(message)
-
-			embed = discord.Embed(
-				title = question,
-				color = 0x00FFFF
-			)
-			embed.set_footer(text = time)
-			embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
-
-			poll_embed = await ctx.send(embed = embed)
-			await poll_embed.add_reaction("👍")
-			await poll_embed.add_reaction("👎")
-
-	@commands.command(aliases = ["emojify", "cry"])
-	async def shout(self, ctx, *message):
-		"""Convert a message into emojies"""
-
-		# Delete original message
-		await ctx.message.delete()
-		
-		final_message = []
-
-		for word in message:
-			message_string = ""
-
-			for letter in word:
-				message_string += f":regional_indicator_{letter.lower()}: "
-			final_message.append(message_string)
-
-		await ctx.send(" ".join(final_message))
-
-	@commands.guild_only()
-	@commands.command()
-	async def afk(self, ctx, *message):
-		# Create table if not exists
-		query = """CREATE TABLE IF NOT EXISTS afk(
-				member_id 	BIGINT	NOT NULL 	PRIMARY KEY,
-				message		TEXT,
-				last_seen	TEXT	NOT NULL,
-				guild_id	BIGINT 	NOT NULL)"""
-		self.cursor.execute(query)
-		self.dbcon.commit()
-
-		# Get emojis
-		blobwave_emoji = self.bot.get_emoji(839737122633023498)
-		check_emoji = self.bot.get_emoji(839713949436084246)
-		nacho_emoji = self.bot.get_emoji(839499460874862655)
-
-		# Insert data into the database
-		try:
-			query = f"""INSERT INTO afk VALUES
-					({ctx.author.id}, '{" ".join(message)}', '{datetime.now().strftime("%m/%d/%Y %H:%M:%S")}', {ctx.guild.id})"""
-			self.cursor.execute(query)
-			self.dbcon.commit()
-		
-		except:
-			self.cursor.execute("DELETE FROM afk WHERE member_id = {}".format(ctx.author.id))
-			self.dbcon.commit()
-
-			await ctx.send(f"{blobwave_emoji} :: {ctx.author.mention} You are already set as AFK. Welcome back! {nacho_emoji}")
-		
-		print(message)
-		if (message != None):
-			await ctx.send(f"{check_emoji} :: {ctx.author.mention} I have set you as AFK. **Reason:** {' '.join(message)}")
-		else:
-			await ctx.send(f"{check_emoji} :: {ctx.author.mention} I have set you as AFK.")
-
-		# Change nickname
-		# First get member instance of the user
-		for member in self.bot.get_all_members():
-			if (member.id == ctx.author.id):
-				await member.edit(nick = f"[AFK] {ctx.author.nick}")
-
+	
 	# Dev commands, "owner only"
 	@commands.is_owner()
 	@commands.command(hidden = True)
@@ -442,6 +276,7 @@ class Core(commands.Cog):
 		except:
 			pass
 
+	
 	# Command to rollback to last transaction when there is a issue with psycopg2
 	@commands.is_owner()
 	@commands.command(hidden = True)
@@ -453,6 +288,7 @@ class Core(commands.Cog):
 			await ctx.send("Rollback not successfull. Check logs.")
 			return
 
+	
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def botname(self, ctx, name):
@@ -467,6 +303,7 @@ class Core(commands.Cog):
 			log.error("Cannot change bot name")
 			await ctx.send("Error. Bot name not changed. Check logs.")
 
+	
 	@commands.is_owner()
 	@commands.command(hidden = True)
 	async def botavatar(self, ctx, which = ""):
@@ -482,127 +319,3 @@ class Core(commands.Cog):
 			except:
 				log.error("Cannot change bot name")
 				await ctx.send("Cannot change bot avatar. Check logs.")
-
-	
-	
-
-
-
-# Not in use though
-class Help(commands.Cog):
-	"""
-	Sends this help message
-	"""
-
-	def __init__(self, bot):
-		self.bot = bot
-
-	@commands.command()
-	async def help(self, ctx, *input):
-		"""Shows all modules of that bot"""
-	
-		prefix = "luci "
-		owner = 707557256220115035
-		owner_name = "luciferchase#6310"
-
-		# checks if cog parameter was given
-		# if not: sending all modules and commands not associated with a cog
-		if not input:
-			# checks if owner is on this server - used to 'tag' owner
-			try:
-				owner = ctx.guild.get_member(owner).mention
-
-			except AttributeError as error:
-				owner = owner
-
-			# starting to build embed
-			embed = discord.Embed(
-				title = "Commands and modules", 
-				color = discord.Color.blue(),
-				description = f"Use `{prefix}help <module>` to gain more information about that module 😁"
-			)
-
-			# iterating trough cogs, gathering descriptions
-			cogs_desc = ""
-			for cog in self.bot.cogs:
-				cogs_desc += f"`{cog}` {self.bot.cogs[cog].__doc__}\n"
-
-			# adding 'list' of cogs to embed
-			embed.add_field(
-				name = "Modules", 
-				value = cogs_desc, 
-				inline = False
-			)
-
-			# integrating trough uncategorized commands
-			commands_desc = ""
-			for command in self.bot.walk_commands():
-				# if cog not in a cog
-				# listing command if cog name is None and command isn't hidden
-				if not command.cog_name and not command.hidden:
-					commands_desc += f"{command.name} - {command.help}\n"
-
-			# adding those commands to embed
-			if commands_desc:
-				embed.add_field(
-					name = "Not belonging to a module",
-					value = commands_desc, 
-					inline = False
-				)
-			embed.set_footer(text = f"{owner}")
-
-		# block called when one cog-name is given
-		# trying to find matching cog and it's commands
-		elif len(input) == 1:
-
-			# iterating trough cogs
-			for cog in self.bot.cogs:
-				# check if cog is the matching one
-				if cog.lower() == input[0].lower():
-
-					# making title - getting description from doc-string below class
-					embed = discord.Embed(
-						title = f"{cog} - Commands", 
-						description = self.bot.cogs[cog].__doc__,
-						color=discord.Color.green()
-					)
-
-					# getting commands from cog
-					for command in self.bot.get_cog(cog).get_commands():
-						# if cog is not hidden
-						if not command.hidden:
-							embed.add_field(
-								name = f"`{prefix}{command.name}`", 
-								value = command.help, 
-								inline = False
-							)
-					# found cog - breaking loop
-					break
-
-			# if input not found
-			# yes, for-loops have an else statement, it's called when no 'break' was issued
-			else:
-				embed = discord.Embed(
-					title="What's that?!",
-					description = f"I've never heard from a module called `{input[0]}` before :scream:",
-					color=discord.Color.orange()
-				)
-
-		# too many cogs requested - only one at a time allowed
-		elif len(input) > 1:
-			embed = discord.Embed(
-				title = "That's too much.",
-				description = "Please request only one module at once :sweat_smile:",
-				color = discord.Color.orange()
-			)
-
-		else:
-			embed = discord.Embed(
-				title = "It's a magical place.",
-				description = "I don't know how you got here. But I didn't see this coming at all.\n"
-								"Would you please be so kind to report that issue to me {}\n"
-								"Thank you! ~ Lucifer Chase".format(owner),
-				color = discord.Color.red())
-
-		# sending reply embed using our own function defined above
-		await ctx.send(embed = embed)
