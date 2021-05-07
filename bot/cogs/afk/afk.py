@@ -5,6 +5,7 @@ import os
 import psycopg2
 
 class AFK(commands.Cog):
+	"""Set yourself AFK."""
 	def __init__(self, bot):
 		self.bot = bot
 
@@ -30,7 +31,7 @@ class AFK(commands.Cog):
 		self.dbcon.commit()
 
 	@commands.Cog.listener("on_message")
-	async def afk_message(self, ctx, message: discord.Message):
+	async def afk_message(self, ctx, message: discord.Message = None):
 		# Return if the message is in the dm
 		if (message.guild is None):
 			return

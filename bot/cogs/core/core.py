@@ -197,7 +197,7 @@ class Core(commands.Cog):
 	@commands.guild_only()
 	@commands.command()
 	async def snipe(self, ctx, number = 1):
-		"""See upto last deleted message
+		"""See upto 5 last deleted message
 		For eg: `luci snipe` gets the last deleted message
 		Also:  `luci snipe 2` gets the second last deleted message and so on."""
 		

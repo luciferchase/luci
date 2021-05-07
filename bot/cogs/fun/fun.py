@@ -36,7 +36,7 @@ class Fun(commands.Cog):
 	
 	@commands.command()
 	async def catfact(self, ctx):
-		"""Get a random catfact"""
+		"""Get a random fact about cats."""
 		async with self.session.get("https://catfact.ninja/fact") as response:
 			data = await response.json()
 			fact = data["fact"]
@@ -47,7 +47,7 @@ class Fun(commands.Cog):
 	
 	@commands.command()
 	async def dogfact(self, ctx):
-		"""Get a random catfact"""
+		"""Get a random fact about dogs. [Bit slow to run for the first time though (API limitation)]"""
 		async with self.session.get("https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=1") as response:
 			data = await response.json()
 			fact = data[0]["fact"]
@@ -148,7 +148,7 @@ class Fun(commands.Cog):
 
 	@commands.command()
 	async def insult(self, ctx, member: discord.Member = None):
-		"""Insult someone"""
+		"""Insult someone. They are really evil though, take care."""
 
 		if (member is None):
 			member = ctx.author
@@ -157,7 +157,7 @@ class Fun(commands.Cog):
 			text = await response.text()
 
 			embed = discord.Embed(
-				title = f"{ctx.author.nick} insulted {member.nick}",
+				title = f"{ctx.author.name} insulted {member.name}",
 				description = text,
 				color = 0xf34949
 			)
@@ -169,10 +169,7 @@ class Fun(commands.Cog):
 	async def emote(self, ctx, emoji_name):
 		"""Send an animated emoji even if you don't have nitro"""
 
-		# First get all the emojies the bot has access
-		emojies = ctx.guild.emojis()
-
-		# Send emoji
-		for emoji in emojies:
+		# First get all the emojies the bot has access and then Send emoji
+		for emoji in ctx.guild.emojis():
 			if (emoji.name == emoji_name):
 				await ctx.invoke(command = "bigmoji", emoji = emoji)
