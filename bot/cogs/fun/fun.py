@@ -171,5 +171,5 @@ class Fun(commands.Cog):
 
 		# First get all the emojies the bot has access and then Send emoji
 		for emoji in ctx.guild.emojis:
-			if (emoji.name == emoji_name):
+			if (emoji.name in emoji_name):
 				await ctx.invoke(command = "bigmoji", emoji = emoji)
