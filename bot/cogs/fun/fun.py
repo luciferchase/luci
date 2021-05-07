@@ -5,7 +5,8 @@ import aiohttp
 
 class Fun(commands.Cog):
 	"""Various fun commands"""
-	def __init__(self):
+	def __init__(self, bot):
+		self.bot = bot
 		# Initialize a session
 		self.session = aiohttp.ClientSession()
 
