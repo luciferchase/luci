@@ -1,6 +1,9 @@
 import discord
 from discord.ext import commands
 
+import os
+import psycopg2
+
 class AFK(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
