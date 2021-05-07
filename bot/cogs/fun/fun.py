@@ -170,6 +170,6 @@ class Fun(commands.Cog):
 		"""Send an animated emoji even if you don't have nitro"""
 
 		# First get all the emojies the bot has access and then Send emoji
-		for emoji in ctx.guild.emojis():
+		for emoji in ctx.guild.emojis:
 			if (emoji.name == emoji_name):
 				await ctx.invoke(command = "bigmoji", emoji = emoji)

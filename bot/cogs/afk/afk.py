@@ -31,7 +31,7 @@ class AFK(commands.Cog):
 		self.dbcon.commit()
 
 	@commands.Cog.listener("on_message")
-	async def afk_message(self, ctx, message: discord.Message = None):
+	async def afk_message(self, message, ctx):
 		# Return if the message is in the dm
 		if (message.guild is None):
 			return
