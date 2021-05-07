@@ -47,6 +47,10 @@ class Bigmoji(commands.Cog):
 	@commands.command(name="bigmoji", aliases = ["e"])
 	async def bigmoji(self, ctx, emoji):
 		"""Post a large .png of an emoji"""
+
+		# Delete original message
+		await ctx.message.delete()
+		
 		channel = ctx.channel
 		convert = False
 		if emoji[0] == "<":

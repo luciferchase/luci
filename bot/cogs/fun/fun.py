@@ -166,11 +166,17 @@ class Fun(commands.Cog):
 
 
 	@commands.guild_only()
-	@commands.command(aliases = ["s"])
-	async def emote(self, ctx, emoji_name):
-		"""Send an animated emoji even if you don't have nitro"""
+	@commands.command(aliases = ["n"])
+	async def nitro(self, ctx, *emoji_name):
+		"""Send an animated emoji even if you don't have nitro. You can send multiple emotes too.
+		Usage: `luci n nacho` or `luci n nacho milk_mocha ishan1`"""
+
+		# Delete original message
+		await ctx.message.delete()
 
 		# First get all the emojies the bot has access and then Send emoji
 		for emoji in ctx.guild.emojis:
 			if (emoji.name in emoji_name):
 				await ctx.send(emoji.url)
+		else:
+			await ctx.send("Emoji not found <a:awkward1:839499334555140157>")
