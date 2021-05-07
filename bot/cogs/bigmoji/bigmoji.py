@@ -20,7 +20,7 @@ except:
 	except:
 		svg_convert = None
 
-log = logging.getLogger("red.flapjack.bigmoji")
+log = logging.getLogger("bigmoji")
 
 
 class Bigmoji(commands.Cog):
