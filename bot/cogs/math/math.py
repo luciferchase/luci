@@ -95,10 +95,10 @@ class Math(commands.Cog):
 		# First properly encode expression
 		# Change "/" to (over) because the api says so
 		if ("/" in expression):
-			expression = expression.replace("/", "(over)")
+			over_expression = expression.replace("/", "(over)")
 
 		# Encode the url now
-		encoded_expression = parse.quote(expression)
+		encoded_expression = parse.quote(over_expression)
 		api = "https://newton.now.sh/api/v2"
 
 		start = time.monotonic()
