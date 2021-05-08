@@ -106,9 +106,12 @@ class Math(commands.Cog):
 			data = await response.json()
 
 			if ("error" in data.keys()):
+				# Get coolcry emoji
+				coolcry = self.bot.get_emoji(780445565476798475)
+				
 				embed = discord.Embed(
 					title = "Timeout",
-					description = "Sorry! But the server was unable to solve the expression <coolcry:780445565476798475>",
+					description = f"Sorry! But the server was unable to solve the expression {coolcry}",
 					color = 0xf34949
 				)
 				return embed
