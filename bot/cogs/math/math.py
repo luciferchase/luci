@@ -91,7 +91,7 @@ class Math(commands.Cog):
 		await ctx.send(embed = embed)
 
 
-	async def get_result(self, operation, expression):
+	async def get_result(self, ctx, operation, expression):
 		# First properly encode expression
 		# Change "/" to (over) because the api says so
 		if ("/" in expression):
@@ -104,6 +104,15 @@ class Math(commands.Cog):
 		start = time.monotonic()
 		async with self.session.get(f"{api}/{operation}/{encoded_expression}") as response:
 			data = await response.json()
+
+			if ("error" in data.keys()):
+				embed = discord.Embed(
+					title = "Timeout",
+					description = "Sorry! But the server was unable to solve the expression <coolcry:780445565476798475>",
+					color = 0xf34949
+				)
+				return embed
+
 			result = data["result"]
 			end = time.monotonic()
 
@@ -127,14 +136,14 @@ class Math(commands.Cog):
 	
 	@commands.command(aliases = ["factor"])
 	async def factorise(self, ctx, *expression):
-		"""Factorise a polynomial equation
+		"""Factorise a polynomial equation. Please put tan(x) instead of tanx and so on for all trigonametric functions.
 		Usage: `luci factorise x^2 + 2x`"""
 		expression = "".join(expression)
 
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		embed = await self.get_result(operation = "factor", expression = expression)
+		embed = await self.get_result(ctx = ctx, operation = "factor", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -143,14 +152,14 @@ class Math(commands.Cog):
 
 	@commands.command(aliases = ["derivation", "differentiate"])
 	async def derive(self, ctx, *expression):
-		"""Differentiate a polynomial
+		"""Differentiate a polynomial. Please put tan(x) instead of tanx and so on for all trigonametric functions.
 		Usage: `luci derive x^2 + 2x`"""
 		expression = "".join(expression)
 
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		embed = await self.get_result(operation = "derive", expression = expression)
+		embed = await self.get_result(ctx = ctx, operation = "derive", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -159,14 +168,14 @@ class Math(commands.Cog):
 
 	@commands.command(aliases = ["integration"])
 	async def integrate(self, ctx, *expression):
-		"""Integrate a polynomial
+		"""Integrate a polynomial. Please put tan(x) instead of tanx and so on for all trigonametric functions.
 		Usage: `luci integrate x^2 + 2x`"""
 		expression = "".join(expression)
 
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		embed = await self.get_result(operation = "integrate", expression = expression)
+		embed = await self.get_result(ctx = ctx, operation = "integrate", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -175,14 +184,14 @@ class Math(commands.Cog):
 
 	@commands.command(aliases = ["solution", "zeroes", "roots"])
 	async def solve(self, ctx, *expression):
-		"""Find roots of a polynomial
+		"""Find roots of a polynomial. Please put tan(x) instead of tanx and so on for all trigonametric functions.
 		Usage: `luci roots x^2 + 2x`"""
 		expression = "".join(expression)
 
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		embed = await self.get_result(operation = "zeroes", expression = expression)
+		embed = await self.get_result(ctx = ctx, operation = "zeroes", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -191,14 +200,14 @@ class Math(commands.Cog):
 
 	@commands.command()
 	async def tangent(self, ctx, *expression):
-		"""Find tangent of a curve at a point [Eg: `luci tangent 2|x^3`. See `luci help tangent`]
+		"""Find tangent of a curve at a point [Eg: `luci tangent 2|x^3`. See `luci help tangent`]. Please put tan(x) instead of tanx and so on for all trigonametric functions.
 		Usage: `luci tangent 2|x^3` # Here 2 is the point where tangent is to be find"""
 		expression = "".join(expression)
 
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		embed = await self.get_result(operation = "tangent", expression = expression)
+		embed = await self.get_result(ctx = ctx, operation = "tangent", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -207,14 +216,14 @@ class Math(commands.Cog):
 
 	@commands.command(name = "area", aliases = ["area under the curve", "definite integration"])
 	async def definite_integral(self, ctx, *expression):
-		"""Do definite integration on a polynomial [Eg: `luci area 2:4|x^3`. See `luci help area`]
+		"""Do definite integration on a polynomial [Eg: `luci area 2:4|x^3`. See `luci help area`]. Please put tan(x) instead of tanx and so on for all trigonametric functions.
 		Usage: `luci area 2:4|x^3` # Here area is to be calulated from 2 to 4"""
 		expression = "".join(expression)
 
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		embed = await self.get_result(operation = "area", expression = expression)
+		embed = await self.get_result(ctx = ctx, operation = "area", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
