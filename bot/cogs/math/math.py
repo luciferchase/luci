@@ -3,7 +3,6 @@ from discord.ext import commands
 from TagScriptEngine import Interpreter, adapter, block
 
 import aiohttp
-import aionewton
 import json
 import logging
 import time
