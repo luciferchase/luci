@@ -49,25 +49,28 @@ class Quiz(commands.Cog):
 		reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "J", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
 		"🇶", "🇷", "🇸", "🇹", "🇺", "🇻", "🇼", "🇽", "🇾", "🇿"]
 
+		await ctx.send("You have 30 seconds to choose a category. Select random to get questions from all categories.")
+		
+		description = "🇦: Random"
+		valid_reactions = {":regional_indicator_a": 1}
+		
+		for index in range(len(categories)):
+			description += f'{reactions[index + 1]} {categories[index]["name"]}'
+
+			# Add it to the dictionary
+			valid_reactions[f":regional_indicator_{chr(98 + index)}"] = categories[index]["id"]
+
 		embed = discord.Embed(
 			title = "Categories",
-			description = "You have 30 seconds to choose a category."
-							"Select random to get questions from all categories.",
+			description = description
 			color = 0x07f223
 		)
 
-		valid_reactions = {}
-		for index in range(len(categories)):
-			embed.add_field(name = f'{reactions[index]} {categories[index]["name"]}')
-
-			# Add it to the dictionary
-			valid_reactions[f":regional_indicator_{chr(97 + index)}"] = categories[index]["id"]
-
-		message = ctx.send(embed = embed)
+		message = await ctx.send(embed = embed)
 
 		# Add reactions
 		for index in range(len(categories)):
-			await message.add_reaction(reactions[index])
+			await message.add_reaction(reactions[index + 1])
 
 		category_chosen = False
 
@@ -88,6 +91,9 @@ class Quiz(commands.Cog):
 				if (emoji in valid_reactions and payload.user.id == ctx.author.id):
 					category_chosen = True
 					category = valid_reactions[emoji]
+
+					# Debugging
+					await ctx.send(category)
 
 					# Delete category list
 					await message.delete()
