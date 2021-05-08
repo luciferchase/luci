@@ -95,7 +95,7 @@ class Math(commands.Cog):
 		# First properly encode expression
 		# Change "/" to (over) because the api says so
 		if ("/" in expression):
-			expression.replace("/", "(over)")
+			expression = expression.replace("/", "(over)")
 
 		# Encode the url now
 		encoded_expression = parse.quote(expression)
