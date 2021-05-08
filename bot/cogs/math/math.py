@@ -92,23 +92,31 @@ class Math(commands.Cog):
 		await ctx.send(embed = embed)
 
 
-	async def send_embed(self, expression, answer):
-		embed = discord.Embed(
-			color = 0xf34949,									# Red					
-			title = result
-		)
-		embed.add_field(
-			name = "Your Input:",
-			value = f'`{expression}`',
-			inline = True
-		)
-		embed.add_field(
-			name = "Answer:",
-			value = f"`{answer}`",
-			inline = True
-		)
-		embed.set_footer(text = f"Calculated in {round((end - start) * 1000, 3)} ms")
-		return embed
+	async def get_result(self, operation, expression):
+		api = "https://newton.now.sh/api/v2"
+
+		start = time.monotonic()
+		async with self.session.get(f"{api}/{operation}/{expression}") as response:
+			data = await response.json()
+			result = data["result"]
+			end = time.monotonic()
+
+			embed = discord.Embed(
+				color = 0xf34949,									# Red					
+				title = result
+			)
+			embed.add_field(
+				name = "Your Input:",
+				value = f'`{expression}`',
+				inline = True
+			)
+			embed.add_field(
+				name = "Answer:",
+				value = f"`{result}`",
+				inline = True
+			)
+			embed.set_footer(text = f"Calculated in {round((end - start) * 1000, 3)} ms")
+			return embed
 
 	
 	@commands.command(aliases = ["factor"])
@@ -120,8 +128,7 @@ class Math(commands.Cog):
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		answer = await aionewton.factor(expression)
-		embed = self.send_embed(expression = expression, answer = answer)
+		embed = await self.get_result(operation = "factor", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -137,8 +144,7 @@ class Math(commands.Cog):
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		answer = await aionewton.derive(expression)
-		embed = self.send_embed(expression = expression, answer = answer)
+		embed = await self.get_result(operation = "derive", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -154,8 +160,7 @@ class Math(commands.Cog):
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		answer = await aionewton.integrate(expression)
-		embed = self.send_embed(expression = expression, answer = answer)
+		embed = await self.get_result(operation = "integrate", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -164,15 +169,14 @@ class Math(commands.Cog):
 
 	@commands.command(aliases = ["solution", "zeroes", "roots"])
 	async def solve(self, ctx, *expression):
-		"""Find roots of a polynomial equation
+		"""Find roots of a polynomial
 		Usage: `luci roots x^2 + 2x`"""
 		expression = "".join(expression)
 
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		answer = await aionewton.zeroes(expression)
-		embed = self.send_embed(expression = expression, answer = answer)
+		embed = await self.get_result(operation = "zeroes", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -188,8 +192,7 @@ class Math(commands.Cog):
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		answer = await aionewton.tangent(expression)
-		embed = self.send_embed(expression = expression, answer = answer)
+		embed = await self.get_result(operation = "tangent", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
@@ -205,8 +208,7 @@ class Math(commands.Cog):
 		loading = await ctx.send("Calculating...")
 		await ctx.trigger_typing()
 
-		answer = await aionewton.area(expression)
-		embed = self.send_embed(expression = expression, answer = answer)
+		embed = await self.get_result(operation = "area", expression = expression)
 
 		# First delete the calculating message
 		await loading.delete()
