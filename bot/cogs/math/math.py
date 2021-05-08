@@ -98,7 +98,7 @@ class Math(commands.Cog):
 			expression.replace("/", "(over)")
 
 		# Encode the url now
-		encoded_expression = parse.qoute(expression)
+		encoded_expression = parse.quote(expression)
 		api = "https://newton.now.sh/api/v2"
 
 		start = time.monotonic()
