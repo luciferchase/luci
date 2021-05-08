@@ -8,4 +8,5 @@ discordpy-slash
 pyparsing
 psycopg2-binary
 requests
+sympy
 TagScriptEngine

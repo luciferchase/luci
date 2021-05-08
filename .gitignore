@@ -131,3 +131,4 @@ dmypy.json
 
 # Test
 *test.py
+bot/cogs/TODO
