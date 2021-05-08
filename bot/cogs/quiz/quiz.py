@@ -62,7 +62,7 @@ class Quiz(commands.Cog):
 
 		embed = discord.Embed(
 			title = "Categories",
-			description = description
+			description = description,
 			color = 0x07f223
 		)
 
