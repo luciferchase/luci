@@ -58,7 +58,7 @@ class Quiz(commands.Cog):
 
 		valid_reactions = {}
 		for index in range(len(self.categories)):
-			embed.add_field(name = f"{reactions[index]} {self.categories[index]["name"]}")
+			embed.add_field(name = f'{reactions[index]} {self.categories[index]["name"]}')
 
 			# Add it to the dictionary
 			valid_reactions[f":regional_indicator_{chr(97 + index)}"] = self.categories[index]["id"]
