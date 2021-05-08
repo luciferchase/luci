@@ -113,7 +113,7 @@ class Math(commands.Cog):
 			)
 			embed.add_field(
 				name = "Your Input:",
-				value = f'`{expression}`',
+				value = f'`{expression.replace("(over)", "/")}`',
 				inline = True
 			)
 			embed.add_field(
