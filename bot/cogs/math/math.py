@@ -92,10 +92,17 @@ class Math(commands.Cog):
 
 
 	async def get_result(self, operation, expression):
+		# First properly encode expression
+		# Change "/" to (over) because the api says so
+		if ("/" in expression):
+			expression.replace("/", "(over)")
+
+		# Encode the url now
+		encoded_expression = parase.qoute(expression)
 		api = "https://newton.now.sh/api/v2"
 
 		start = time.monotonic()
-		async with self.session.get(f"{api}/{operation}/{expression}") as response:
+		async with self.session.get(f"{api}/{operation}/{encoded_expression}") as response:
 			data = await response.json()
 			result = data["result"]
 			end = time.monotonic()
