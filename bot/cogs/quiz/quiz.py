@@ -72,25 +72,25 @@ class Quiz(commands.Cog):
 		category_chosen = False
 
 		while not category_chosen:
-			 # Try for 30 seconds
-			 try:
-			 	# Check if the user has chosen a category or not
-			 	def check(payload: discord.RawReactionActionEvent):
-			 		if (payload.user.id != self.bot.user.id and message.id == payload.message.id):
-			 			return True
+			# Try for 30 seconds
+			try:
+				# Check if the user has chosen a category or not
+				def check(payload: discord.RawReactionActionEvent):
+					if (payload.user.id != self.bot.user.id and message.id == payload.message.id):
+						return True
 
-			 	payload: discord.RawReactionActionEvent = await self.bot.wait_for(
-			 			"raw_reaction_add", timeout = 30, check = check
-			 		)
+				payload: discord.RawReactionActionEvent = await self.bot.wait_for(
+						"raw_reaction_add", timeout = 30, check = check
+					)
 
-			 	emoji = payload.emoji.name
+				emoji = payload.emoji.name
 
-			 	if (emoji in valid_reactions and payload.user.id == ctx.author.id):
-			 		category_chosen = True
-			 		category = valid_reactions[emoji]
+				if (emoji in valid_reactions and payload.user.id == ctx.author.id):
+					category_chosen = True
+					category = valid_reactions[emoji]
 
-			 		# Delete category list
-			 		await message.delete()
+					# Delete category list
+					await message.delete()
 
 			# Self abort the game after 30 seconds
 			except asyncio.TimeoutError:
