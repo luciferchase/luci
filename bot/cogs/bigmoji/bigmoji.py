@@ -48,8 +48,8 @@ class Bigmoji(commands.Cog):
 	async def bigmoji(self, ctx, emoji):
 		"""Post a large .png of an emoji"""
 
-		# Delete original message
-		await ctx.message.delete()
+		# # Delete original message
+		# await ctx.message.delete()
 		
 		channel = ctx.channel
 		convert = False

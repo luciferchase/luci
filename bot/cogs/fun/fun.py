@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 
 import aiohttp
+from datetime import datetime
 
 class Fun(commands.Cog):
 	"""Various fun commands"""
@@ -132,8 +133,8 @@ class Fun(commands.Cog):
 	async def shout(self, ctx, *message):
 		"""Convert a message into emojies"""
 
-		# Delete original message
-		await ctx.message.delete()
+		# # Delete original message
+		# await ctx.message.delete()
 		
 		final_message = []
 
@@ -171,8 +172,8 @@ class Fun(commands.Cog):
 		"""Send an animated emoji even if you don't have nitro. Send just its name and the bot will send the emote.
 		Usage: `luci n nacho`"""
 
-		# Delete original message
-		await ctx.message.delete()
+		# # Delete original message
+		# await ctx.message.delete()
 
 		# First get all the emojies the bot has access and then Send emoji
 		emoji_found = False
