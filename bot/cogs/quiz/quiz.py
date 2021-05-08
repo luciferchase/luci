@@ -22,13 +22,6 @@ class Quiz(commands.Cog):
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
-		# Get categories
-		async with self.session.get("https://opentdb.com/api_category.php") as response:
-			data = await response.json()
-
-			self.categories = data["trivia_categories"]
-		
-
 	@commands.command(aliases = ["trivia"])
 	async def quiz(self, ctx):
 		"""Play a trivia quiz from a bunch of categories"""
@@ -45,6 +38,12 @@ class Quiz(commands.Cog):
 
 				await ctx.send(f"Uh oh! I faced some error {coolcry}. Please run the command again or inform {luciferchase}")
 
+		# Get categories
+		async with self.session.get("https://opentdb.com/api_category.php") as response:
+			data = await response.json()
+
+			categories = data["trivia_categories"]
+		
 		# Let the player choose a category
 		reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "J", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
 		"🇶", "🇷", "🇸", "🇹", "🇺", "🇻", "🇼", "🇽", "🇾", "🇿"]
@@ -57,16 +56,16 @@ class Quiz(commands.Cog):
 		)
 
 		valid_reactions = {}
-		for index in range(len(self.categories)):
-			embed.add_field(name = f'{reactions[index]} {self.categories[index]["name"]}')
+		for index in range(len(categories)):
+			embed.add_field(name = f'{reactions[index]} {categories[index]["name"]}')
 
 			# Add it to the dictionary
-			valid_reactions[f":regional_indicator_{chr(97 + index)}"] = self.categories[index]["id"]
+			valid_reactions[f":regional_indicator_{chr(97 + index)}"] = categories[index]["id"]
 
 		message = ctx.send(embed = embed)
 
 		# Add reactions
-		for index in range(len(self.categories)):
+		for index in range(len(categories)):
 			await message.add_reaction(reactions[index])
 
 		category_chosen = False
