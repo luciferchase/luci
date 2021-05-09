@@ -137,10 +137,10 @@ class Quiz(commands.Cog):
 				await ctx.send(f"Please run the command again or inform {self.luciferchase}")
 				return
 
-		question = data["question"]
+		question = data["results"]["question"]
 
-		correct_answer = data["correct_answer"]
-		options = data["incorrect_answers"]
+		correct_answer = data["results"]["correct_answer"]
+		options = data["results"]["incorrect_answers"]
 		reactions = ["🇦", "🇧", "🇨", "🇩"]
 
 		# Get a random index
