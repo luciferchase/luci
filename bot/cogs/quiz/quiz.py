@@ -431,12 +431,12 @@ class Quiz(commands.Cog):
 		await ctx.send(embed = embed)
 
 	@commands.command()
-	async def leaderboard(self, ctx, world = False):
+	async def leaderboard(self, ctx, world = None):
 		"""See quiz leaderboard. Type `luci leaderboard world` to see global leaderboard"""
-		if (world != False):
+		if (world != None):
 			self.cursor.execute(f"""SELECT * FROM quiz WHERE guild_id = {ctx.guild.id} ORDER BY points""")
 		else:
-			self.cursor.execute(f"""SELECT * FROM quiz ORDER BY points""")
+			self.cursor.execute("""SELECT * FROM quiz ORDER BY points DESC""")
 
 		data = self.cursor.fetchall()
 

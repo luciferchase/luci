@@ -239,7 +239,7 @@ class IPL(commands.Cog):
 	async def fetch_standings(self):
 		# Fetch standings from the database
 
-		self.cursor.execute("SELECT * FROM STANDINGS ORDER BY points")
+		self.cursor.execute("SELECT * FROM STANDINGS ORDER BY points DESC")
 		data = self.cursor.fetchall()
 
 		current_standings = {}
