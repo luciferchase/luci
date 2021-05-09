@@ -434,7 +434,7 @@ class Quiz(commands.Cog):
 	async def leaderboard(self, ctx, world = None):
 		"""See quiz leaderboard. Type `luci leaderboard world` to see global leaderboard"""
 		if (world != None):
-			self.cursor.execute(f"""SELECT * FROM quiz WHERE guild_id = {ctx.guild.id} ORDER BY points""")
+			self.cursor.execute(f"""SELECT * FROM quiz WHERE guild_id = {ctx.guild.id} ORDER BY points DESC""")
 		else:
 			self.cursor.execute("""SELECT * FROM quiz ORDER BY points DESC""")
 
