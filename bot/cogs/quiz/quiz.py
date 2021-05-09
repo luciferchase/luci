@@ -136,7 +136,7 @@ class Quiz(commands.Cog):
 
 			if (data["response_code"] != 0):
 				# Try again
-				async with self.session.get(api, params) as response:
+				async with self.session.get(api, params = params) as response:
 					data = await response.json()
 
 					# If this time too api didn't respond automatically close the game
