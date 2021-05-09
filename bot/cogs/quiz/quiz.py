@@ -152,7 +152,7 @@ class Quiz(commands.Cog):
 		# Make string for the embed
 		description = ""
 		for index in range(4):
-			description = f"{reactions[index]} {options[index]}\n"
+			description += f"{reactions[index]} {options[index]}\n"
 
 		# Send the embed
 		embed = discord.Embed(title = question, description = description)
@@ -297,7 +297,7 @@ class Quiz(commands.Cog):
 			# Fetch question first
 			correct_index, correct_answer, embed = await self.send_question(category_id, difficulty_level, token)
 			message = await ctx.send(embed = embed)
-			
+
 			for index in range(5):
 				await message.add_reaction(reactions[index])
 
@@ -324,6 +324,10 @@ class Quiz(commands.Cog):
 						)
 						await message.edit(embed = embed)
 						break
+
+					# Delete original question
+					await message.delete()
+					questions_attempted += 1
 					
 					if (reactions.index(emoji) == correct_index):
 						points += difficulty_points
@@ -333,13 +337,9 @@ class Quiz(commands.Cog):
 						await ctx.send(content = f"{self.coolcry} Incorrect Answer!", delete_after = 5)
 						await ctx.send(content = f"The correct answer is {correct_answer}", delete_after = 5)
 
-					questions_attempted += 1
-
 			# Self abort the game after 60 seconds
 			except asyncio.TimeoutError:
 				difficulty_chosen = True
 				
 				# Default to medium difficulty
 				difficulty_level = "medium"
-
-		await ctx.send(points)
