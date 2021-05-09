@@ -70,7 +70,7 @@ class Quiz(commands.Cog):
 
 		# Add reactions
 		for index in range(20):
-			await message.add_reaction(reactions[index + 1])
+			await message.add_reaction(reactions[index])
 
 		category_chosen = False
 
@@ -79,7 +79,7 @@ class Quiz(commands.Cog):
 			try:
 				# Check if the user has chosen a category or not
 				def check(payload: discord.RawReactionActionEvent):
-					if (payload.user.id != self.bot.user.id and message.id == payload.message.id):
+					if (payload.user_id != self.bot.user.id and message.id == payload.message_id):
 						return True
 
 				payload: discord.RawReactionActionEvent = await self.bot.wait_for(
