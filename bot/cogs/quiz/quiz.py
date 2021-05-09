@@ -160,7 +160,7 @@ class Quiz(commands.Cog):
 		"""Play a trivia quiz from a bunch of categories"""
 
 		# Check if there is a field of user in database
-		self.cursor.execute(f"SELECT * FROM quiz WHERE user_id = {ctx.author.id}").
+		self.cursor.execute(f"SELECT * FROM quiz WHERE user_id = {ctx.author.id}")
 		data = self.cursor.fetchall()
 
 		# If there is no instance of user, add them
