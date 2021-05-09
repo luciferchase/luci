@@ -51,7 +51,7 @@ class Quiz(commands.Cog):
 
 		await ctx.send("You have 30 seconds to choose a category. Select random to get questions from all categories.")
 		
-		description = "🇦: Random"
+		description = "🇦: Random\n"
 		valid_reactions = {":regional_indicator_a": 1}
 		
 		for index in range(20):
@@ -101,5 +101,6 @@ class Quiz(commands.Cog):
 			# Self abort the game after 30 seconds
 			except asyncio.TimeoutError:
 				category_chosen = True
+				coolcry = self.bot.get_emoji(780445565476798475)
 
 				await message.edit(f"Timeout. Game aborted! {coolcry}")
