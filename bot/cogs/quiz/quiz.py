@@ -336,18 +336,16 @@ class Quiz(commands.Cog):
 						await message.edit(embed = embed)
 						await message.clear_reactions()
 						break
-
-					# Delete original question
-					await message.delete()
-					questions_attempted += 1
 					
 					if (reactions.index(emoji) == correct_index):
 						points += difficulty_points
-
 						await ctx.send(content = f"{smart} Correct Answer!", delete_after = 5)
+
 					else:
 						await ctx.send(content = f"{coolcry} Incorrect Answer!", delete_after = 5)
 						await ctx.send(content = f"The correct answer is {correct_answer}", delete_after = 5)
+
+					questions_attempted += 1
 
 			# Self abort the game after 60 seconds
 			except asyncio.TimeoutError:
