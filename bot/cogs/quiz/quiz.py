@@ -137,10 +137,10 @@ class Quiz(commands.Cog):
 				await ctx.send(f"Please run the command again or inform {self.luciferchase}")
 				return
 
-		question = data["results"]["question"]
+		question = data["results"][0]["question"]
 
-		correct_answer = data["results"]["correct_answer"]
-		options = data["results"]["incorrect_answers"]
+		correct_answer = data["results"][0]["correct_answer"]
+		options = data["results"][0]["incorrect_answers"]
 		reactions = ["🇦", "🇧", "🇨", "🇩"]
 
 		# Get a random index
@@ -176,7 +176,8 @@ class Quiz(commands.Cog):
 		reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "🇯", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
 		"🇶", "🇷", "🇸", "🇹", "🇺", "🇻", "🇼", "🇽", "🇾", "🇿"]
 
-		await ctx.send("You have 60 seconds to choose a category. Select random to get questions from all categories.")
+		await ctx.send("You have 60 seconds to choose a category.", delete_after = 10)
+		await ctx.send("Select random to get questions from all categories.", delete_after = 10)
 		
 		description = "🇦 Random\n"
 		valid_reactions = {":regional_indicator_a": 1}
