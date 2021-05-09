@@ -51,14 +51,14 @@ class Quiz(commands.Cog):
 
 		await ctx.send("You have 30 seconds to choose a category. Select random to get questions from all categories.")
 		
-		description = "🇦: Random\n"
+		description = "🇦 Random\n"
 		valid_reactions = {":regional_indicator_a": 1}
 		
-		for index in range(20):
+		for index in range(19):
 			description += f'{reactions[index + 1]} {categories[index]["name"]}\n'
 
 			# Add it to the dictionary
-			valid_reactions[f":regional_indicator_{chr(98 + index)}"] = categories[index]["id"]
+			valid_reactions[reactions[index + 1]] = categories[index]["id"]
 
 		embed = discord.Embed(
 			title = "Categories",
@@ -87,9 +87,7 @@ class Quiz(commands.Cog):
 					)
 
 				emoji = payload.emoji.name
-				print(emoji)
-				print(payload.user_id)
-
+				
 				if (emoji in valid_reactions and payload.user_id == ctx.author.id):
 					category_chosen = True
 					category = valid_reactions[emoji]
