@@ -152,7 +152,7 @@ class Quiz(commands.Cog):
 		# Make string for the embed
 		description = ""
 		for index in range(4):
-			description = f"{reactions[index]}\t {option[index]}\n"
+			description = f"{reactions[index]} {options[index]}\n"
 
 		# Send the embed
 		embed = discord.Embed(title = question, description = description)
