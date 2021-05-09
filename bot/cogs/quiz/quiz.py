@@ -134,6 +134,15 @@ class Quiz(commands.Cog):
 		async with self.session.get(api, params = params) as response:
 			data = await response.json()
 
+			if (data["response_code"] != 0):
+				# Try again
+				async with self.session.get(api, params) as response:
+					data = await response.json()
+
+					# If this time too api didn't respond automatically close the game
+					return (None, None, None)
+			
+
 		question = data["results"][0]["question"]
 
 		correct_answer = data["results"][0]["correct_answer"]
@@ -323,6 +332,24 @@ class Quiz(commands.Cog):
 		while not game_ended and questions_attempted <= 50:
 			# Fetch question first
 			correct_index, correct_answer, embed = await self.send_question(category_id, difficulty_level, token)
+
+			# If there is some problem in fetching question from api
+			if (embed == None):
+				game_ended = True
+
+				await ctx.send(f"Uh oh! I faced some error {coolcry}.")
+				await ctx.send(f"Please run the command again or inform {luciferchase.mention}")
+
+				embed = discord.Embed(
+					title = f"{ctx.author.name} Thank you for playing! {nacho}",
+					color = 0x07f223
+				)
+				await message.edit(embed = embed)
+				await message.clear_reactions()
+				await footnote.delete()
+				
+				break
+
 			await message.edit(embed = embed)
 
 			for index in range(5):
