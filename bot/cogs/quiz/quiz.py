@@ -238,7 +238,7 @@ class Quiz(commands.Cog):
 
 		description = ""
 		for level in difficulty:
-			description += f"{level} {difficulty[level]["difficulty_level"]} [{difficulty[level]["difficulty_level"]} points for each correct answer]\n"
+			description += f'{level} {difficulty[level]["difficulty_level"]} [{difficulty[level]["difficulty_level"]} points for each correct answer]\n'
 
 		embed = discord.Embed(
 			title = "Select Difficulty (Default is Medium)",
@@ -329,6 +329,8 @@ class Quiz(commands.Cog):
 					else:
 						await ctx.send(content = f"{self.coolcry} Incorrect Answer!", delete_after = 5)
 						await ctx.send(content = f"The correct answer is {correct_answer}", delete_after = 5)
+
+					questions_attempted += 1
 
 			# Self abort the game after 60 seconds
 			except asyncio.TimeoutError:
