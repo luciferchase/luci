@@ -295,7 +295,9 @@ class Quiz(commands.Cog):
 
 		while not game_ended and questions_attempted <= 50:
 			# Fetch question first
-			correct_index, correct_answer, message = await self.send_question(category_id, difficulty_level, token)
+			correct_index, correct_answer, embed = await self.send_question(category_id, difficulty_level, token)
+			message = await ctx.send(embed = embed)
+			
 			for index in range(5):
 				await message.add_reaction(reactions[index])
 
