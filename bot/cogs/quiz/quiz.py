@@ -128,7 +128,7 @@ class Quiz(commands.Cog):
 		if (category_id == 1):
 			del params["category"]
 		
-		with self.session.get(api, params) as response:
+		with self.session.get(api, params = params) as response:
 			data = await response.json()
 
 			# If there is an error while fetching questions
@@ -178,11 +178,11 @@ class Quiz(commands.Cog):
 
 		await ctx.send("You have 60 seconds to choose a category. Select random to get questions from all categories.")
 		
-		description = "🇦\t Random\n"
+		description = "🇦 Random\n"
 		valid_reactions = {":regional_indicator_a": 1}
 		
 		for index in range(19):
-			description += f'{reactions[index + 1]}\t {categories[index]["name"]}\n'
+			description += f'{reactions[index + 1]} {categories[index]["name"]}\n'
 
 			# Add it to the dictionary
 			valid_reactions[reactions[index + 1]] = categories[index]["id"]
@@ -236,14 +236,19 @@ class Quiz(commands.Cog):
 			"🇨": {"difficulty_level": "hard", "points": 20}
 		}
 
+		description = ""
+		for level in difficulty:
+			description += f"{level} {difficulty[level]["difficulty_level"]} [{difficulty[level]["difficulty_level"]} points for each correct answer]\n"
+
 		embed = discord.Embed(
 			title = "Select Difficulty (Default is Medium)",
-			description = "🇦\t Easy [5 points for each correct answer]"
-							"🇧\t Medium [10 points for each correct answer]"
-							"🇨\t Hard [20 points for each correct answer]",
+			description = description,
 			color = 0x07f223
 		)
 		message = await ctx.send(embed = embed)
+
+		for emoji in difficulty:
+			message.add_reaction(emoji)
 
 		difficulty_chosen = False
 
@@ -273,6 +278,9 @@ class Quiz(commands.Cog):
 			except asyncio.TimeoutError:
 				difficulty_chosen = True
 				
+				# Delete difficulty list
+				await message.delete()
+
 				# Default to medium difficulty
 				difficulty_level = "medium"
 				difficulty_points = 10
