@@ -134,15 +134,6 @@ class Quiz(commands.Cog):
 		async with self.session.get(api, params = params) as response:
 			data = await response.json()
 
-			# If there is an error while fetching questions
-			if (data["response_code"] != 0):
-				coolcry = self.bot.get_emoji(780445565476798475)
-				luciferchase = self.bot.get_user(707557256220115035)
-
-				await ctx.send(f"Uh oh! I faced some error {coolcry}.")
-				await ctx.send(f"Please run the command again or inform {luciferchase.mention}")
-				return
-
 		question = data["results"][0]["question"]
 
 		correct_answer = data["results"][0]["correct_answer"]
@@ -389,6 +380,6 @@ class Quiz(commands.Cog):
 		embed.add_field(name = "Questions Correct:", value = questions_correct, inline = True)
 		embed.add_field(
 			name = "Category:", 
-			value = [category for category in self.categories if category["id"] == category_id]["name"],
+			value = [category for category in self.categories if category["id"] == category_id][0]["name"],
 			inline = False
 		)
