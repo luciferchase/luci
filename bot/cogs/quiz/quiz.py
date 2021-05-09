@@ -46,7 +46,7 @@ class Quiz(commands.Cog):
 			categories = data["trivia_categories"]
 		
 		# Let the player choose a category
-		reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "J", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
+		reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "🇯", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
 		"🇶", "🇷", "🇸", "🇹", "🇺", "🇻", "🇼", "🇽", "🇾", "🇿"]
 
 		await ctx.send("You have 30 seconds to choose a category. Select random to get questions from all categories.")
@@ -55,7 +55,7 @@ class Quiz(commands.Cog):
 		valid_reactions = {":regional_indicator_a": 1}
 		
 		for index in range(20):
-			description += f'{reactions[index + 1]} {categories[index]["name"]}'
+			description += f'{reactions[index + 1]} {categories[index]["name"]}\n'
 
 			# Add it to the dictionary
 			valid_reactions[f":regional_indicator_{chr(98 + index)}"] = categories[index]["id"]
