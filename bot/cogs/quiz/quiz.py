@@ -128,7 +128,7 @@ class Quiz(commands.Cog):
 		if (category_id == 1):
 			del params["category"]
 		
-		with self.session.get(api, params = params) as response:
+		async with self.session.get(api, params = params) as response:
 			data = await response.json()
 
 			# If there is an error while fetching questions
@@ -248,7 +248,7 @@ class Quiz(commands.Cog):
 		message = await ctx.send(embed = embed)
 
 		for emoji in difficulty:
-			message.add_reaction(emoji)
+			await message.add_reaction(emoji)
 
 		difficulty_chosen = False
 
