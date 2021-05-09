@@ -159,6 +159,19 @@ class Quiz(commands.Cog):
 	async def quiz(self, ctx):
 		"""Play a trivia quiz from a bunch of categories"""
 
+		# Check if there is a field of user in database
+		self.cursor.execute(f"SELECT * FROM quiz WHERE user_id = {ctx.author.id}").
+		data = self.cursor.fetchall()
+
+		# If there is no instance of user, add them
+		if (len(data) == 0):
+			query = f"""INSERT INTO quiz VALUES
+					({ctx.author.id}, 0, 0, 0, {ctx.guild.id})"""
+			
+			self.cursor.execute(query)
+			self.dbcon.commit()
+
+
 		# Get emojis
 		coolcry = self.bot.get_emoji(780445565476798475)
 		smart = self.bot.get_emoji(839468976539172864)
@@ -365,8 +378,11 @@ class Quiz(commands.Cog):
 
 		# Update database
 		query = f"""UPDATE quiz
-				SET points = points + {points}
+				SET points = points + {points},
+				questions_attempted = questions_attempted + {questions_attempted},
+				questions_correct = questions_correct + {questions_correct}
 				WHERE user_id = {ctx.author.id}"""
+
 		self.cursor.execute(query)
 		self.dbcon.commit()
 
@@ -383,3 +399,10 @@ class Quiz(commands.Cog):
 			value = [category for category in self.categories if category["id"] == category_id][0]["name"],
 			inline = False
 		)
+		await ctx.send(embed = embed)
+
+	# @commands.command()
+	# async def leaderboard(self, ctx, world = False):
+	# 	"""See quiz leaderboard. Type `luci leaderboard world` to see global leaderboard"""
+	# 	if (world != False):
+	# 		query = f"""SELECT * FROM quiz WHERE guild_id = {ctx.guild.id} ORDER BY points"""
