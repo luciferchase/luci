@@ -87,8 +87,10 @@ class Quiz(commands.Cog):
 					)
 
 				emoji = payload.emoji.name
+				print(emoji)
+				print(payload.user_id)
 
-				if (emoji in valid_reactions and payload.user.id == ctx.author.id):
+				if (emoji in valid_reactions and payload.user_id == ctx.author.id):
 					category_chosen = True
 					category = valid_reactions[emoji]
 
@@ -103,4 +105,4 @@ class Quiz(commands.Cog):
 				category_chosen = True
 				coolcry = self.bot.get_emoji(780445565476798475)
 
-				await message.edit(f"Timeout. Game aborted! {coolcry}")
+				await message.edit(content = f"Timeout. Game aborted! {coolcry}")
