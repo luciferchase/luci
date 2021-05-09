@@ -96,13 +96,6 @@ class Quiz(commands.Cog):
 		self.bot = bot
 		self.categories = categories
 
-		# Get emojis
-		self.coolcry = self.bot.get_emoji(780445565476798475)
-		self.smart = self.bot.get_emoji(839468976539172864)
-		self.nacho = self.bot.get_emoji(839499460874862655)
-
-		self.luciferchase = self.bot.get_user(707557256220115035)
-
 		# Initialize a session
 		self.session = aiohttp.ClientSession()
 
@@ -133,8 +126,11 @@ class Quiz(commands.Cog):
 
 			# If there is an error while fetching questions
 			if (data["response_code"] != 0):
-				await ctx.send(f"Uh oh! I faced some error {self.coolcry}.")
-				await ctx.send(f"Please run the command again or inform {self.luciferchase}")
+				coolcry = self.bot.get_emoji(780445565476798475)
+				luciferchase = self.bot.get_user(707557256220115035)
+
+				await ctx.send(f"Uh oh! I faced some error {coolcry}.")
+				await ctx.send(f"Please run the command again or inform {luciferchase.mention}")
 				return
 
 		question = data["results"][0]["question"]
@@ -155,12 +151,19 @@ class Quiz(commands.Cog):
 			description += f"{reactions[index]} {options[index]}\n"
 
 		# Send the embed
-		embed = discord.Embed(title = question, description = description)
+		embed = discord.Embed(title = question, description = description, color = 0x00FFFFF)
 		return correct_index, correct_answer, embed
 		
 	@commands.command(aliases = ["trivia"])
 	async def quiz(self, ctx):
 		"""Play a trivia quiz from a bunch of categories"""
+
+		# Get emojis
+		coolcry = self.bot.get_emoji(780445565476798475)
+		smart = self.bot.get_emoji(839468976539172864)
+		nacho = self.bot.get_emoji(839499460874862655)
+
+		luciferchase = self.bot.get_user(707557256220115035)
 
 		# Get a session token first
 		async with self.session.get("https://opentdb.com/api_token.php?command=request") as response:
@@ -169,8 +172,8 @@ class Quiz(commands.Cog):
 			if (data["response_code"] == 0):
 				token = data["token"]
 			else:
-				await ctx.send(f"Uh oh! I faced some error {self.coolcry}.")
-				await ctx.send(f"Please run the command again or inform {self.luciferchase}")
+				await ctx.send(f"Uh oh! I faced some error {coolcry}.")
+				await ctx.send(f"Please run the command again or inform {luciferchase.mention}")
 
 		# Let the player choose a category
 		reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "🇯", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
@@ -227,7 +230,7 @@ class Quiz(commands.Cog):
 			except asyncio.TimeoutError:
 				category_chosen = True
 
-				await message.edit(content = f"Timeout. Game aborted! {self.coolcry}", embed = None)
+				await message.edit(content = f"Timeout. Game aborted! {coolcry}", embed = None)
 				return
 
 		# Let the player choose difficulty level
@@ -239,7 +242,8 @@ class Quiz(commands.Cog):
 
 		description = ""
 		for level in difficulty:
-			description += f'{level} {difficulty[level]["difficulty_level"]} [{difficulty[level]["difficulty_level"]} points for each correct answer]\n'
+			description += f'{level} {difficulty[level]["difficulty_level"].title()} \
+			[{difficulty[level]["points"]} points for each correct answer]\n'
 
 		embed = discord.Embed(
 			title = "Select Difficulty (Default is Medium)",
@@ -293,10 +297,17 @@ class Quiz(commands.Cog):
 
 		reactions = ["🇦", "🇧", "🇨", "🇩", "❌"]
 
+		embed = discord.Embed(
+			title = "Controls",
+			description = f"You have 60 seconds for each question.\nYou will get {difficulty_points} for each question.\nYou can click on ❌ anytime to close the game.\nEnjoy {nacho}",
+			color = 0x07f223
+		)
+		message = await ctx.send(embed = embed)
+
 		while not game_ended and questions_attempted <= 50:
 			# Fetch question first
 			correct_index, correct_answer, embed = await self.send_question(category_id, difficulty_level, token)
-			message = await ctx.send(embed = embed)
+			await message.edit(embed = embed)
 
 			for index in range(5):
 				await message.add_reaction(reactions[index])
@@ -319,10 +330,11 @@ class Quiz(commands.Cog):
 						game_ended = True
 
 						embed = discord.Embed(
-							title = f"{ctx.author.name} Thank you for playing! {self.nacho}",
+							title = f"{ctx.author.name} Thank you for playing! {nacho}",
 							color = 0x07f223
 						)
 						await message.edit(embed = embed)
+						await message.clear_reactions()
 						break
 
 					# Delete original question
@@ -332,9 +344,9 @@ class Quiz(commands.Cog):
 					if (reactions.index(emoji) == correct_index):
 						points += difficulty_points
 
-						await ctx.send(content = f"{self.smart} Correct Answer!", delete_after = 5)
+						await ctx.send(content = f"{smart} Correct Answer!", delete_after = 5)
 					else:
-						await ctx.send(content = f"{self.coolcry} Incorrect Answer!", delete_after = 5)
+						await ctx.send(content = f"{coolcry} Incorrect Answer!", delete_after = 5)
 						await ctx.send(content = f"The correct answer is {correct_answer}", delete_after = 5)
 
 			# Self abort the game after 60 seconds
