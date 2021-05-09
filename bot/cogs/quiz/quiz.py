@@ -105,6 +105,16 @@ class Quiz(commands.Cog):
 		self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
 		self.cursor = self.dbcon.cursor()
 
+		# Create table if not exists
+		query = """CREATE TABLE IF NOT EXISTS quiz(
+				user_id					BIGINT		NOT NULL	PRIMARY KEY,
+				points					INT 		NOT NULL,
+				questions_attempted		INT 		NOT NULL,
+				questions_correct		INT 		NOT NULL,
+				guild_id				BIGINT		NOT NULL)"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
 
 	async def send_question(self, category_id, difficulty_level, token):
 		# Fetch a question and send it as embed
@@ -294,6 +304,7 @@ class Quiz(commands.Cog):
 		game_ended = False
 		points = 0
 		questions_attempted = 0
+		questions_correct = 0
 
 		reactions = ["🇦", "🇧", "🇨", "🇩", "❌"]
 
@@ -303,6 +314,7 @@ class Quiz(commands.Cog):
 			color = 0x07f223
 		)
 		message = await ctx.send(embed = embed)
+		footnote = await ctx.send(f"{nacho} Best of luck")
 
 		while not game_ended and questions_attempted <= 50:
 			# Fetch question first
@@ -335,21 +347,48 @@ class Quiz(commands.Cog):
 						)
 						await message.edit(embed = embed)
 						await message.clear_reactions()
+						await footnote.delete()
+						
 						break
 					
 					if (reactions.index(emoji) == correct_index):
 						points += difficulty_points
-						await ctx.send(content = f"{smart} Correct Answer!", delete_after = 5)
+						questions_correct += 1
+						
+						await footnote.edit(content = f"{smart} Correct Answer!")
 
 					else:
-						await ctx.send(content = f"{coolcry} Incorrect Answer!", delete_after = 5)
-						await ctx.send(content = f"The correct answer is {correct_answer}", delete_after = 5)
+						await footnote.edit(content = f"{coolcry} Incorrect Answer!\nThe correct answer is {correct_answer}.")
 
+					await message.remove_reaction(payload.emoji, discord.Object(id = payload.user_id))
 					questions_attempted += 1
 
 			# Self abort the game after 60 seconds
 			except asyncio.TimeoutError:
-				difficulty_chosen = True
-				
-				# Default to medium difficulty
-				difficulty_level = "medium"
+					game_ended = True
+
+					await message.delete()
+					await footnote.edit(f"{coolcry} Game aborted automatically!")
+					
+					break
+
+		# Update database
+		query = f"""UPDATE quiz
+				SET points = points + {points}
+				WHERE user_id = {ctx.author.id}"""
+		self.cursor.execute(query)
+		self.dbcon.commit()
+
+		# Send final embed
+		embed = discord.Embed(
+			title = "Total Points",
+			description = points,
+			color = 0x07f223
+		)
+		embed.add_field(name = "Questions Played:", value = questions_attempted, inline = True)
+		embed.add_field(name = "Questions Correct:", value = questions_correct, inline = True)
+		embed.add_field(
+			name = "Category:", 
+			value = [category for category in self.categories if category["id"] == category_id]["name"],
+			inline = False
+		)
