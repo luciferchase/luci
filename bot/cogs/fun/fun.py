@@ -89,8 +89,8 @@ class Fun(commands.Cog):
 			options = [option for option in message[message.find("|") + 1:].split("|") if option != ""]
 
 			# Check if there are more than 26 options
-			if (len(options) > 26):
-				await ctx.send("Bruh! Please give maximum 26 options 🤦‍♂️")
+			if (len(options) > 20):
+				await ctx.send("Bruh! Please give maximum 20 options 🤦‍♂️. You can only react 20 times to a message.")
 				return
 
 			reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "J", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
