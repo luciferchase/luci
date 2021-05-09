@@ -239,7 +239,7 @@ class IPL(commands.Cog):
 	async def fetch_standings(self):
 		# Fetch standings from the database
 
-		self.cursor.execute("SELECT * FROM STANDINGS")
+		self.cursor.execute("SELECT * FROM STANDINGS ORDER BY points")
 		data = self.cursor.fetchall()
 
 		current_standings = {}
@@ -254,8 +254,6 @@ class IPL(commands.Cog):
 			# {username: points}
 			current_standings[username] = user[1]
 
-		# Sort the the standings according to their value
-		current_standings = dict(sorted(current_standings.items(), key = lambda item: item[1], reverse = True))
 		leaderboard = [user for user in current_standings]
 
 		embed = discord.Embed(

@@ -391,6 +391,8 @@ class Quiz(commands.Cog):
 					else:
 						await footnote.edit(content = f"{coolcry} Incorrect Answer!\nThe correct answer is {correct_answer}.")
 
+					# Wait atleast 1 sec to remove reaction otherwise it gets rate limited
+					asyncio.sleep(1)
 					await message.remove_reaction(payload.emoji, discord.Object(id = payload.user_id))
 					questions_attempted += 1
 
@@ -428,8 +430,30 @@ class Quiz(commands.Cog):
 		)
 		await ctx.send(embed = embed)
 
-	# @commands.command()
-	# async def leaderboard(self, ctx, world = False):
-	# 	"""See quiz leaderboard. Type `luci leaderboard world` to see global leaderboard"""
-	# 	if (world != False):
-	# 		query = f"""SELECT * FROM quiz WHERE guild_id = {ctx.guild.id} ORDER BY points"""
+	@commands.command()
+	async def leaderboard(self, ctx, world = False):
+		"""See quiz leaderboard. Type `luci leaderboard world` to see global leaderboard"""
+		if (world != False):
+			self.cursor.execute(f"""SELECT * FROM quiz WHERE guild_id = {ctx.guild.id} ORDER BY points""")
+		else:
+			self.cursor.execute(f"""SELECT * FROM quiz ORDER BY points""")
+
+		data = self.cursor.fetchall()
+
+		embed = discord.Embed(
+			title = "Global Leaderboard" if world else "Leaderboard",
+			color = 0x07f223
+		)
+		emojies = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+
+		# Add fields to the embed
+		for index in range(len(data)):
+			user = self.bot.get_user(data[index][0])
+			
+			embed.add_field(
+				name = f"{emojies[index]} {user.name}#{user.discriminator}",
+				value = f"Points: {data[index][1]}",
+				inline = False
+			)
+		
+		await ctx.send(embed = embed)
