@@ -329,7 +329,7 @@ class Quiz(commands.Cog):
 		message = await ctx.send(embed = embed)
 		footnote = await ctx.send(f"{nacho} Best of luck")
 
-		while not game_ended and questions_attempted <= 50:
+		while not game_ended and questions_attempted < 100:
 			# Fetch question first
 			correct_index, correct_answer, embed = await self.send_question(category_id, difficulty_level, token)
 
@@ -392,7 +392,7 @@ class Quiz(commands.Cog):
 						await footnote.edit(content = f"{coolcry} Incorrect Answer!\nThe correct answer is {correct_answer}.")
 
 					# Wait atleast 1 sec to remove reaction otherwise it gets rate limited
-					asyncio.sleep(1)
+					await asyncio.sleep(1)
 					await message.remove_reaction(payload.emoji, discord.Object(id = payload.user_id))
 					questions_attempted += 1
 
@@ -404,6 +404,18 @@ class Quiz(commands.Cog):
 					await footnote.edit(f"{coolcry} Game aborted automatically!")
 					
 					break
+
+		# Send a message after successfully playing 100 questions
+		else:
+			embed = discord.Embed(
+				title = f"{ctx.author.name} Thank you for playing! {nacho}",
+				description = "You can play only 100 questions at a time. If you want to play more, please try the command again",
+				color = 0x07f223
+			)
+			await message.edit(embed = embed)
+			await message.clear_reactions()
+			await footnote.delete()
+			
 
 		# Update database
 		query = f"""UPDATE quiz
@@ -432,7 +444,7 @@ class Quiz(commands.Cog):
 
 	@commands.command()
 	async def leaderboard(self, ctx, world = None):
-		"""See quiz leaderboard. Type `luci leaderboard world` to see global leaderboard"""
+		"""See quiz leaderboard. Type `luci leaderboard global` to see global leaderboard"""
 		if (world != None):
 			self.cursor.execute(f"""SELECT * FROM quiz WHERE guild_id = {ctx.guild.id} ORDER BY points DESC""")
 		else:
