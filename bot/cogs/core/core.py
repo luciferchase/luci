@@ -37,6 +37,9 @@ class Core(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_join(self, member):
+		if (member.guild.id != 738731754885480468):
+			return
+
 		channel = member.guild.system_channel
 			
 		if channel is not None:
@@ -57,6 +60,9 @@ class Core(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_member_remove(self, member):
+		if (member.guild.id != 738731754885480468):
+			return
+		
 		channel = member.guild.system_channel
 			
 		if channel is not None:
@@ -71,6 +77,9 @@ class Core(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_invite_create(self, invite):
+		if (self.bot.guild.id != 738731754885480468):
+			return
+		
 		# Create a dm with me
 		luci = self.bot.get_user(707557256220115035)
 		dm = await luci.create_dm()
@@ -113,6 +122,9 @@ class Core(commands.Cog):
 	# Add last 5 deleted message to database
 	@commands.Cog.listener()
 	async def on_message_delete(self, message):
+		if (self.bot.guild.id != 738731754885480468):
+			return
+		
 		# Check if the message was a poll or shout which was automatically deleted by the bot
 		# Check the message is deleted by an actual user and not by a bot
 		if (message.author.bot == True or \
@@ -197,6 +209,9 @@ class Core(commands.Cog):
 	@commands.guild_only()
 	@commands.command()
 	async def snipe(self, ctx, number = 1):
+		if (self.bot.guild.id != 738731754885480468):
+			return
+		
 		"""See upto 5 last deleted message
 		For eg: `luci snipe` gets the last deleted message
 		Also:  `luci snipe 2` gets the second last deleted message and so on."""
