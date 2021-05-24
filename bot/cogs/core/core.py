@@ -183,8 +183,9 @@ class Core(commands.Cog):
 		nacho = self.bot.get_emoji(839499460874862655)
 
 		embed = discord.Embed(
-			title = "[Invite Link](https://discord.com/api/oauth2/authorize?client_id=836213550384545852&permissions=3221744704&scope=bot)",
-			description = f"Thank you for adding me to your server {nacho}",
+			title = f"Thank you for adding me to your server {nacho}",
+			description = "[Invite Link](https://discord.com/api/oauth2/authorize?client_id=836213550384545852&permissions=3221744704&scope=bot)",
+
 		)
 		await ctx.send(embed = embed)
 
