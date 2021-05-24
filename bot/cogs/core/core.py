@@ -173,10 +173,20 @@ class Core(commands.Cog):
 
 	# Fun, "for all" commands
 	@commands.command()
-	async def ping(self, ctx) :
+	async def ping(self, ctx):
 		"""Ping Pong"""
 		await ctx.send(f"🏓 Pong in {str(round(self.bot.latency, 3))} s")
 
+	@commands.command()
+	async def invite(self, ctx):
+		"""Invite bot to your server"""
+		nacho = self.bot.get_emoji(839499460874862655)
+
+		embed = discord.Embed(
+			title = "[Invite Link](https://discord.com/api/oauth2/authorize?client_id=836213550384545852&permissions=3221744704&scope=bot)",
+			description = f"Thank you for adding me to your server {nacho}",
+		)
+		ctx.send(embed = embed)
 
 	@commands.command(aliases = ["pm"])
 	async def dm(self, ctx, userid: int, *message: str):
