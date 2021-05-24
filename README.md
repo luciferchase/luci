@@ -2,7 +2,7 @@
 
 ![Luci](/bot/avatars/avatar2.png)
 
-A General-Purpose Fun bot with lots and lots of features. (I will try to add any command if you want it)
+A General-Purpose Fun bot with lots and lots of features.
 
 # Commands
 
