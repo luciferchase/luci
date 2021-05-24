@@ -31,7 +31,7 @@ A General-Purpose Fun bot with lots and lots of features.
 | memespam                  | So that you don't have to beg for meme 50 times           |
 | avatar    [alias = av]    | See the avatar of a user (must be from the same guild)    |
 | bigmoji   [alias = e ]    | Enlarge an emoji                                          |
-| Comics                    | Get a comic. See [example](#comics)                       |
+| Comics                    | Get a ohno, Saturday Morning Breakfast Cereal (smbc), The Perry Bible Fellowship (pbf), Cyanide and Happiness (cah), XKCD (xkcd), Mr. Lovenstein (mrls), Chainsawsuit (chainsaw), Sarah's Scribbles (sarah), Dilbert (dilbert), Calvin and Hobbes (calvin), Garfield (garfield), Odd is out (oddones) Commic |
 | poll                      | Make a poll                                               |
 | nitro [alias = n] | Don't have nitro? Don't worry, send an animated emote through bot |
 | insult                    | Evil insult 😈                                            |
