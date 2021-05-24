@@ -186,7 +186,7 @@ class Core(commands.Cog):
 			title = "[Invite Link](https://discord.com/api/oauth2/authorize?client_id=836213550384545852&permissions=3221744704&scope=bot)",
 			description = f"Thank you for adding me to your server {nacho}",
 		)
-		ctx.send(embed = embed)
+		await ctx.send(embed = embed)
 
 	@commands.command(aliases = ["pm"])
 	async def dm(self, ctx, userid: int, *message: str):
