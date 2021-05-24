@@ -98,8 +98,9 @@ class Scheduler(commands.Cog):
 			dbcon.commit()
 
 	def schedule(self):
-		if (self.bot.guild.id != 738731754885480468):
-			return
+		for guild in self.bot.guilds:
+			if (guild.id not in [738731754885480468]):
+				return
 		
 		# Initialize scheduler
 		schedule_log = logging.getLogger("apscheduler")

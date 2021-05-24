@@ -77,9 +77,10 @@ class Core(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_invite_create(self, invite):
-		if (self.bot.guild.id != 738731754885480468):
-			return
-		
+		for guild in self.bot.guilds:
+			if (guild.id not in [738731754885480468]):
+				return
+
 		# Create a dm with me
 		luci = self.bot.get_user(707557256220115035)
 		dm = await luci.create_dm()
@@ -122,7 +123,7 @@ class Core(commands.Cog):
 	# Add last 5 deleted message to database
 	@commands.Cog.listener()
 	async def on_message_delete(self, message):
-		if (self.bot.guild.id != 738731754885480468):
+		if (message.guild.id != 738731754885480468):
 			return
 		
 		# Check if the message was a poll or shout which was automatically deleted by the bot
@@ -209,8 +210,9 @@ class Core(commands.Cog):
 	@commands.guild_only()
 	@commands.command()
 	async def snipe(self, ctx, number = 1):
-		if (self.bot.guild.id != 738731754885480468):
-			return
+		for guild in self.bot.guilds:
+			if (guild.id not in [738731754885480468]):
+				return
 		
 		"""See upto 5 last deleted message
 		For eg: `luci snipe` gets the last deleted message
