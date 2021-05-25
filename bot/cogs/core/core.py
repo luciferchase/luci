@@ -184,7 +184,7 @@ class Core(commands.Cog):
 
 		embed = discord.Embed(
 			title = f"Thank you for adding me to your server {nacho}",
-			description = "[Invite Link](https://discord.com/api/oauth2/authorize?client_id=836213550384545852&permissions=3221744704&scope=bot)",
+			description = "**[Invite Link](https://discord.com/api/oauth2/authorize?client_id=836213550384545852&permissions=3221744704&scope=bot)**",
 			color = 0x00FFFFF
 		)
 		await ctx.send(embed = embed)
