@@ -22,6 +22,7 @@ from cogs.fun import fun
 # from cogs.ipl import ipl
 from cogs.math import math
 from cogs.meme import meme
+from cogs.moderation import moderation
 from cogs.photo import photo
 from cogs.quiz import quiz
 # from cogs.testing import testing
@@ -63,6 +64,7 @@ bot.add_cog(fun.Fun(bot))
 # bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
+bot.add_cog(moderation.Moderation(bot))
 bot.add_cog(photo.Photo())
 bot.add_cog(quiz.Quiz(bot))
 # bot.add_cog(testing.Testing())
