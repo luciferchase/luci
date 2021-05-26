@@ -7,10 +7,10 @@ class Moderation(commands.Cog):
         self.bot = bot
 
     #The below code bans player.
-    @commands.command(name = "ban")
+    @commands.command()
     @commands.has_permissions(ban_members = True)
-    async def ban_member(ctx, member : discord.Member, *, reason = None):
-        await ctx.guild.ban(member, reason = reason)
+    async def ban(ctx, member : discord.Member, *, reason = None):
+        await guild.ban(member, reason = reason)
 
     #The below code unbans player.
     @commands.command()
