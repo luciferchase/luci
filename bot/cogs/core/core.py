@@ -36,6 +36,13 @@ class Core(commands.Cog):
         # await slash.sync_all_commands(self.bot)
 
     @commands.Cog.listener()
+    async def on_command_error(ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Please pass in all requirements :rolling_eyes:.")
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("You dont have all the requirements :facepalm:")
+
+    @commands.Cog.listener()
     async def on_member_join(self, member):
         if (member.guild.id != 738731754885480468):
             return
