@@ -1,13 +1,7 @@
 import discord
 from discord.ext import commands
-from urllib.parse import urlparse
-import datetime
+
 import asyncio
-import random
-import pip
-import os
-import io
-import json
 
 
 class Mod(commands.Cog):
