@@ -7,7 +7,7 @@ class Moderation(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    @commands.has_permissions(admin = True)
+    @commands.has_permissions(administrator = True)
     async def ban(self, member, *reason):
         """Ban a member [Reason must be given]"""
         await member.ban()
