@@ -15,7 +15,7 @@ class Mod(commands.Cog):
         
         embed = discord.Embed(timestamp = ctx.message.created_at)
         embed.set_author(name = method.title(), icon_url = user.avatar_url)
-        embed.color = await ctx.get_dominant_color(user.avatar_url)
+        embed.color = 0xf34949
         embed.set_footer(text = f"User ID: {user.id}")
         
         if success:
@@ -69,7 +69,7 @@ class Mod(commands.Cog):
     async def unban(self, ctx, name_or_id, *, reason = None):
         """Unban someone from the server."""
 
-        ban = await ctx.get_ban(name_or_id)
+        ban = await ctx.guild.fetch_ban(name_or_id)
 
         try:
             await ctx.guild.unban(ban.user, reason = reason)
@@ -128,7 +128,7 @@ class Mod(commands.Cog):
     async def baninfo(self, ctx, *, name_or_id):
         """Check the reason of a ban from the audit logs."""
 
-        ban = await ctx.get_ban(name_or_id)
+        ban = await ctx.guild.fetch_ban(name_or_id)
 
         embed = discord.Embed()
         embed.color = await ctx.get_dominant_color(ban.user.avatar_url)
