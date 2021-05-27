@@ -173,10 +173,10 @@ class Music(commands.Cog):
         except KeyError:
             pass
 
-    # async def cog_check(self, ctx):
-    #     """A local check which applies to all commands in this cog."""
-    #     if not ctx.guild:
-    #         raise commands.NoPrivateMessage
+    async def cog_check(self, ctx):
+        """A local check which applies to all commands in this cog."""
+        if not ctx.guild:
+            raise commands.NoPrivateMessage
         
     # async def cog_command_error(self, ctx, error):
     #     """A local error handler for all errors arising from commands in this cog."""
