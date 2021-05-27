@@ -35,7 +35,9 @@ class Mod(commands.Cog):
             else:
                 embed.description = f"{user} was just {method}ed."
         else:
-            if method == "lockdown" or "channel-lockdown":
+            if method == "lock" or "channel-locked":
+                embed.description = f"You do not have the permissions to {method} `{location.name}`."
+            if method == "unlock" or "channel-unlocked":
                 embed.description = f"You do not have the permissions to {method} `{location.name}`."
             else:
                 embed.description = f"You do not have the permissions to {method} {user.name}."
@@ -287,8 +289,8 @@ class Mod(commands.Cog):
         """Server/Channel lock"""
         pass
 
-    @lock.command(aliases=["chan"])
-    async def channel(self, ctx, channel: discord.TextChannel = None, *, reason = None):
+    @lock.command(aliases=["channel"])
+    async def chan(self, ctx, channel: discord.TextChannel = None, *, reason = None):
         """Lockdown a channel. Members will not be able to send a message."""
 
         if channel is None: 
@@ -308,8 +310,8 @@ class Mod(commands.Cog):
         embed = await self.format_mod_embed(ctx, ctx.author, success, "channel-locked", 0, channel)
         await ctx.send(embed = embed)
     
-    @lock.command()
-    async def server(self, ctx, server: discord.Guild = None, *, reason = None):
+    @lock.command(name = "server")
+    async def _server(self, ctx, server: discord.Guild = None, *, reason = None):
         """Lockdown the server. Sed lyf."""
 
         if server is None: 
