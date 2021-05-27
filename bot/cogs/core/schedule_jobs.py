@@ -21,35 +21,54 @@ class Scheduler(commands.Cog):
 	
 	# Scheduled events
 	async def schedule_meme(self):
+		config = {
+			"qtopia": [587164191710773268, True],
+			"aech": [738731755569414196, True]
+		}
+		
 		async with self.session.get("https://meme-api.herokuapp.com/gimme/dankmemes") as response:
 			data = await response.json()
 
-			channel = self.bot.get_channel(835113922172026881)
-		
-			embed = discord.Embed(
-				color = 0x06f9f5,							# Blue-ish
-				title = data["title"],
-				url = data["postLink"]
-			)
-			embed.set_image(url = data["url"])
-			embed.set_footer(text = f'👍 {data["ups"]}')
-			meme = await channel.send(embed = embed)
-			await meme.add_reaction("😂")
-			await meme.add_reaction("leo-1:748517015962255440")
+			for channel_id in config.values:
+				if (not channel_id[1]):
+					return
+
+				channel = self.bot.get_channel(channel_id[0])
+
+				embed = discord.Embed(
+					color = 0x06f9f5,							# Blue-ish
+					title = data["title"],
+					url = data["postLink"]
+				)
+				embed.set_image(url = data["url"])
+				embed.set_footer(text = f'👍 {data["ups"]}')
+				meme = await channel.send(embed = embed)
+				await meme.add_reaction("😂")
+				await meme.add_reaction("leo-1:748517015962255440")
 
 	async def schedule_wallpaper(self):
-		channel = self.bot.get_channel(738731755569414197)
+		config = {
+			"qtopia": [587156041716727848, True],
+			"aech": [738731755569414197, True]
+		}
+
 		api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US"
 
 		async with self.session.get(api) as response:
 			data = await response.json()
 
-			await channel.send(data["images"][0]["title"])
-			
-			wallpaper = await channel.send(f'http://bing.com{data["images"][0]["url"]}')
-			await wallpaper.add_reaction("❤️")
-			await wallpaper.add_reaction("👍")
-			await wallpaper.add_reaction("👎")
+			for channel_id in config.values:
+				if (not channel_id[1]):
+					return
+
+				channel = self.bot.get_channel(channel_id[0])
+
+				await channel.send(data["images"][0]["title"])
+				
+				wallpaper = await channel.send(f'http://bing.com{data["images"][0]["url"]}')
+				await wallpaper.add_reaction("❤️")
+				await wallpaper.add_reaction("👍")
+				await wallpaper.add_reaction("👎")
 
 	async def schedule_ipl(self):
 		# Set up database
@@ -98,10 +117,6 @@ class Scheduler(commands.Cog):
 			dbcon.commit()
 
 	def schedule(self):
-		for guild in self.bot.guilds:
-			if (guild.id not in [738731754885480468]):
-				return
-		
 		# Initialize scheduler
 		schedule_log = logging.getLogger("apscheduler")
 		schedule_log.setLevel(logging.WARNING)
