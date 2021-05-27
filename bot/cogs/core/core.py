@@ -9,6 +9,7 @@ import psycopg2
 from discordpy_slash import slash
 
 from cogs.botstatus.botstatus import Botstatus
+from utils.converters.converters import GetFetchUser
 
 class Core(commands.Cog):
     """Core commands. Most of them are owner only."""

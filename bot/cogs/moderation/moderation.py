@@ -1,30 +1,9 @@
 import discord
-from discord import User
 from discord.ext import commands
-from discord.ext.commands import BadArgument, Context, Converter, MemberConverter, UserConverter
 
 import asyncio
 
-
-class GetFetchUser(UserConverter):
-    async def convert(self, ctx, user: str) -> User:
-        """
-        :param user: str argument coming from Discord.
-        Tries to get user from cache and if fails tries to fetch user from Discord.
-        If both fail raises BadArgument
-        """
-        try:
-            return await super().convert(ctx, user)
-        except BadArgument:
-            try:
-                user_id = int(user)
-            except ValueError:
-                raise BadArgument("Can't convert to neither user nor snowflake.")
-            else:
-                try:
-                    return await ctx.bot.fetch_user(user_id)
-                except HTTPException as e:
-                    raise BadArgument(e)
+from utils.converters.converters import GetFetchUser
 
 
 class Mod(commands.Cog):
@@ -32,6 +11,7 @@ class Mod(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.GetFetchUser = converters.GetFetchUser()
 
     async def format_mod_embed(self, ctx, user, success, method, duration = None, location = None):
         """Helper function to format an embed to prevent extra code"""
@@ -97,7 +77,7 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator = True)
-    async def unban(self, ctx, member: GetFetchUser, *, reason = None):
+    async def unban(self, ctx, membe.GetFetchUs import GetFetchUserer, *, reason = None):
         try:
             await ctx.guild.unban(user = member, reason = reason)
         except:
@@ -154,10 +134,10 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator = True)
-    async def baninfo(self, ctx, *, name_or_id):
+    async def baninfo(self, ctx, *, member: GetFetchUser):
         """Check the reason of a ban from the audit logs."""
 
-        ban = await ctx.guild.fetch_ban(name_or_id)
+        ban = await ctx.guild.fetch_ban(member)
 
         embed = discord.Embed()
         embed.color = 0xf34949
