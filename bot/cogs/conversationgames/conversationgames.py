@@ -1040,7 +1040,7 @@ class ConversationGames(commands.Cog):
 
 		# Build Embed
 		embed = discord.Embed(
-			title = f"{author.name} asked {user.name}",
+			title = f"{author.nick} asked {user.nick}",
 			description = question.format(name = random_member),
 			color = 0xf34949							# red
 		)
@@ -1063,7 +1063,7 @@ class ConversationGames(commands.Cog):
 
 		# Build Embed
 		embed = discord.Embed(
-			title = f"{author.name} dared {user.name}",
+			title = f"{author.nick} dared {user.nick}",
 			description = question.format(name = random_member),
 			color = 0xf34949					# Red
 		)							
