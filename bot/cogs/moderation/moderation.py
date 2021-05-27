@@ -252,7 +252,7 @@ class Mod(commands.Cog):
         else:
             success = True
             
-        progress.delete()
+        await progress.delete()
 
         embed = await self.format_mod_embed(ctx, member, success, "mute", f"{str(duration[:-1])} {longunit}")
         await ctx.send(embed = embed)
@@ -279,7 +279,7 @@ class Mod(commands.Cog):
         else:
             success = True
 
-        progress.delete()
+        await progress.delete()
             
         embed = await self.format_mod_embed(ctx, member, success, "unmute")
         await ctx.send(embed = embed)
