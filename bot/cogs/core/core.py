@@ -9,12 +9,13 @@ import psycopg2
 from discordpy_slash import slash
 
 from cogs.botstatus.botstatus import Botstatus
-from bot.utils.converters.converters import GetFetchUser
+from bot.utils.converters import GetFetchUser
 
 class Core(commands.Cog):
     """Core commands. Most of them are owner only."""
     def __init__(self, bot):
         self.bot = bot
+        self.GetFetchUser = GetFetchUser()
 
         # Set up database
         DATABASE_URL = os.environ["DATABASE_URL"]
@@ -191,20 +192,12 @@ class Core(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command(aliases = ["pm"])
-    async def dm(self, ctx, userid: int, *message: str):
+    async def dm(self, ctx, user: self.GetFetchUser, *message: str):
         """DM a user
         Syntax: luci dm 707557256220115035 you are geh"""
-        if (userid is None or message is None):
-            await ctx.send("Bruh! Give a user atlease")
+        if (user is None or message is None):
+            await ctx.send("Bruh! Give a user atleast")
             # await ctx.invoke(self.bot.get_command("help"), "dm")
-        try:
-            user_to_dm = self.bot.get_user(int(userid))
-            dm_channel = await user_to_dm.create_dm()
-        except:
-            await ctx.send("User not found. Is the user even real?")
-            # await ctx.invoke(self.bot.get_command("help"), "dm")
-            return
-
         message = " ".join(message)
 
         embed = discord.Embed(title = "Direct Message", description = message)
@@ -212,7 +205,7 @@ class Core(commands.Cog):
         embed.set_footer(text = ctx.message.created_at)
 
         try:
-            await dm_channel.send(embed = embed)
+            await user.send(embed = embed)
             await ctx.send(f"DM Sent successfully to {user_to_dm.name}")
         except:
             await ctx.send("DM not sent. Have you done eveything correctly?")

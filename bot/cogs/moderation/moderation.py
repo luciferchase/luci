@@ -3,7 +3,7 @@ from discord.ext import commands
 
 import asyncio
 
-from bot.utils.converters.converters import GetFetchUser
+from utils.converters import converters
 
 
 class Mod(commands.Cog):
@@ -11,6 +11,7 @@ class Mod(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.GetFetchUser = converters.GetFetchUser()
 
     async def format_mod_embed(self, ctx, user, success, method, duration = None, location = None):
         """Helper function to format an embed to prevent extra code"""
@@ -76,7 +77,7 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator = True)
-    async def unban(self, ctx, membe.GetFetchUs import GetFetchUserer, *, reason = None):
+    async def unban(self, ctx, member: self.GetFetchUser, *, reason = None):
         try:
             await ctx.guild.unban(user = member, reason = reason)
         except:
@@ -133,7 +134,7 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator = True)
-    async def baninfo(self, ctx, *, member: GetFetchUser):
+    async def baninfo(self, ctx, *, member: self.GetFetchUser):
         """Check the reason of a ban from the audit logs."""
 
         ban = await ctx.guild.fetch_ban(member)
