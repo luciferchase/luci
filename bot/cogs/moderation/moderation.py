@@ -1,6 +1,7 @@
 import discord
+from discord import User
 from discord.ext import commands
-from discord.ext.commands import UserConverter
+from discord.ext.commands import BadArgument, Context, Converter, MemberConverter, UserConverter
 
 import asyncio
 
