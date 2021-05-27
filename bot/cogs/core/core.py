@@ -206,9 +206,9 @@ class Core(commands.Cog):
 
         try:
             await user.send(embed = embed)
-            await ctx.send(f"DM Sent successfully to {user_to_dm.name}")
+            await ctx.send(f"DM Sent successfully to {user.name}")
         except:
-            await ctx.send("DM not sent. Have you done eveything correctly?")
+            await ctx.send("DM not sent. Have you done everything correctly?")
             # await ctx.invoke(self.bot.get_command("help"), "dm")
 
 

@@ -78,13 +78,15 @@ class Mod(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator = True)
     async def unban(self, ctx, member: GetFetchUser, *, reason = None):
+        """Unban a User"""
+
         try:
             await ctx.guild.unban(user = member, reason = reason)
         except:
             success = False
         else:
-            await member.send(f"You have been banned in {ctx.guild} for {reason}" if reason != None \
-                else f"You have been banned in {ctx.guild}")
+            await member.send(f"You have been unbanned in {ctx.guild} for {reason}" if reason != None \
+                else f"You have been unbanned in {ctx.guild}")
             success = True
 
         embed = await self.format_mod_embed(ctx, member, success, "unban")
@@ -204,6 +206,7 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
+    @commands.has_permissions(administrator = True)
     async def mute(self, ctx, member: discord.Member, duration, *, reason = None):
         """Denies someone from chatting in all text channels and \
         talking in voice channels for a specified duration"""
@@ -278,12 +281,14 @@ class Mod(commands.Cog):
 
     @commands.group(invoke_without_command = True)
     @commands.has_permissions(administrator = True)
-    async def lockdown(self, ctx):
-        """Server/Channel lockdown"""
+    async def lock(self, ctx):
+        """Server/Channel lock"""
         pass
 
-    @lockdown.command(aliases=["channel"])
-    async def chan(self, ctx, channel: discord.TextChannel = None, *, reason = None):
+    @lock.command(aliases=["chan"])
+    async def channel(self, ctx, channel: discord.TextChannel = None, *, reason = None):
+        """Lockdown a channel. Members will not be able to send a message."""
+
         if channel is None: 
             channel = ctx.channel
         
@@ -298,11 +303,13 @@ class Mod(commands.Cog):
         else:
             success = True
         
-        embed = await self.format_mod_embed(ctx, ctx.author, success, "channel-lockdown", 0, channel)
+        embed = await self.format_mod_embed(ctx, ctx.author, success, "channel-locked", 0, channel)
         await ctx.send(embed = embed)
     
-    @lockdown.command()
+    @lock.command()
     async def server(self, ctx, server: discord.Guild = None, *, reason = None):
+        """Lockdown the server. Sed lyf."""
+
         if server is None: 
             server = ctx.guild
         
@@ -322,5 +329,58 @@ class Mod(commands.Cog):
         
         progress.delete()
         
-        embed = await self.format_mod_embed(ctx, ctx.author, success, "server-lockdown", 0, server)
+        embed = await self.format_mod_embed(ctx, ctx.author, success, "server-locked", 0, server)
+        await ctx.send(embed = embed)
+
+    @commands.group(invoke_without_command = True)
+    @commands.has_permissions(administrator = True)
+    async def unlock(self, ctx):
+        """Server/Channel unlock"""
+        pass
+
+    @unlock.command(aliases=["channel"])
+    async def chan(self, ctx, channel: discord.TextChannel = None, *, reason = None):
+        """Unlock a channel. Members will be able to send message again."""
+
+        if channel is None: 
+            channel = ctx.channel
+        
+        try:
+            await channel.set_permissions(
+                ctx.guild.default_role, 
+                overwrite = discord.PermissionOverwrite(send_messages = False), 
+                reason = reason
+            )
+        except:
+            success = False
+        else:
+            success = True
+        
+        embed = await self.format_mod_embed(ctx, ctx.author, success, "channel-unlocked", 0, channel)
+        await ctx.send(embed = embed)
+    
+    @unlock.command()
+    async def server(self, ctx, server: discord.Guild = None, *, reason = None):
+        """Unlock the server. Sed lyf."""
+        
+        if server is None: 
+            server = ctx.guild
+        
+        progress = await ctx.send(f"Unlocking {server.name}")
+        
+        try:
+            for channel in server.channels:
+                await channel.set_permissions(
+                    ctx.guild.default_role, 
+                    overwrite = discord.PermissionOverwrite(send_messages = False), 
+                    reason = reason
+                )
+        except:
+            success = False
+        else:
+            success = True
+        
+        progress.delete()
+        
+        embed = await self.format_mod_embed(ctx, ctx.author, success, "server-unlocked", 0, server)
         await ctx.send(embed = embed)
