@@ -2,7 +2,6 @@ from typing import Union
 
 from discord import Embed, Color, Member, User
 
-
 def simple_embed(message: str, title: str, color: Color) -> Embed:
     embed = Embed(title=title, description=message, color=color)
     return embed
@@ -30,7 +29,7 @@ def success(message: str, member: Union[Member, User] = None) -> Embed:
                    usually our bot member object from the specific guild.
     :return: Embed object
     """
-    return simple_embed(f"{constants.success_emoji}︱{message}", "",
+    return simple_embed(f"😁︱{message}", "",
                         get_top_role_color(member, fallback_color=Color.green()))
 
 def failure(message: str) -> Embed:
@@ -39,7 +38,7 @@ def failure(message: str) -> Embed:
     :param message: embed description
     :return: Embed object
     """
-    return simple_embed(f"{constants.failure_emoji}︱{message}", "", Color.red())
+    return simple_embed(f"🥺︱{message}", "", Color.red())
 
 def get_top_role_color(member: Union[Member, User], *, fallback_color) -> Color:
     """
