@@ -23,7 +23,7 @@ class Scheduler(commands.Cog):
 	async def schedule_meme(self):
 		config = {
 			"qtopia": [587164191710773268, True],
-			"aech": [738731755569414196, True]
+			"aech": [835113922172026881, True]
 		}
 		
 		async with self.session.get("https://meme-api.herokuapp.com/gimme/dankmemes") as response:
