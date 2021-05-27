@@ -213,7 +213,8 @@ class Mod(commands.Cog):
     @commands.has_permissions(administrator = True)
     async def mute(self, ctx, member: discord.Member, duration, *, reason = None):
         """Denies someone from chatting in all text channels and \
-        talking in voice channels for a specified duration"""
+        talking in voice channels for a specified duration
+        Example: luci mute @luciferchase 1h"""
 
         unit = duration[-1]
         
