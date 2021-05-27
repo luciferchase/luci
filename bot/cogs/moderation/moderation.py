@@ -3,7 +3,7 @@ from discord.ext import commands
 
 import asyncio
 
-from bot.utils.converters import converters
+from bot.utils.converters import GetFetchUser
 
 
 class Mod(commands.Cog):
