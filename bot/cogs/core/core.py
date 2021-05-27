@@ -192,7 +192,7 @@ class Core(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command(aliases = ["pm"])
-    async def dm(self, ctx, user: self.GetFetchUser, *message: str):
+    async def dm(self, ctx, user: GetFetchUser, *message: str):
         """DM a user
         Syntax: luci dm 707557256220115035 you are geh"""
         if (user is None or message is None):

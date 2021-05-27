@@ -77,7 +77,7 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator = True)
-    async def unban(self, ctx, member: self.GetFetchUser, *, reason = None):
+    async def unban(self, ctx, member: GetFetchUser, *, reason = None):
         try:
             await ctx.guild.unban(user = member, reason = reason)
         except:
@@ -134,7 +134,7 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator = True)
-    async def baninfo(self, ctx, *, member: self.GetFetchUser):
+    async def baninfo(self, ctx, *, member: GetFetchUser):
         """Check the reason of a ban from the audit logs."""
 
         ban = await ctx.guild.fetch_ban(member)
