@@ -28,8 +28,10 @@ class Mod(commands.Cog):
                 embed.description = f"{user} was just {method}d."
             elif method == "mute":
                 embed.description = f"{user} was just {method}d for {duration}."
-            elif method == "channel-lockdown" or method == "server-lockdown":
+            elif method == "channel-locked" or method == "server-locked":
                 embed.description = f"`{location.name}` is now in lockdown mode!"
+            elif method == "channel-unlocked" or method == "server-unlocked":
+                embed.description = f"`{location.name}` is now unlocked!. Enjoy!"
             else:
                 embed.description = f"{user} was just {method}ed."
         else:
@@ -338,8 +340,8 @@ class Mod(commands.Cog):
         """Server/Channel unlock"""
         pass
 
-    @unlock.command(aliases=["channel"])
-    async def chan(self, ctx, channel: discord.TextChannel = None, *, reason = None):
+    @unlock.command(aliases=["chan"])
+    async def channel(self, ctx, channel: discord.TextChannel = None, *, reason = None):
         """Unlock a channel. Members will be able to send message again."""
 
         if channel is None: 
@@ -348,7 +350,7 @@ class Mod(commands.Cog):
         try:
             await channel.set_permissions(
                 ctx.guild.default_role, 
-                overwrite = discord.PermissionOverwrite(send_messages = False), 
+                overwrite = discord.PermissionOverwrite(send_messages = True), 
                 reason = reason
             )
         except:
@@ -372,7 +374,7 @@ class Mod(commands.Cog):
             for channel in server.channels:
                 await channel.set_permissions(
                     ctx.guild.default_role, 
-                    overwrite = discord.PermissionOverwrite(send_messages = False), 
+                    overwrite = discord.PermissionOverwrite(send_messages = True), 
                     reason = reason
                 )
         except:
