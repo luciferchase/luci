@@ -3,7 +3,7 @@ from discord.ext import commands
 
 import asyncio
 
-from utils.converters import converters
+from bot.utils.converters import converters
 
 
 class Mod(commands.Cog):
