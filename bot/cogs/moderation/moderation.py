@@ -38,6 +38,7 @@ class Mod(commands.Cog):
         return embed
 
     @commands.command()
+    @commands.has_permissions(administrator = True)
     async def kick(self, ctx, member: discord.Member, *, reason = None):
         """Kick someone from the server."""
 
@@ -52,8 +53,12 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
+    @commands.has_permissions(administrator = True)
     async def ban(self, ctx, member: discord.Member, *, reason = None):
         """Ban someone from the server."""
+
+        if (member == ctx.author):
+            await ctx.send("Boomer! you can't ban yourself 🤦‍♂️")
 
         try:
             await ctx.guild.ban(member, reason = reason)
@@ -90,6 +95,7 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
+    @commands.has_permissions(administrator = True)
     async def purge(self, ctx, limit : int, member: discord.Member = None):
         """Clean a number of messages"""
 
@@ -103,7 +109,7 @@ class Mod(commands.Cog):
     @commands.command()
     async def clean(self, ctx, quantity: int):
         """ Clean a number of your own messages
-        Usage: {prefix}clean 5 """
+        Usage: luci clean 5 """
 
         if quantity <= 15:
             total = quantity + 1
@@ -118,7 +124,7 @@ class Mod(commands.Cog):
                     await asyncio.sleep(3.0)
 
     @commands.command()
-    @commands.command(has_permissions = administrator)
+    @commands.has_permissions(administrator = True)
     async def bans(self, ctx):
         """See a list of banned users in the guild"""
 
@@ -131,6 +137,7 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
+    @commands.has_permissions(administrator = True)
     async def baninfo(self, ctx, *, name_or_id):
         """Check the reason of a ban from the audit logs."""
 
@@ -146,6 +153,7 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
+    @commands.has_permissions(administrator = True)
     async def addrole(self, ctx, member: discord.Member, *, rolename: str):
         """Add a role to someone else."""
 
@@ -161,6 +169,7 @@ class Mod(commands.Cog):
 
 
     @commands.command()
+    @commands.has_permissions(administrator = True)
     async def removerole(self, ctx, member: discord.Member, *, rolename: str):
         """Remove a role from someone else."""
 
@@ -174,6 +183,7 @@ class Mod(commands.Cog):
             await ctx.send("I don't have the perms to add that role.")
 
     @commands.command()
+    @commands.has_permissions(administrator = True)
     async def hackban(self, ctx, userid, *, reason = None):
         """Ban someone not in the server"""
 
@@ -271,6 +281,7 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.group(invoke_without_command = True)
+    @commands.has_permissions(administrator = True)
     async def lockdown(self, ctx):
         """Server/Channel lockdown"""
         pass
