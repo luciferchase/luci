@@ -178,23 +178,23 @@ class Music(commands.Cog):
     #     if not ctx.guild:
     #         raise commands.NoPrivateMessage
         
-    async def cog_command_error(self, ctx, error):
-        """A local error handler for all errors arising from commands in this cog."""
-        if isinstance(error, commands.NoPrivateMessage):
-            try:
-                return await ctx.send(embed=failure("This command can not be used in private messages."))
-            except discord.HTTPException:
-                pass
-        elif isinstance(error, InvalidVoiceChannel):
-            await ctx.send(
-                embed=failure(
-                    "Error connecting to Voice Channel. "
-                    "Please make sure you are in a valid channel or provide me with one"
-                )
-            )
-        else:
-            traceback_msg = traceback.format_exception(etype=type(error), value=error, tb=error.__traceback__)
-            logger.error(traceback_msg)
+    # async def cog_command_error(self, ctx, error):
+    #     """A local error handler for all errors arising from commands in this cog."""
+    #     if isinstance(error, commands.NoPrivateMessage):
+    #         try:
+    #             return await ctx.send(embed=failure("This command can not be used in private messages."))
+    #         except discord.HTTPException:
+    #             pass
+    #     elif isinstance(error, InvalidVoiceChannel):
+    #         await ctx.send(
+    #             embed=failure(
+    #                 "Error connecting to Voice Channel. "
+    #                 "Please make sure you are in a valid channel or provide me with one"
+    #             )
+    #         )
+    #     else:
+    #         traceback_msg = traceback.format_exception(etype=type(error), value=error, tb=error.__traceback__)
+    #         logger.error(traceback_msg)
 
     def get_player(self, ctx):
         """Retrieve the guild player, or generate one."""

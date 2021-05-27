@@ -2,7 +2,7 @@ aiohttp
 akinator.py
 APScheduler
 bs4
-discord.py
+discord.py[voice]
 discord-pretty-help
 discordpy-slash
 pyparsing
