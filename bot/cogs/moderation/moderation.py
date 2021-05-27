@@ -57,6 +57,8 @@ class Mod(commands.Cog):
 
         try:
             await ctx.guild.ban(member, reason = reason)
+            await member.send(f"You have been banned in {ctx.guild} for {reason}" if reason != None \
+                else f"You have been banned in {ctx.guild}")
         except:
             success = False
         else:
@@ -66,19 +68,25 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
-    async def unban(self, ctx, name_or_id, *, reason = None):
-        """Unban someone from the server."""
+    @commands.has_permissions(administrator = True)
+    async def unban(ctx, *, member):
+        banned_users = await ctx.guild.bans()
+        member_name, member_discriminator = member.split("#")
 
-        ban = await ctx.guild.fetch_ban(name_or_id)
+        for ban_entry in banned_users:
+            user = ban_entry.user
 
-        try:
-            await ctx.guild.unban(ban.user, reason = reason)
-        except:
-            success = False
-        else:
-            success = True
+            if (user.name, user.discriminator) == (member_name, member_discriminator):
+                try:
+                    await ctx.guild.unban(user)
+                    await member.send(f"You have been banned in {ctx.guild} for {reason}" if reason != None \
+                        else f"You have been banned in {ctx.guild}")
+                except:
+                    success = False
+                else:
+                    success = True
         
-        embed = await self.format_mod_embed(ctx, ban.user, success, "unban")
+        embed = await self.format_mod_embed(ctx, member, success, "unban")
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -110,17 +118,15 @@ class Mod(commands.Cog):
                     await asyncio.sleep(3.0)
 
     @commands.command()
+    @commands.command(has_permissions = administrator)
     async def bans(self, ctx):
         """See a list of banned users in the guild"""
 
-        try:
-            bans = await ctx.guild.bans()
-        except:
-            return await ctx.send("You dont have the perms to see bans.")
-
+        bans = await ctx.guild.bans()
+    
         embed = discord.Embed(title = f"List of Banned Members ({len(bans)}):")
         embed.description = ", ".join([str(b.user) for b in bans])
-        embed.color = await ctx.get_dominant_color(ctx.guild.icon_url)
+        embed.color = 0xf34949
 
         await ctx.send(embed = embed)
 
@@ -131,7 +137,7 @@ class Mod(commands.Cog):
         ban = await ctx.guild.fetch_ban(name_or_id)
 
         embed = discord.Embed()
-        embed.color = await ctx.get_dominant_color(ban.user.avatar_url)
+        embed.color = 0xf34949
         embed.set_author(name = str(ban.user), icon_url = ban.user.avatar_url)
         embed.add_field(name="Reason", value = ban.reason or "None")
         embed.set_thumbnail(url = ban.user.avatar_url)
@@ -184,14 +190,15 @@ class Mod(commands.Cog):
             success = True
 
         if success:
-            async for entry in ctx.guild.audit_logs(limit = 1, user = ctx.guild.me, action = discord.AuditLogAction.ban):
+            async for entry in ctx.guild.audit_logs(limit = 1, user = ctx.guild.me, 
+                action = discord.AuditLogAction.ban):
                 embed = await self.format_mod_embed(ctx, entry.target, success, "hackban")
         else:
             embed = await self.format_mod_embed(ctx, userid, success, "hackban")
         await ctx.send(embed = embed)
 
     @commands.command()
-    async def mute(self, ctx, member:discord.Member, duration, *, reason = None):
+    async def mute(self, ctx, member: discord.Member, duration, *, reason = None):
         """Denies someone from chatting in all text channels and \
         talking in voice channels for a specified duration"""
 
@@ -245,7 +252,7 @@ class Mod(commands.Cog):
             pass
         
     @commands.command()
-    async def unmute(self, ctx, member:discord.Member, *, reason = None):
+    async def unmute(self, ctx, member: discord.Member, *, reason = None):
         """Removes channel overrides for specified member"""
 
         progress = await ctx.send("Unmuting user!")
