@@ -5,6 +5,7 @@ bs4
 discord.py[voice]
 discord-pretty-help
 discordpy-slash
+ffmpeg
 pyparsing
 psycopg2-binary
 reactionmenu
