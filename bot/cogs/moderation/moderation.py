@@ -74,23 +74,16 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator = True)
-    async def unban(self, ctx, member: discord.Member, *, reason = None):
-        banned_users = await ctx.guild.bans()
-        member_name, member_discriminator = member.split("#")
+    async def unban(self, ctx, member: GetFetchUser, *, reason = None):
+        try:
+            await ctx.guild.unban(user = member, reason = reason)
+        except:
+            success = False
+        else:
+            await member.send(f"You have been banned in {ctx.guild} for {reason}" if reason != None \
+                else f"You have been banned in {ctx.guild}")
+            success = True
 
-        for ban_entry in banned_users:
-            user = ban_entry.user
-
-            if (user.name, user.discriminator) == (member_name, member_discriminator):
-                try:
-                    await ctx.guild.unban(user)
-                    await member.send(f"You have been banned in {ctx.guild} for {reason}" if reason != None \
-                        else f"You have been banned in {ctx.guild}")
-                except:
-                    success = False
-                else:
-                    success = True
-        
         embed = await self.format_mod_embed(ctx, member, success, "unban")
         await ctx.send(embed = embed)
 
@@ -328,7 +321,3 @@ class Mod(commands.Cog):
         
         embed = await self.format_mod_embed(ctx, ctx.author, success, "server-lockdown", 0, server)
         await ctx.send(embed = embed)
-
-
-def setup(bot):
-    bot.add_cog(Mod(bot))
