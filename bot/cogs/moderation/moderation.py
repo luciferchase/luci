@@ -74,7 +74,7 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator = True)
-    async def unban(ctx, *, member):
+    async def unban(self, ctx, member: discord.Member, *, reason = None):
         banned_users = await ctx.guild.bans()
         member_name, member_discriminator = member.split("#")
 
