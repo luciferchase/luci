@@ -6,6 +6,25 @@ A General-Purpose Fun bot with lots and lots of features.
 
 # Commands
 
+## Moderation
+
+| Commands                  | What it does?                                             |
+| ---------                 | ---------------------------------                         |
+| mute                      | Mute someone for a time interval                          |
+| unmute                    | Unmute a muted person                                     |
+| kick                      | Kick a member out!                                        |
+| ban                       | Ban them! Good riddance                                   |
+| unban                     | Unban a member                                            |
+| bans                      | See list of members who are banned                        |
+| baninfo                   | See info about a particular banned member                 |
+| addrole                   | Add a role to a member                                    |
+| removerole                | Remover a role from a member                              |
+| purge             | Purge a member's messages (You can purge your own messages too)   |
+| clean                     | Clean your own messages                                   |
+| hackban                   | Ban someone who is not in the server                      |
+| lock | Lockdown a channel or the server (members will not be able to send any message) |
+| unlock                    | Unlock a locked server or channel                         |
+
 ## Games
 
 | Commands                  | What it does?                                             |
