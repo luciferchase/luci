@@ -31,7 +31,7 @@ class Mod(commands.Cog):
             elif method == "channel-locked" or method == "server-locked":
                 embed.description = f"`{location.name}` is now in lockdown mode!"
             elif method == "channel-unlocked" or method == "server-unlocked":
-                embed.description = f"`{location.name}` is now unlocked!. Enjoy!"
+                embed.description = f"`{location.name}` is now unlocked. Enjoy!"
             else:
                 embed.description = f"{user} was just {method}ed."
         else:
@@ -331,7 +331,7 @@ class Mod(commands.Cog):
         else:
             success = True
         
-        progress.delete()
+        await progress.delete()
         
         embed = await self.format_mod_embed(ctx, ctx.author, success, "server-locked", 0, server)
         await ctx.send(embed = embed)
@@ -384,7 +384,7 @@ class Mod(commands.Cog):
         else:
             success = True
         
-        progress.delete()
+        await progress.delete()
         
         embed = await self.format_mod_embed(ctx, ctx.author, success, "server-unlocked", 0, server)
         await ctx.send(embed = embed)
