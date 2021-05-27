@@ -192,8 +192,6 @@ class Music(commands.Cog):
                     "Please make sure you are in a valid channel or provide me with one"
                 )
             )
-        elif isinstance(error, TortoiseGuildCheckFailure):
-            await ctx.send(embed=failure(f"{error}"))
         else:
             traceback_msg = traceback.format_exception(etype=type(error), value=error, tb=error.__traceback__)
             logger.error(traceback_msg)
@@ -228,9 +226,6 @@ class Music(commands.Cog):
             except AttributeError:
                 raise InvalidVoiceChannel("No channel to join.",
                     " Please either specify a valid channel or join one.")
-
-        if "music" not in channel.name.lower():
-            raise InvalidVoiceChannel("Can't join channel - channel has to have 'music' in it's name.")
 
         vc = ctx.voice_client
 
