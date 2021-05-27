@@ -195,7 +195,6 @@ class Music(commands.Cog):
         else:
             traceback_msg = traceback.format_exception(etype=type(error), value=error, tb=error.__traceback__)
             logger.error(traceback_msg)
-            await self.bot.log_error(traceback_msg)
 
     def get_player(self, ctx):
         """Retrieve the guild player, or generate one."""
