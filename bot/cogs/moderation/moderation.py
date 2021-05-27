@@ -11,7 +11,6 @@ class Mod(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.GetFetchUser = converters.GetFetchUser()
 
     async def format_mod_embed(self, ctx, user, success, method, duration = None, location = None):
         """Helper function to format an embed to prevent extra code"""
