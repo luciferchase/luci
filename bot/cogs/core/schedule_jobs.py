@@ -29,7 +29,7 @@ class Scheduler(commands.Cog):
 		async with self.session.get("https://meme-api.herokuapp.com/gimme/dankmemes") as response:
 			data = await response.json()
 
-			for channel_id in config.values:
+			for channel_id in config.values():
 				if (not channel_id[1]):
 					return
 
@@ -57,7 +57,7 @@ class Scheduler(commands.Cog):
 		async with self.session.get(api) as response:
 			data = await response.json()
 
-			for channel_id in config.values:
+			for channel_id in config.values():
 				if (not channel_id[1]):
 					return
 
