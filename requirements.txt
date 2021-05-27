@@ -11,3 +11,4 @@ reactionmenu
 requests
 sympy
 TagScriptEngine
+youtube_dl
