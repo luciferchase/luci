@@ -190,7 +190,7 @@ class Fun(commands.Cog):
 			await ctx.send("Emoji not found <a:awkward1:839499334555140157>")
 
 	@commands.command()
-    @commands.cooldown(rate=1, per=2.0, type=commands.BucketType.user)
+	@commands.cooldown(rate=1, per=2.0, type = commands.BucketType.user)
     async def urban(self, ctx, *, search: commands.clean_content):
         """ Find the 'best' definition to your words """
         async with ctx.channel.typing():
