@@ -97,32 +97,32 @@ class Core(commands.Cog):
         embed.add_footer(text = invite.created_at)
         await dm.send(embed = embed)
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        # If the message is from the bot itself then return
-        if (message.author == self.bot.user):
-            return
+    # @commands.Cog.listener()
+    # async def on_message(self, message):
+    #     # If the message is from the bot itself then return
+    #     if (message.author == self.bot.user):
+    #         return
 
-        # Make a variable about me
-        luci = self.bot.get_user(707557256220115035)
+    #     # Make a variable about me
+    #     luci = self.bot.get_user(707557256220115035)
         
-        # Forward all messages to me if the message is not from a guils, or by a bot or by me
-        if (message.guild is None and not message.author.bot and message.author != luci):
-            dm_channel = await luci.create_dm()
+    #     # Forward all messages to me if the message is not from a guils, or by a bot or by me
+    #     if (message.guild is None and not message.author.bot and message.author != luci):
+    #         dm_channel = await luci.create_dm()
             
-            embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
-            embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
-            embed.set_footer(text = message.created_at)
+    #         embed = discord.Embed(title = "Direct Message", description = message.content, color = 0x00FFFF)
+    #         embed.set_author(name = message.author.name, icon_url = message.author.avatar_url)
+    #         embed.set_footer(text = message.created_at)
 
-            # Send attachments
-            if (message.attachments != None):
-                try:
-                    embed.set_image(url = message.attachments[0].url)
-                except:
-                    pass
+    #         # Send attachments
+    #         if (message.attachments != None):
+    #             try:
+    #                 embed.set_image(url = message.attachments[0].url)
+    #             except:
+    #                 pass
 
-            await dm_channel.send(embed = embed)
-            await message.channel.send(f"Message sent to {luci.name}")
+    #         await dm_channel.send(embed = embed)
+    #         await message.channel.send(f"Message sent to {luci.name}")
 
     # Add last 5 deleted message to database
     @commands.Cog.listener()
