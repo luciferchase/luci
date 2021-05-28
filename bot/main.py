@@ -29,6 +29,7 @@ from cogs.qtopia import qtopia
 from cogs.quiz import quiz
 # from cogs.testing import testing
 from cogs.tictactoe import tictactoe
+from cogs.timezone import timezone
 
 # Get Members intent
 intents = discord.Intents.all()
@@ -73,6 +74,7 @@ bot.add_cog(qtopia.Qtopia(bot))
 bot.add_cog(quiz.Quiz(bot))
 # bot.add_cog(testing.Testing())
 bot.add_cog(tictactoe.TTT(bot))
+bot.add_cog(timezone.Timezone())
 
 # Start scheduled commands
 scheduler = schedule_jobs.Scheduler(bot).schedule()
