@@ -294,7 +294,7 @@ class Core(commands.Cog):
 
         await ctx.send(f"Mods in **{ctx.guild.name}**\n{message}")
 
-    @commands.command(aliases = "uinfo")
+    @commands.command(aliases = ["uinfo"])
     async def userinfo(self, ctx, *, name=""):
         """Get user info. Ex: luci info @user"""
 
