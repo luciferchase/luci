@@ -8,7 +8,6 @@ import logging
 import os
 import psutil
 import psycopg2
-import timeago
 
 from cogs.botstatus.botstatus import Botstatus
 from bot.utils.converters import GetFetchUser
@@ -388,11 +387,6 @@ class Core(commands.Cog):
 
         embed = discord.Embed(colour = embedColour)
         embed.set_thumbnail(url = ctx.bot.user.avatar_url)
-        embed.add_field(
-            name = "Last boot", 
-            value = timeago.format(datetime.now() - self.bot.uptime), 
-            inline = True
-        )
         embed.add_field(name = "Developer", value = "luciferchase#6310")
         embed.add_field(name = "Library", value = "discord.py", inline = True)
         embed.add_field(
