@@ -319,39 +319,24 @@ class Core(commands.Cog):
                 role = "N/A"
             voice_state = None if not user.voice else user.voice.channel
         
-        if embed_perms(ctx.message):
-            embed = discord.Embed(timestamp=ctx.message.created_at, colour=0x708DD0)
-            embed.add_field(name='User ID', value=user.id, inline=True)
-            
-            if isinstance(user, discord.Member):
-                embed.add_field(name='Nick', value=user.nick, inline=True)
-                embed.add_field(name='Status', value=user.status, inline=True)
-                embed.add_field(name='In Voice', value=voice_state, inline=True)
-                embed.add_field(name='Game', value=user.activity, inline=True)
-                embed.add_field(name='Highest Role', value=role, inline=True)
-            embed.add_field(name='Account Created', value=user.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
-            
-            if isinstance(user, discord.Member):
-                embed.add_field(name='Join Date', value=user.joined_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
-            embed.set_thumbnail(url=user.avatar_url)
-            embed.set_author(name=user, icon_url=self.bot.avatar_url)
-            
-            await ctx.send(embed=embed)
-        else:
-            if isinstance(user, discord.Member):
-                msg = '**User Info:** ```User ID: %s\nNick: %s\nStatus: %s\n',
-                ' In Voice: %s\nGame: %s\nHighest Role: %s\nAccount Created: %s\n', 
-                ' Join Date: %s\nAvatar url:%s```' % (user.id, user.nick, \
-                    user.status, voice_state, user.activity, role, \
-                    user.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S'), \
-                    user.joined_at.__format__('%A, %d. %B %Y @ %H:%M:%S'), avi)
-            else:
-                msg = '**User Info:** ```User ID: %s\nAccount Created: %s\n', 
-                ' Avatar url:%s```' % (user.id, user.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S'), avi)
-            await ctx.send(self.bot.bot_prefix + msg)
-
-        await ctx.message.delete()
-
+        embed = discord.Embed(timestamp=ctx.message.created_at, colour=0x708DD0)
+        embed.add_field(name='User ID', value=user.id, inline=True)
+        
+        if isinstance(user, discord.Member):
+            embed.add_field(name='Nick', value=user.nick, inline=True)
+            embed.add_field(name='Status', value=user.status, inline=True)
+            embed.add_field(name='In Voice', value=voice_state, inline=True)
+            embed.add_field(name='Game', value=user.activity, inline=True)
+            embed.add_field(name='Highest Role', value=role, inline=True)
+        embed.add_field(name='Account Created', value=user.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
+        
+        if isinstance(user, discord.Member):
+            embed.add_field(name='Join Date', value=user.joined_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
+        embed.set_thumbnail(url=user.avatar_url)
+        embed.set_author(name=user, icon_url=self.bot.avatar_url)
+        
+        await ctx.send(embed=embed)
+ 
     @commands.group()
     @commands.guild_only()
     async def server(self, ctx):

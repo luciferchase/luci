@@ -25,6 +25,7 @@ from cogs.meme import meme
 from cogs.moderation import moderation
 from cogs.music import music
 from cogs.photo import photo
+from cogs.qtopia import qtopia
 from cogs.quiz import quiz
 # from cogs.testing import testing
 from cogs.tictactoe import tictactoe
@@ -68,6 +69,7 @@ bot.add_cog(meme.Meme())
 bot.add_cog(moderation.Mod(bot))
 bot.add_cog(music.Music(bot))
 bot.add_cog(photo.Photo())
+bot.add_cog(qtopia.Qtopia(bot))
 bot.add_cog(quiz.Quiz(bot))
 # bot.add_cog(testing.Testing())
 bot.add_cog(tictactoe.TTT(bot))
