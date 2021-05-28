@@ -313,11 +313,6 @@ class Core(commands.Cog):
         else:
             user = ctx.message.author
 
-        if user.avatar_url_as(static_format='png')[54:].startswith('a_'):
-            avi = user.avatar_url.rsplit("?", 1)[0]
-        else:
-            avi = user.avatar_url_as(static_format='png')
-        
         if isinstance(user, discord.Member):
             role = user.top_role.name
             if role == "@everyone":
@@ -338,8 +333,8 @@ class Core(commands.Cog):
             
             if isinstance(user, discord.Member):
                 embed.add_field(name='Join Date', value=user.joined_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
-            embed.set_thumbnail(url=avi)
-            embed.set_author(name=user, icon_url='https://i.imgur.com/RHagTDg.png')
+            embed.set_thumbnail(url=user.avatar_url)
+            embed.set_author(name=user, icon_url=self.bot.avatar_url)
             
             await ctx.send(embed=embed)
         else:
