@@ -7,11 +7,13 @@ class Qtopia(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.guild = self.bot.get_guild(587139618999369739)
 
     @commands.command()
     async def vent1(self, ctx, *message):
-        if isinstance(ctx.channel, discord.channel.DMChannel) and ctx.author in self.guild.members:
+        """Send anonymous question to #vent-1. DM only Command."""
+        guild = await self.bot.fetch_guild(587139618999369739)
+
+        if isinstance(ctx.channel, discord.channel.DMChannel) and ctx.author in guild.members:
             message = " ".join(message)
             channel = self.bot.get_channel(739150769722228806)
             await ctx.send(message)
@@ -19,7 +21,10 @@ class Qtopia(commands.Cog):
 
     @commands.command()
     async def vent2(self, ctx, *message):
-        if isinstance(ctx.channel, discord.channel.DMChannel) and ctx.author in self.guild.members:
+        """Send anonymous question to #vent-2. DM only Command."""
+        guild = await self.bot.fetch_guild(587139618999369739)
+
+        if isinstance(ctx.channel, discord.channel.DMChannel) and ctx.author in guild.members:
             message = " ".join(message)
             channel = self.bot.get_channel(793407631066005554)
             await ctx.send(message)
@@ -27,7 +32,10 @@ class Qtopia(commands.Cog):
 
     @commands.command()
     async def ask(self, ctx, *message):
-        if isinstance(ctx.channel, discord.channel.DMChannel) and ctx.author in self.guild.members:
+        """Send anonymous question to #q-and-a. DM only Command."""
+        guild = await self.bot.fetch_guild(587139618999369739)
+
+        if isinstance(ctx.channel, discord.channel.DMChannel) and ctx.author in guild.members:
             message = " ".join(message)
             channel = self.bot.get_channel(639902815849938975)
             await ctx.send(message)
