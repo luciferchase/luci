@@ -19,8 +19,9 @@ class Fun(commands.Cog):
 		You can also get phonetics for a particular letter or multiple letter (separated by space) by doing:
 		`luci nda l` or `luci nda l m n o`"""
 		
-		phonetics = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf", "Hotel", "India", "Juliett", \
-		"Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", \
+		phonetics = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Golf",\
+		"Hotel", "India", "Juliett", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", \
+		"Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", \
 		"Whiskey", "X-Ray", "Yankee", "Zulu"]
 
 		message_string = ""
@@ -31,7 +32,8 @@ class Fun(commands.Cog):
 
 		else:
 			for letter in args:
-				message_string += f"{letter}: {''.join([word for word in phonetics if word[0].lower() == letter])}\n"
+				message_string += f"{letter}: {''.join([word for word in phonetics \
+					if word[0].lower() == letter])}\n"
 
 		await ctx.send(f"```ml\n{message_string}```")
 
@@ -50,7 +52,8 @@ class Fun(commands.Cog):
 	@commands.command()
 	async def dogfact(self, ctx):
 		"""Get a random fact about dogs. [Bit slow to run for the first time though (API limitation)]"""
-		async with self.session.get("https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=1") as response:
+		async with self.session.get(
+			"https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=1") as response:
 			data = await response.json()
 			fact = data[0]["fact"]
 
@@ -90,7 +93,8 @@ class Fun(commands.Cog):
 
 			# Check if there are more than 26 options
 			if (len(options) > 20):
-				await ctx.send("Bruh! Please give maximum 20 options 🤦‍♂️. You can only react 20 times to a message.")
+				await ctx.send("Bruh! Please give maximum 20 options 🤦‍♂️.",
+					" You can only react 20 times to a message.")
 				return
 
 			reactions = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫", "🇬", "🇭", "🇮", "J", "🇰", "🇱", "🇲", "🇳", "🇴", "🇵", \
@@ -169,7 +173,8 @@ class Fun(commands.Cog):
 	@commands.guild_only()
 	@commands.command(aliases = ["n"])
 	async def nitro(self, ctx, emoji_name):
-		"""Send an animated emoji even if you don't have nitro. Send just its name and the bot will send the emote.
+		"""Send an animated emoji even if you don't have nitro. \
+		Send just its name and the bot will send the emote.
 		Usage: `luci n nacho`"""
 
 		# # Delete original message
@@ -184,3 +189,29 @@ class Fun(commands.Cog):
 
 		if (not emoji_found):
 			await ctx.send("Emoji not found <a:awkward1:839499334555140157>")
+
+	@commands.command()
+    @commands.cooldown(rate=1, per=2.0, type=commands.BucketType.user)
+    async def urban(self, ctx, *, search: commands.clean_content):
+        """ Find the 'best' definition to your words """
+        async with ctx.channel.typing():
+            try:
+            	async with self.session.get(f"https://api.urbandictionary.com/v0/define?term={search}") \
+            	as response:
+            		data = await response.json()
+            except Exception:
+                return await ctx.send("Urban API returned invalid data... might be down atm.")
+
+            if not len(data["list"]):
+                return await ctx.send("Couldn't find your search in the dictionary...")
+
+            result = sorted(data["list"], reverse = True, key=lambda i: int(i["thumbs_up"]))[0]
+
+            definition = result["definition"]
+            
+            if len(definition) >= 1000:
+                definition = definition[:1000]
+                definition = definition.rsplit(" ", 1)[0]
+                definition += "..."
+
+            await ctx.send(f"📚 Definitions for **{result['word']}**```fix\n{definition}```")

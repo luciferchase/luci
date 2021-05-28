@@ -24,7 +24,7 @@ class Mod(commands.Cog):
         if success:
             if method == "ban" or method == "hackban":
                 embed.description = f"{user} was just {method}ned."
-            elif method == "unmute":
+            elif method == "unmute" or method == "kick":
                 embed.description = f"{user} was just {method}d."
             elif method == "mute":
                 embed.description = f"{user} was just {method}d for {duration}."
@@ -45,7 +45,8 @@ class Mod(commands.Cog):
         return embed
 
     @commands.command()
-    @commands.has_permissions(administrator = True)
+    @commands.guild_only
+    @commands.has_permissions(kick_members = True)
     async def kick(self, ctx, member: discord.Member, *, reason = None):
         """Kick someone from the server."""
 
@@ -60,7 +61,8 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
-    @commands.has_permissions(administrator = True)
+    @commands.guild_only()
+    @commands.has_permissions(ban_members = True)
     async def ban(self, ctx, member: discord.Member, *, reason = None):
         """Ban someone from the server."""
 
@@ -80,7 +82,8 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
-    @commands.has_permissions(administrator = True)
+    @commands.guild_only()
+    @commands.has_permissions(ban_members = True)
     async def unban(self, ctx, member: GetFetchUser, *, reason = None):
         """Unban a User"""
 
@@ -97,36 +100,8 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
-    @commands.has_permissions(administrator = True)
-    async def purge(self, ctx, limit : int, member: discord.Member = None):
-        """Clean a number of messages"""
-
-        if member is None:
-            await ctx.purge(limit = limit + 1)
-        else:
-            async for message in ctx.channel.history(limit = limit + 1):
-                if message.author is member:
-                    await message.delete()
-
-    @commands.command()
-    async def clean(self, ctx, quantity: int):
-        """ Clean a number of your own messages
-        Usage: luci clean 5 """
-
-        if quantity <= 15:
-            total = quantity + 1
-            async for message in ctx.channel.history(limit = total):
-                if message.author == ctx.author:
-                    await message.delete()
-                    await asyncio.sleep(3.0)
-        else:
-            async for message in ctx.channel.history(limit = 6):
-                if message.author == ctx.author:
-                    await message.delete()
-                    await asyncio.sleep(3.0)
-
-    @commands.command()
-    @commands.has_permissions(administrator = True)
+    @commands.guild_only()
+    @commands.has_permissions(view_audit_log = True)
     async def bans(self, ctx):
         """See a list of banned users in the guild"""
 
@@ -139,7 +114,8 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
-    @commands.has_permissions(administrator = True)
+    @commands.guild_only()
+    @commands.has_permissions(view_audit_log = True)
     async def baninfo(self, ctx, *, member: GetFetchUser):
         """Check the reason of a ban from the audit logs."""
 
@@ -155,7 +131,8 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
-    @commands.has_permissions(administrator = True)
+    @commands.guild_only()
+    @commands.has_permissions(manage_roles = True)
     async def addrole(self, ctx, member: discord.Member, *, rolename: str):
         """Add a role to someone else."""
 
@@ -171,7 +148,8 @@ class Mod(commands.Cog):
 
 
     @commands.command()
-    @commands.has_permissions(administrator = True)
+    @commands.guild_only()
+    @commands.has_permissions(manage_roles = True)
     async def removerole(self, ctx, member: discord.Member, *, rolename: str):
         """Remove a role from someone else."""
 
@@ -185,7 +163,8 @@ class Mod(commands.Cog):
             await ctx.send("I don't have the perms to add that role.")
 
     @commands.command()
-    @commands.has_permissions(administrator = True)
+    @commands.guild_only()
+    @commands.has_permissions(ban_members = True)
     async def hackban(self, ctx, userid, *, reason = None):
         """Ban someone not in the server"""
 
@@ -210,7 +189,8 @@ class Mod(commands.Cog):
         await ctx.send(embed = embed)
 
     @commands.command()
-    @commands.has_permissions(administrator = True)
+    @commands.guild_only()
+    @commands.has_permissions(manage_channel = True)
     async def mute(self, ctx, member: discord.Member, duration, *, reason = None):
         """Denies someone from chatting in all text channels and \
         talking in voice channels for a specified duration
@@ -264,7 +244,9 @@ class Mod(commands.Cog):
                 await channel.set_permissions(member, overwrite = None, reason = reason)
         except:
             pass
-        
+    
+    @commands.guild_only()
+    @commands.has_permissions(manage_channel = True)
     @commands.command()
     async def unmute(self, ctx, member: discord.Member, *, reason = None):
         """Removes channel overrides for specified member"""
@@ -284,8 +266,9 @@ class Mod(commands.Cog):
         embed = await self.format_mod_embed(ctx, member, success, "unmute")
         await ctx.send(embed = embed)
 
+    @commands.guild_only()
     @commands.group(invoke_without_command = True)
-    @commands.has_permissions(administrator = True)
+    @commands.has_permissions(manage_server = True)
     async def lock(self, ctx):
         """Server/Channel lock"""
         pass
@@ -337,8 +320,9 @@ class Mod(commands.Cog):
         embed = await self.format_mod_embed(ctx, ctx.author, success, "server-locked", 0, server)
         await ctx.send(embed = embed)
 
+    @commands.guild_only()
     @commands.group(invoke_without_command = True)
-    @commands.has_permissions(administrator = True)
+    @commands.has_permissions(manage_server = True)
     async def unlock(self, ctx):
         """Server/Channel unlock"""
         pass
@@ -389,3 +373,137 @@ class Mod(commands.Cog):
         
         embed = await self.format_mod_embed(ctx, ctx.author, success, "server-unlocked", 0, server)
         await ctx.send(embed = embed)
+
+    @commands.command(aliases=["nick"])
+    @commands.guild_only()
+    @permissions.has_permissions(manage_nicknames = True)
+    async def nickname(self, ctx, member: discord.Member, *, name: str = None, *, reason = None):
+        """Change nickname of a member"""
+        try:
+            await member.edit(nick = name, reason = reason)
+            
+            message = f"Changed **{member.name}'s** nickname to **{name}**"
+            
+            if name is None:
+                message = f"Reset **{member.name}'s** nickname"
+            await ctx.send(message)
+        
+        except Exception as e:
+            await ctx.send(e)
+
+    @commands.group()
+    @commands.guild_only()
+    @commands.max_concurrency(1, per=commands.BucketType.guild)
+    @permissions.has_permissions(manage_messages=True)
+    async def prune(self, ctx):
+        """ Removes messages from the current server. """
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(str(ctx.command))
+
+    async def do_removal(self, ctx, limit, predicate, *, before=None, after=None, message=True):
+        if limit > 2000:
+            return await ctx.send(f"Too many messages to search given ({limit}/2000)")
+
+        if not before:
+            before = ctx.message
+        else:
+            before = discord.Object(id=before)
+
+        if after:
+            after = discord.Object(id=after)
+
+        try:
+            deleted = await ctx.channel.purge(limit=limit, before=before, after=after, check=predicate)
+        except discord.Forbidden:
+            return await ctx.send("I do not have permissions to delete messages.")
+        except discord.HTTPException as e:
+            return await ctx.send(f"Error: {e} (try a smaller search?)")
+
+        deleted = len(deleted)
+        if message is True:
+            await ctx.send(f"🚮 Successfully removed {deleted} message{'' if deleted == 1 else 's'}.")
+
+    @prune.command()
+    async def embeds(self, ctx, search=100):
+        """Removes messages that have embeds in them."""
+        await self.do_removal(ctx, search, lambda e: len(e.embeds))
+
+    @prune.command()
+    async def files(self, ctx, search=100):
+        """Removes messages that have attachments in them."""
+        await self.do_removal(ctx, search, lambda e: len(e.attachments))
+
+    @prune.command()
+    async def mentions(self, ctx, search=100):
+        """Removes messages that have mentions in them."""
+        await self.do_removal(ctx, search, lambda e: len(e.mentions) or len(e.role_mentions))
+
+    @prune.command()
+    async def images(self, ctx, search=100):
+        """Removes messages that have embeds or attachments."""
+        await self.do_removal(ctx, search, lambda e: len(e.embeds) or len(e.attachments))
+
+    @prune.command(name="all")
+    async def _remove_all(self, ctx, search=100):
+        """Removes all messages."""
+        await self.do_removal(ctx, search, lambda e: True)
+
+    @prune.command()
+    async def user(self, ctx, member: discord.Member, search=100):
+        """Removes all messages by the member."""
+        await self.do_removal(ctx, search, lambda e: e.author == member)
+
+    @prune.command()
+    async def contains(self, ctx, *, substr: str):
+        """Removes all messages containing a substring.
+        The substring must be at least 3 characters long.
+        """
+        if len(substr) < 3:
+            await ctx.send("The substring length must be at least 3 characters.")
+        else:
+            await self.do_removal(ctx, 100, lambda e: substr in e.content)
+
+    @prune.command(name="bots")
+    async def _bots(self, ctx, search=100, prefix=None):
+        """Removes a bot user's messages and messages with their optional prefix."""
+
+        getprefix = prefix if prefix else self.config["prefix"]
+
+        def predicate(m):
+            return (m.webhook_id is None and m.author.bot) or m.content.startswith(tuple(getprefix))
+
+        await self.do_removal(ctx, search, predicate)
+
+    @prune.command(name="users")
+    async def _users(self, ctx, prefix=None, search=100):
+        """Removes only user messages. """
+
+        def predicate(m):
+            return m.author.bot is False
+
+        await self.do_removal(ctx, search, predicate)
+
+    @prune.command(name="emojis")
+    async def _emojis(self, ctx, search=100):
+        """Removes all messages containing custom emoji."""
+        custom_emoji = re.compile(r"<a?:(.*?):(\d{17,21})>|[\u263a-\U0001f645]")
+
+        def predicate(m):
+            return custom_emoji.search(m.content)
+
+        await self.do_removal(ctx, search, predicate)
+
+    @prune.command(name="reactions")
+    async def _reactions(self, ctx, search=100):
+        """Removes all reactions from messages that have them."""
+
+        if search > 2000:
+            return await ctx.send(f"Too many messages to search for ({search}/2000)")
+
+        total_reactions = 0
+        async for message in ctx.history(limit=search, before=ctx.message):
+            if len(message.reactions):
+                total_reactions += sum(r.count for r in message.reactions)
+                await message.clear_reactions()
+
+        await ctx.send(f"Successfully removed {total_reactions} reactions.")

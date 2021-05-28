@@ -3,10 +3,12 @@ from discord.ext import commands
 from discord.utils import get
 
 from datetime import datetime, timedelta
+from discordpy_slash import slash
 import logging
 import os
+import psutil
 import psycopg2
-from discordpy_slash import slash
+import timeago
 
 from cogs.botstatus.botstatus import Botstatus
 from bot.utils.converters import GetFetchUser
@@ -16,6 +18,7 @@ class Core(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.GetFetchUser = GetFetchUser()
+        self.process = psutil.Process(os.getpid())
 
         # Set up database
         DATABASE_URL = os.environ["DATABASE_URL"]
@@ -186,7 +189,7 @@ class Core(commands.Cog):
 
         embed = discord.Embed(
             title = f"Thank you for adding me to your server {nacho}",
-            description = "**[Invite Link](https://discord.com/api/oauth2/authorize?client_id=836213550384545852&permissions=8&scope=bot)**",
+            description = f"**[Invite Link]({discord.utils.oauth_url(self.bot.user.id)})**",
             color = 0x00FFFFF
         )
         await ctx.send(embed = embed)
@@ -234,7 +237,8 @@ class Core(commands.Cog):
 
         # If there are no messages deleted in this channel
         if (data == []):
-            await ctx.send(embed = discord.Embed(title = "No messages deleted in this channel", color = 0xf34949))
+            await ctx.send(
+                mbed = discord.Embed(title = "No messages deleted in this channel", color = 0xf34949))
             return
 
         # Configure channel where message was deleted
@@ -266,7 +270,127 @@ class Core(commands.Cog):
         embed.set_author(name = f"Author: {author.name}", icon_url = author.avatar_url)
         await ctx.send(embed = embed)
 
-    
+    @commands.command()
+    @commands.guild_only()
+    async def mods(self, ctx):
+        """ Check which mods are online on current guild """
+        message = ""
+        all_status = {
+            "online": {"users": [], "emoji": "🟢"},
+            "idle": {"users": [], "emoji": "🟡"},
+            "dnd": {"users": [], "emoji": "🔴"},
+            "offline": {"users": [], "emoji": "⚫"}
+        }
+
+        for user in ctx.guild.members:
+            user_perm = ctx.channel.permissions_for(user)
+            if user_perm.kick_members or user_perm.ban_members:
+                if not user.bot:
+                    all_status[str(user.status)]["users"].append(f"**{user}**")
+
+        for i in all_status:
+            if all_status[i]["users"]:
+                message += f"{all_status[i]['emoji']} {', '.join(all_status[i]['users'])}\n"
+
+        await ctx.send(f"Mods in **{ctx.guild.name}**\n{message}")
+
+    @commands.command()
+    @commands.guild_only()
+    async def user(self, ctx, *, user: discord.Member = None):
+        """ Get user information """
+
+        user = user or ctx.author
+
+        show_roles = ", ".join(
+            [f"<@&{i.id}>" for i in sorted(user.roles, key = lambda i: i.position, reverse = True) \
+            if i.id != ctx.guild.default_role.id]
+        ) if len(user.roles) > 1 else "None"
+
+        embed = discord.Embed(colour = user.top_role.colour.value)
+        embed.set_thumbnail(url = user.avatar_url)
+
+        embed.add_field(name = "Full name", value = user, inline = True)
+        embed.add_field(
+            name = "Nickname",
+            value = user.nick if hasattr(user, "nick") else "None", inline = True)
+        embed.add_field(name = "Account created", value = default.date(user.created_at), inline = True)
+        embed.add_field(name = "Joined this server", value = default.date(user.joined_at), inline = True)
+        embed.add_field(name = "Roles", value = show_roles, inline = False)
+
+        await ctx.send(content=f"ℹ About **{user.id}**", embed = embed)
+
+    @commands.group()
+    @commands.guild_only()
+    async def server(self, ctx):
+        """ Check info about current server """
+
+        if ctx.invoked_subcommand is None:
+            find_bots = sum(1 for member in ctx.guild.members if member.bot)
+
+            embed = discord.Embed()
+
+            if ctx.guild.icon:
+                embed.set_thumbnail(url=ctx.guild.icon_url)
+            if ctx.guild.banner:
+                embed.set_image(url=ctx.guild.banner_url_as(format="png"))
+
+            embed.add_field(name = "Server Name", value = ctx.guild.name, inline = True)
+            embed.add_field(name = "Server ID", value = ctx.guild.id, inline = True)
+            embed.add_field(name = "Members", value = ctx.guild.member_count, inline = True)
+            embed.add_field(name = "Bots", value = find_bots, inline = True)
+            embed.add_field(name = "Owner", value = ctx.guild.owner, inline = True)
+            embed.add_field(name = "Region", value = ctx.guild.region, inline = True)
+            embed.add_field(name = "Created", value = default.date(ctx.guild.created_at), inline = True)
+            await ctx.send(content = f"ℹ information about **{ctx.guild.name}**", embed = embed)
+
+    @server.command(name = "avatar", aliases = ["icon"])
+    async def server_avatar(self, ctx):
+        """ Get the current server icon """
+
+        if not ctx.guild.icon:
+            return await ctx.send("This server does not have a avatar...")
+        await ctx.send(f"Avatar of **{ctx.guild.name}**\n{ctx.guild.icon_url_as(size = 1024)}")
+
+    @server.command(name = "banner")
+    async def server_banner(self, ctx):
+        """ Get the current banner image """
+
+        if not ctx.guild.banner:
+            return await ctx.send("This server does not have a banner...")
+        await ctx.send(f"Banner of **{ctx.guild.name}**\n{ctx.guild.banner_url_as(format = 'png')}")
+
+    @commands.command(aliases = ["info", "stats"])
+    async def about(self, ctx):
+        """ About the bot """
+
+        ramUsage = self.process.memory_full_info().rss / 1024**2
+        avgmembers = sum(i.member_count for i in self.bot.guilds) / len(self.bot.guilds)
+
+        embedColour = 0x00FFFF
+
+        embed = discord.Embed(colour = embedColour)
+        embed.set_thumbnail(url = ctx.bot.user.avatar_url)
+        embed.add_field(
+            name = "Last boot", 
+            value = timeago.format(datetime.now() - self.bot.uptime), 
+            inline = True
+        )
+        embed.add_field(name = "Developer", value = "luciferchase#6310")
+        embed.add_field(name = "Library", value = "discord.py", inline = True)
+        embed.add_field(
+            name="Servers", 
+            value=f"{len(ctx.bot.guilds)} ( avg: {avgmembers:,.2f} users/server )", 
+            inline=True
+        )
+        embed.add_field(
+            name = "Commands loaded", 
+            value = len([i.name for i in self.bot.commands]), 
+            inline = True
+        )
+        embed.add_field(name = "RAM", value = f"{ramUsage:.2f} MB", inline = True)
+
+        await ctx.send(content = f"ℹ About **{ctx.bot.user}**", embed = embed)
+
     # Dev commands, "owner only"
     @commands.is_owner()
     @commands.command(hidden = True)
