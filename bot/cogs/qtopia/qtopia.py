@@ -13,7 +13,7 @@ class Qtopia(commands.Cog):
         """Send anonymous question to #vent-1. DM only Command."""
         if isinstance(ctx.channel, discord.channel.DMChannel):
             message = " ".join(message)
-            channel = self.bot.get_channel(739150769722228806)
+            channel = await self.bot.fetch_channel(739150769722228806)
             await ctx.send(message)
             await ctx.send(f"{ctx.author.name} message sent to #vent-1")
 
@@ -22,7 +22,7 @@ class Qtopia(commands.Cog):
         """Send anonymous question to #vent-2. DM only Command."""
         if isinstance(ctx.channel, discord.channel.DMChannel):
             message = " ".join(message)
-            channel = self.bot.get_channel(793407631066005554)
+            channel = await self.bot.fetch_channel(793407631066005554)
             await ctx.send(message)
             await ctx.send(f"{ctx.author.name} message sent to #vent-2")
 
@@ -31,6 +31,6 @@ class Qtopia(commands.Cog):
         """Send anonymous question to #q-and-a. DM only Command."""
         if isinstance(ctx.channel, discord.channel.DMChannel):
             message = " ".join(message)
-            channel = self.bot.get_channel(639902815849938975)
+            channel = await self.bot.fetch_channel(639902815849938975)
             await ctx.send(message)
             await ctx.send(f"{ctx.author.name} message sent to #q-and-a")
