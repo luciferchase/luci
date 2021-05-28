@@ -13,4 +13,5 @@ reactionmenu
 requests
 sympy
 TagScriptEngine
+timeago
 youtube_dl
