@@ -333,7 +333,7 @@ class Core(commands.Cog):
         if isinstance(user, discord.Member):
             embed.add_field(name='Join Date', value=user.joined_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
         embed.set_thumbnail(url=user.avatar_url)
-        embed.set_author(name=user, icon_url=self.bot.avatar_url)
+        embed.set_author(name=user)
         
         await ctx.send(embed=embed)
  

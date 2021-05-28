@@ -20,14 +20,17 @@ class Qtopia(commands.Cog):
                 send_message = message[9:]
                 channel = self.bot.get_channel(739150769722228806)
                 await ctx.send(message)
+                await ctx.send(f"{message.author.name} message sent to #vent-1")
 
             if (message.content.startswith.lower() == "luci vent2"):
                 send_message = message[9:]
                 channel = self.bot.get_channel(793407631066005554)
                 await ctx.send(message)
+                await ctx.send(f"{message.author.name} message sent to #vent-2")
 
-            # q and a channels
+            # q-and-a channels
             if (message.content.startswith.lower() == "luci ask"):
                 send_message = message[7:]
                 channel = self.bot.get_channel(639902815849938975)
                 await ctx.send(message)
+                await ctx.send(f"{message.author.name} message sent to #q-and-a")
