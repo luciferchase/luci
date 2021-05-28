@@ -190,7 +190,7 @@ class Mod(commands.Cog):
 
     @commands.command()
     @commands.guild_only()
-    @commands.has_permissions(manage_channel = True)
+    @commands.has_permissions(manage_channels = True)
     async def mute(self, ctx, member: discord.Member, duration, *, reason = None):
         """Denies someone from chatting in all text channels and \
         talking in voice channels for a specified duration
@@ -246,7 +246,7 @@ class Mod(commands.Cog):
             pass
     
     @commands.guild_only()
-    @commands.has_permissions(manage_channel = True)
+    @commands.has_permissions(manage_channels = True)
     @commands.command()
     async def unmute(self, ctx, member: discord.Member, *, reason = None):
         """Removes channel overrides for specified member"""
