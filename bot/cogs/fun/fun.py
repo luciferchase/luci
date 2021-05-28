@@ -33,7 +33,7 @@ class Fun(commands.Cog):
 		else:
 			for letter in args:
 				message_string += f"{letter}: {''.join([word for word in phonetics \
-					if word[0].lower() == letter])}\n"
+					if word[0].lower() == letter])}" + "\n"
 
 		await ctx.send(f"```ml\n{message_string}```")
 
