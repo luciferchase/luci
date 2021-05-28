@@ -361,7 +361,7 @@ class Core(commands.Cog):
             embed.add_field(name = "Created", value = ctx.guild.created_at, inline = True)
             await ctx.send(content = f"ℹ information about **{ctx.guild.name}**", embed = embed)
 
-    @server.command(name = "avatar", aliases = ["icon"])
+    @serverinfo.command(name = "avatar", aliases = ["icon"])
     async def server_avatar(self, ctx):
         """ Get the current server icon """
 
@@ -369,7 +369,7 @@ class Core(commands.Cog):
             return await ctx.send("This server does not have a avatar...")
         await ctx.send(f"Avatar of **{ctx.guild.name}**\n{ctx.guild.icon_url_as(size = 1024)}")
 
-    @server.command(name = "banner")
+    @serverinfo.command(name = "banner")
     async def server_banner(self, ctx):
         """ Get the current banner image """
 
