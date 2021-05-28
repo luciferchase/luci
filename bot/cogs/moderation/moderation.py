@@ -376,7 +376,7 @@ class Mod(commands.Cog):
 
     @commands.command(aliases=["nick"])
     @commands.guild_only()
-    @permissions.has_permissions(manage_nicknames = True)
+    @commands.has_permissions(manage_nicknames = True)
     async def nickname(self, ctx, member: discord.Member, *, name: str = None):
         """Change nickname of a member"""
         try:
@@ -394,7 +394,7 @@ class Mod(commands.Cog):
     @commands.group()
     @commands.guild_only()
     @commands.max_concurrency(1, per=commands.BucketType.guild)
-    @permissions.has_permissions(manage_messages=True)
+    @commands.has_permissions(manage_messages=True)
     async def prune(self, ctx):
         """ Removes messages from the current server. """
         if ctx.invoked_subcommand is None:
