@@ -294,30 +294,68 @@ class Core(commands.Cog):
 
         await ctx.send(f"Mods in **{ctx.guild.name}**\n{message}")
 
-    @commands.command()
-    @commands.guild_only()
-    async def user(self, ctx, *, user: discord.Member = None):
-        """ Get user information """
+    @commands.command(aliases = "uinfo")
+    async def userinfo(self, ctx, *, name=""):
+        """Get user info. Ex: luci info @user"""
 
-        user = user or ctx.author
+        if name:
+            try:
+                user = ctx.message.mentions[0]
+            except IndexError:
+                user = ctx.guild.get_member_named(name)
+            if not user:
+                user = ctx.guild.get_member(int(name))
+            if not user:
+                user = self.bot.get_user(int(name))
+            if not user:
+                await ctx.send(self.bot.bot_prefix + 'Could not find user.')
+                return
+        else:
+            user = ctx.message.author
 
-        show_roles = ", ".join(
-            [f"<@&{i.id}>" for i in sorted(user.roles, key = lambda i: i.position, reverse = True) \
-            if i.id != ctx.guild.default_role.id]
-        ) if len(user.roles) > 1 else "None"
+        if user.avatar_url_as(static_format='png')[54:].startswith('a_'):
+            avi = user.avatar_url.rsplit("?", 1)[0]
+        else:
+            avi = user.avatar_url_as(static_format='png')
+        
+        if isinstance(user, discord.Member):
+            role = user.top_role.name
+            if role == "@everyone":
+                role = "N/A"
+            voice_state = None if not user.voice else user.voice.channel
+        
+        if embed_perms(ctx.message):
+            embed = discord.Embed(timestamp=ctx.message.created_at, colour=0x708DD0)
+            embed.add_field(name='User ID', value=user.id, inline=True)
+            
+            if isinstance(user, discord.Member):
+                embed.add_field(name='Nick', value=user.nick, inline=True)
+                embed.add_field(name='Status', value=user.status, inline=True)
+                embed.add_field(name='In Voice', value=voice_state, inline=True)
+                embed.add_field(name='Game', value=user.activity, inline=True)
+                embed.add_field(name='Highest Role', value=role, inline=True)
+            embed.add_field(name='Account Created', value=user.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
+            
+            if isinstance(user, discord.Member):
+                embed.add_field(name='Join Date', value=user.joined_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
+            embed.set_thumbnail(url=avi)
+            embed.set_author(name=user, icon_url='https://i.imgur.com/RHagTDg.png')
+            
+            await ctx.send(embed=embed)
+        else:
+            if isinstance(user, discord.Member):
+                msg = '**User Info:** ```User ID: %s\nNick: %s\nStatus: %s\n',
+                ' In Voice: %s\nGame: %s\nHighest Role: %s\nAccount Created: %s\n', 
+                ' Join Date: %s\nAvatar url:%s```' % (user.id, user.nick, \
+                    user.status, voice_state, user.activity, role, \
+                    user.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S'), \
+                    user.joined_at.__format__('%A, %d. %B %Y @ %H:%M:%S'), avi)
+            else:
+                msg = '**User Info:** ```User ID: %s\nAccount Created: %s\n', 
+                ' Avatar url:%s```' % (user.id, user.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S'), avi)
+            await ctx.send(self.bot.bot_prefix + msg)
 
-        embed = discord.Embed(colour = user.top_role.colour.value)
-        embed.set_thumbnail(url = user.avatar_url)
-
-        embed.add_field(name = "Full name", value = user, inline = True)
-        embed.add_field(
-            name = "Nickname",
-            value = user.nick if hasattr(user, "nick") else "None", inline = True)
-        embed.add_field(name = "Account created", value = default.date(user.created_at), inline = True)
-        embed.add_field(name = "Joined this server", value = default.date(user.joined_at), inline = True)
-        embed.add_field(name = "Roles", value = show_roles, inline = False)
-
-        await ctx.send(content=f"ℹ About **{user.id}**", embed = embed)
+        await ctx.message.delete()
 
     @commands.group()
     @commands.guild_only()
