@@ -268,7 +268,7 @@ class Mod(commands.Cog):
 
     @commands.guild_only()
     @commands.group(invoke_without_command = True)
-    @commands.has_permissions(manage_server = True)
+    @commands.has_permissions(manage_guild = True)
     async def lock(self, ctx):
         """Server/Channel lock"""
         pass
@@ -322,7 +322,7 @@ class Mod(commands.Cog):
 
     @commands.guild_only()
     @commands.group(invoke_without_command = True)
-    @commands.has_permissions(manage_server = True)
+    @commands.has_permissions(manage_guild = True)
     async def unlock(self, ctx):
         """Server/Channel unlock"""
         pass
