@@ -45,7 +45,7 @@ class Mod(commands.Cog):
         return embed
 
     @commands.command()
-    @commands.guild_only
+    @commands.guild_only()
     @commands.has_permissions(kick_members = True)
     async def kick(self, ctx, member: discord.Member, *, reason = None):
         """Kick someone from the server."""
