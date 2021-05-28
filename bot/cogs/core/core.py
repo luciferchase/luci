@@ -319,7 +319,7 @@ class Core(commands.Cog):
                 role = "N/A"
             voice_state = None if not user.voice else user.voice.channel
         
-        embed = discord.Embed(timestamp=ctx.message.created_at, colour=0x708DD0)
+        embed = discord.Embed(timestamp=ctx.message.created_at, colour=0xf34949)
         embed.add_field(name='User ID', value=user.id, inline=True)
         
         if isinstance(user, discord.Member):
@@ -337,9 +337,9 @@ class Core(commands.Cog):
         
         await ctx.send(embed=embed)
  
-    @commands.group()
+    @commands.group(aliases = ["sinfo"])
     @commands.guild_only()
-    async def server(self, ctx):
+    async def serverinfo(self, ctx):
         """ Check info about current server """
 
         if ctx.invoked_subcommand is None:
@@ -358,7 +358,7 @@ class Core(commands.Cog):
             embed.add_field(name = "Bots", value = find_bots, inline = True)
             embed.add_field(name = "Owner", value = ctx.guild.owner, inline = True)
             embed.add_field(name = "Region", value = ctx.guild.region, inline = True)
-            embed.add_field(name = "Created", value = default.date(ctx.guild.created_at), inline = True)
+            embed.add_field(name = "Created", value = ctx.guild.created_at, inline = True)
             await ctx.send(content = f"ℹ information about **{ctx.guild.name}**", embed = embed)
 
     @server.command(name = "avatar", aliases = ["icon"])
