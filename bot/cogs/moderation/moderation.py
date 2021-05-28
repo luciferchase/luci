@@ -377,10 +377,10 @@ class Mod(commands.Cog):
     @commands.command(aliases=["nick"])
     @commands.guild_only()
     @permissions.has_permissions(manage_nicknames = True)
-    async def nickname(self, ctx, member: discord.Member, *, name: str = None, *, reason = None):
+    async def nickname(self, ctx, member: discord.Member, *, name: str = None):
         """Change nickname of a member"""
         try:
-            await member.edit(nick = name, reason = reason)
+            await member.edit(nick = name)
             
             message = f"Changed **{member.name}'s** nickname to **{name}**"
             
