@@ -195,9 +195,9 @@ class Fun(commands.Cog):
         """ Find the 'best' definition to your words """
         async with ctx.channel.typing():
             try:
-            async with self.session.get(f"https://api.urbandictionary.com/v0/define?term={search}") \
-            as response:
-                data = await response.json()
+                async with self.session.get(f"https://api.urbandictionary.com/v0/define?term={search}") \
+                as response:
+                    data = await response.json()
             except Exception:
                 return await ctx.send("Urban API returned invalid data... might be down atm.")
 
