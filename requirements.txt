@@ -7,8 +7,9 @@ discord-pretty-help
 discordpy-slash
 ffmpeg
 psutil
-pyparsing
 psycopg2-binary
+pyparsing
+pytz
 reactionmenu
 requests
 sympy
