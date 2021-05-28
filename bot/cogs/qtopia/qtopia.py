@@ -14,6 +14,8 @@ class Qtopia(commands.Cog):
         if (message.author == self.bot.user):
             return
 
+        luci = self.bot.get_user(707557256220115035)
+
         if (message.guild is None and not message.author.bot and message.author != luci):
             # Vent channels
             if (message.content.startswith.lower() == "luci vent1"):
