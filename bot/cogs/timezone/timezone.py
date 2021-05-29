@@ -41,16 +41,17 @@ class Timezone(commands.Cog):
     async def convert(self, ctx, tz_1, tz_2, *timestamp):
         """Example: luci convert london kolkata 12:56"""
 
-        timestamp = timestamp[0].split(":")
+        if (":" not in timestamp):
+            timestamp += ":00"
+        if (len(timestamp.split(":")[0]) == 1):
+            timestamp = "0" + timestamp
 
-        if (len(timestamp) == 1):
-            timestamp.append("00")
-        elif (len(timestamp[0]) == 1):
-            timestamp[0] = "0" + timestamp[0]
-
+        # Convert timestamp to datetime object
+        timestamp = strptime(timestamp, "%H:%M")
+        
         if (tz_1.lower() == "usa"):
             tz_1 = "america"
-        elif (tz_2.lower() == "usa"):
+        if (tz_2.lower() == "usa"):
             tz_2 = "america"
 
         list_of_timezones = list(pytz.all_timezones)
@@ -80,20 +81,17 @@ class Timezone(commands.Cog):
             await ctx.send("You can check list of timezones using `luci timezones [continent name]`")
             return
         
-        # Set time in first timezone
-        now_tz1 = datetime.now(pytz.timezone(tz_1))
-        
-        hour = 0
-        while (now_tz1.strftime("%H") != timestamp[0]):
-            now_tz1 += timedelta(hours = hour)
-            hour += 1
-        else:
-            now_tz1 = datetime.now(pytz.timezone(tz_1)) + timedelta(hours = hour, minutes = int(timestamp[1]))
+        # First we will get the time difference between the timezones
+        # Current time in UTC
+        now_utc = datetime.now(pytz.timezone("UTC"))
 
-        # Convert it to appropriate timezone
-        different_tz = now_tz1.astimezone(pytz.timezone(tz_2))
-        await ctx.send("```css\n{}: {}\n{}: {}```".format(tz_1, now_tz1.strftime(self.fmt), 
-            tz_2, different_tz.strftime(self.fmt)))
+        time_in_tz1 = now_utc.astimezone(pytz.timezone(tz_1))
+        time_in_tz2 = now_utc.astimezone(pytz.timezone(tz_2))
+
+        difference_in_time = time_in_tz2 - time_in_tz1
+
+        await ctx.send("```css\n{}: {}\n{}: {}```".format(
+            tz_1, timestamp.strftime(self.fmt), tz_2, (timestamp + difference_in_time).strftime(self.fmt)))
 
     @commands.command()
     async def timezones(self, ctx, *continent):
