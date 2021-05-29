@@ -44,7 +44,9 @@ class Timezone(commands.Cog):
         timestamp = timestamp[0].split(":")
 
         if (len(timestamp) == 1):
-            timestamp.append("0")
+            timestamp.append("00")
+        elif (len(timestamp[0]) == 1):
+            timestamp[0] = "0" + timestamp[0]
 
         if (tz_1.lower() == "usa"):
             tz_1 = "america"
@@ -82,7 +84,7 @@ class Timezone(commands.Cog):
         now_utc = datetime.now(pytz.timezone("UTC"))
         
         hour = 0
-        while (now_utc.strftime(self.fmt) != timestamp):
+        while (now_utc.strftime(self.fmt) != ":".join(timestamp)):
             now_utc += timedelta(hours = hour, minutes = int(timestamp[1]))
             hour += 1
 
