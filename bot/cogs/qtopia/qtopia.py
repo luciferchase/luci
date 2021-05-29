@@ -17,7 +17,7 @@ class Qtopia(commands.Cog):
         if isinstance(ctx.channel, discord.channel.DMChannel):
             message = " ".join(message)
             channel = await self.bot.fetch_channel(739150769722228806)
-            await channel.send(message)
+            await channel.send("[Annonymous message] ", message)
             confirmation_message = await ctx.send(f"{ctx.author.name} message sent to #vent-1")
 
             with open("/app/bot/cogs/qtopia/logs.json", "r+") as logs:
@@ -28,6 +28,8 @@ class Qtopia(commands.Cog):
 
                 data["vent1"].insert(0, [ctx.author.id, message[:50], 
                     confirmation_message.created_at.strftime("%d-%m-%Y | %H:%M")])
+
+            with open("app/bot/cogs/qtopia/logs.json") as logs:
                 json.dump(data, logs)
 
     @commands.command()
@@ -36,7 +38,7 @@ class Qtopia(commands.Cog):
         if isinstance(ctx.channel, discord.channel.DMChannel):
             message = " ".join(message)
             channel = await self.bot.fetch_channel(793407631066005554)
-            await channel.send(message)
+            await channel.send("[Annonymous Message] ", message)
             confirmation_message = await ctx.send(f"{ctx.author.name} message sent to #vent-2")
 
             with open("/app/bot/cogs/qtopia/logs.json", "r+") as logs:
@@ -47,6 +49,8 @@ class Qtopia(commands.Cog):
 
                 data["vent2"].insert(0, [ctx.author.id, message[:50], 
                     confirmation_message.created_at.strftime("%d-%m-%Y | %H:%M")])
+
+            with open("/app/bot/cogs/qtopia/logs.json") as logs:
                 json.dump(data, logs)
 
     @commands.command()
@@ -55,7 +59,7 @@ class Qtopia(commands.Cog):
         if isinstance(ctx.channel, discord.channel.DMChannel):
             message = " ".join(message)
             channel = await self.bot.fetch_channel(639902815849938975)
-            await channel.send(message)
+            await channel.send("[Annonymous Message] ", message)
             confirmation_message = await ctx.send(f"{ctx.author.name} message sent to #q-and-a")
 
             with open("/app/bot/cogs/qtopia/logs.json", "r+") as logs:
@@ -66,6 +70,8 @@ class Qtopia(commands.Cog):
 
                 data["ask"].insert(0, [ctx.author.id, message[:50], 
                     confirmation_message.created_at.strftime("%d-%m-%Y | %H:%M")])
+
+            with open("/app/bot/cogs/qtopia/logs.json") as logs:
                 json.dump(data, logs)
 
     @commands.command()
