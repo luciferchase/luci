@@ -81,17 +81,18 @@ class Timezone(commands.Cog):
             return
         
         # Set time in first timezone
-        now_utc = datetime.now(pytz.timezone("UTC"))
+        now_tz1 = datetime.now(pytz.timezone(tz_1))
         
         hour = 0
-        while (now_utc.strftime(self.fmt) != ":".join(timestamp)):
-            now_utc += timedelta(hours = hour, minutes = int(timestamp[1]))
+        while (now_tz1.strftime("%H") != timestamp[0]):
+            now_tz1 += timedelta(hours = hour)
             hour += 1
-
+        else:
+            now_tz1 = datetime.now(pytz.timezone(tz_1)) + timedelta(hours = hour, minutes = timestamp[1])
 
         # Convert it to appropriate timezone
-        different_tz = now_utc.astimezone(pytz.timezone(tz_2))
-        await ctx.send("```css\n{}: {}\n{}: {}```".format(tz_1, now_utc.strftime(self.fmt), 
+        different_tz = now_tz1.astimezone(pytz.timezone(tz_2))
+        await ctx.send("```css\n{}: {}\n{}: {}```".format(tz_1, now_tz1.strftime(self.fmt), 
             tz_2, different_tz.strftime(self.fmt)))
 
     @commands.command()
