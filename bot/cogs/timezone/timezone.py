@@ -44,6 +44,7 @@ class Timezone(commands.Cog):
             if (continent.title() in tz):
                 tz_list.append(tz)
         else:
-            await ctx.send(f"Bruh! Are you sure {" ".join(continent.split("_")).title()} is a continent? 🤦‍♂️")
+            await ctx.send(f'Bruh! Are you sure {" ".join(continent.split("_")).title()} is a continent? 🤦‍♂️')
+            break
 
         await ctx.send("```css\n{}```".format('\n'.join(tz_list)))
