@@ -88,7 +88,7 @@ class Timezone(commands.Cog):
             now_tz1 += timedelta(hours = hour)
             hour += 1
         else:
-            now_tz1 = datetime.now(pytz.timezone(tz_1)) + timedelta(hours = hour, minutes = timestamp[1])
+            now_tz1 = datetime.now(pytz.timezone(tz_1)) + timedelta(hours = hour, minutes = int(timestamp[1]))
 
         # Convert it to appropriate timezone
         different_tz = now_tz1.astimezone(pytz.timezone(tz_2))
