@@ -48,7 +48,7 @@ class Timezone(commands.Cog):
             timestamp = "0" + timestamp
 
         # Convert timestamp to datetime object
-        timestamp = strptime(timestamp, "%H:%M")
+        timestamp = datetime.strptime(timestamp, "%H:%M")
         
         if (tz_1.lower() == "usa"):
             tz_1 = "america"
