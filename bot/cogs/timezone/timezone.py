@@ -17,12 +17,13 @@ class Timezone(commands.Cog):
         if (country.lower() == "usa"):
             country = "america"
 
+        country = "_".join(country)
         list_of_timezones = list(pytz.all_timezones)
         
         for i in range(len(list_of_timezones)):
             if (country.title() in list_of_timezones[i]):
                 country = list_of_timezones[i]
-                break
+                found_timezones.append(country)
         else:
             await ctx.send("Uh oh! No country found 👀")
             await ctx.send("You can check list of accepted timezones using `luci timezones [continent name]`")
