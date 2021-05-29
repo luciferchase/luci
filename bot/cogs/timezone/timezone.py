@@ -1,14 +1,16 @@
 import discord
 from discord.ext import commands
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 
 class Timezone(commands.Cog):
     """Convert local time to different timezones"""
+    def __init__(self):
+        self.fmt = "%H:%M"
 
-    @commands.command(aliases = ["tz"])
+    @commands.group(aliases = ["tz"])
     async def time(self, ctx, *country):
         """Example: luci tz london"""
 
@@ -22,7 +24,7 @@ class Timezone(commands.Cog):
         for i in range(len(list_of_timezones)):
             if (country.title() in list_of_timezones[i]):
                 country = list_of_timezones[i]
-                found_timezones.append(country)
+                break
         else:
             await ctx.send("Uh oh! No country found 👀")
             await ctx.send("You can check list of accepted timezones using `luci timezones [continent name]`")
@@ -33,10 +35,60 @@ class Timezone(commands.Cog):
 
         # Convert it to appropriate timezone
         different_tz = now_utc.astimezone(pytz.timezone(country))
-        await ctx.send("```css\n{}: {}```".format(country, different_tz.strftime('%H:%M')))
+        await ctx.send("```css\n{}: {}```".format(country, different_tz.strftime(self.fmt)))
+
+    @time.command()
+    async def convert(self, ctx, tz_1, tz_2, *timestamp):
+        """Convert time from one timezone to another
+        Example: luci time convert london kolkata 12:56"""
+
+        if (tz_1.lower() == "usa"):
+            tz_1 = "america"
+        elif (tz_2.lower() == "usa"):
+            tz_2 = "america"
+
+        list_of_timezones = list(pytz.all_timezones)
+
+        found_1, found_2 = (False, False)
+        
+        for i in range(len(list_of_timezones)):
+            if (found_1 and found_2):
+                break
+
+            if (tz_1.title() in list_of_timezones[i]):
+                tz_1 = list_of_timezones[i]
+            elif (tz_2.title() in list_of_timezones[i]):
+                tz_2 = list_of_timezones[i]
+
+        else:
+            if (not found_1):
+                country_not_found = "first country"
+            elif (not found_2):
+                country_not_found = "second county"
+            else:
+                country_not_found = "both the countries"
+
+            await ctx.send(f"Uh oh! Your {country_not_found} not found 👀")
+            await ctx.send("You can check list of accepted timezones using `luci timezones [continent name]`")
+            return
+        
+        # Set time in first timezone
+        now_utc = datetime.now(pytz.timezone("UTC"))
+        
+        hour = 0
+        while (now_utc.strftime(self.fmt) != timestamp):
+            now_utc += timedelta(hours = hour, minutes = timestamp[2:])
+            hour += 1
+
+
+        # Convert it to appropriate timezone
+        different_tz = now_utc.astimezone(pytz.timezone(tz_2))
+        await ctx.send("```css\n{}: {}\n{}: {}```".format(tz_1, now_utc.strftime(self.fmt), 
+            tz_2, different_tz.strftime(self.fmt)))
 
     @commands.command()
     async def timezones(self, ctx, *continent):
+        """See list of accepted timezones"""
         continent = "_".join(continent)
         tz_list = []
 
