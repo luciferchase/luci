@@ -14,28 +14,29 @@ class Timezone(commands.Cog):
     async def time(self, ctx, *country):
         """Example: luci tz london"""
 
-        country = "_".join(country)
+        if ctx.invoked_subcommand is None:
+            country = "_".join(country)
 
-        if (country.lower() == "usa"):
-            country = "america"
+            if (country.lower() == "usa"):
+                country = "america"
 
-        list_of_timezones = list(pytz.all_timezones)
-        
-        for i in range(len(list_of_timezones)):
-            if (country.title() in list_of_timezones[i]):
-                country = list_of_timezones[i]
-                break
-        else:
-            await ctx.send("Uh oh! No country found 👀")
-            await ctx.send("You can check list of accepted timezones using `luci timezones [continent name]`")
-            return
+            list_of_timezones = list(pytz.all_timezones)
+            
+            for i in range(len(list_of_timezones)):
+                if (country.title() in list_of_timezones[i]):
+                    country = list_of_timezones[i]
+                    break
+            else:
+                await ctx.send("Uh oh! No country found 👀")
+                await ctx.send("You can check list of timezones using `luci timezones [continent name]`")
+                return
 
-        # Current time in UTC
-        now_utc = datetime.now(pytz.timezone("UTC"))
+            # Current time in UTC
+            now_utc = datetime.now(pytz.timezone("UTC"))
 
-        # Convert it to appropriate timezone
-        different_tz = now_utc.astimezone(pytz.timezone(country))
-        await ctx.send("```css\n{}: {}```".format(country, different_tz.strftime(self.fmt)))
+            # Convert it to appropriate timezone
+            different_tz = now_utc.astimezone(pytz.timezone(country))
+            await ctx.send("```css\n{}: {}```".format(country, different_tz.strftime(self.fmt)))
 
     @time.command()
     async def convert(self, ctx, tz_1, tz_2, *timestamp):
@@ -69,7 +70,7 @@ class Timezone(commands.Cog):
                 country_not_found = "both the countries"
 
             await ctx.send(f"Uh oh! Your {country_not_found} not found 👀")
-            await ctx.send("You can check list of accepted timezones using `luci timezones [continent name]`")
+            await ctx.send("You can check list of timezones using `luci timezones [continent name]`")
             return
         
         # Set time in first timezone
