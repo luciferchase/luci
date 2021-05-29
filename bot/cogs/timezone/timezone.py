@@ -83,7 +83,7 @@ class Timezone(commands.Cog):
         
         hour = 0
         while (now_utc.strftime(self.fmt) != timestamp):
-            now_utc += timedelta(hours = hour, minutes = timestamp[1])
+            now_utc += timedelta(hours = hour, minutes = int(timestamp[1]))
             hour += 1
 
 
@@ -106,4 +106,8 @@ class Timezone(commands.Cog):
             await ctx.send(f'Bruh! Are you sure {" ".join(continent.split("_")).title()} is a continent? 🤦‍♂️')
             return
 
-        await ctx.send("```css\n{}```".format('\n'.join(tz_list)))
+        try:
+            await ctx.send("```css\n{}```".format('\n'.join(tz_list)))
+        except:
+            await ctx.send("```css\n{}```".format('\n'.join(tz_list[30:])))
+            await ctx.send("```css\n{}```".format('\n'.join(tz_list[:30])))
