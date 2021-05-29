@@ -48,7 +48,7 @@ class Timezone(commands.Cog):
             timestamp = "0" + timestamp
 
         # Convert timestamp to datetime object
-        timestamp = datetime.strptime(timestamp, "%H:%M")
+        timestamp = datetime.strptime(timestamp, self.fmt)
         
         if (tz_1.lower() == "usa"):
             tz_1 = "america"
@@ -89,10 +89,19 @@ class Timezone(commands.Cog):
         time_in_tz1 = now_utc.astimezone(pytz.timezone(tz_1))
         time_in_tz2 = now_utc.astimezone(pytz.timezone(tz_2))
 
-        difference_in_time = time_in_tz2 - time_in_tz1
+        # Stip all timezone info from datetime object
+        time_in_tz1 = datetime.strptime(time_in_tz1.strftime(fmt), fmt)
+        time_in_tz2 = datetime.strptime(time_in_tz2.strftime(fmt), fmt)
 
+        if (time_in_tz2 > time_in_tz1):
+            difference_in_time = time_in_tz2 - time_in_tz1
+            timestamp_2 = timestamp + difference_in_time
+        else:
+            difference_in_time = time_in_tz1 - time_in_tz2
+            timestamp_2 = timestamp - difference_in_time
+        
         await ctx.send("```css\n{}: {}\n{}: {}```".format(
-            tz_1, timestamp.strftime(self.fmt), tz_2, (timestamp + difference_in_time).strftime(self.fmt)))
+            tz_1, timestamp.strftime(self.fmt), tz_2, timestamp_2.strftime(self.fmt)))
 
     @commands.command()
     async def timezones(self, ctx, *continent):
