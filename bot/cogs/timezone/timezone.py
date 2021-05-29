@@ -78,7 +78,7 @@ class Timezone(commands.Cog):
         
         hour = 0
         while (now_utc.strftime(self.fmt) != timestamp):
-            now_utc += timedelta(hours = hour, minutes = timestamp[2:])
+            now_utc += timedelta(hours = hour, minutes = timestamp[1])
             hour += 1
 
 
