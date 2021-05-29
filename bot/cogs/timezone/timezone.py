@@ -41,6 +41,11 @@ class Timezone(commands.Cog):
     async def convert(self, ctx, tz_1, tz_2, *timestamp):
         """Example: luci convert london kolkata 12:56"""
 
+        timestamp = timestamp[0].split(":")
+
+        if (len(timestamp) == 1):
+            timestamp.append("0")
+
         if (tz_1.lower() == "usa"):
             tz_1 = "america"
         elif (tz_2.lower() == "usa"):
