@@ -20,7 +20,7 @@ class Qtopia(commands.Cog):
             await channel.send(message)
             confirmation_message = await ctx.send(f"{ctx.author.name} message sent to #vent-1")
 
-            with open("app/bot/qtopia/logs.json", "r+") as logs:
+            with open("/app/bot/cogs/qtopia/logs.json", "r+") as logs:
                 data = json.load(logs)
 
                 if (len(data["vent1"]) == 10):
@@ -39,7 +39,7 @@ class Qtopia(commands.Cog):
             await channel.send(message)
             confirmation_message = await ctx.send(f"{ctx.author.name} message sent to #vent-2")
 
-            with open("app/bot/qtopia/logs.json", "r+") as logs:
+            with open("/app/bot/cogs/qtopia/logs.json", "r+") as logs:
                 data = json.load(logs)
 
                 if (len(data["vent2"]) == 10):
@@ -58,7 +58,7 @@ class Qtopia(commands.Cog):
             await channel.send(message)
             confirmation_message = await ctx.send(f"{ctx.author.name} message sent to #q-and-a")
 
-            with open("app/bot/qtopia/logs.json", "r+") as logs:
+            with open("/app/bot/cogs/qtopia/logs.json", "r+") as logs:
                 data = json.load(logs)
 
                 if (len(data["ask"]) == 10):
@@ -72,7 +72,7 @@ class Qtopia(commands.Cog):
     @commands.has_permissions(ban_members = True)
     async def log(self, ctx, channel, number = 1):
 
-        with open("app/bot/qtopia/logs.json", "r") as logs:
+        with open("/app/bot/cogs/qtopia/logs.json", "r") as logs:
             data = json.load(logs)
 
             message_string = ""
