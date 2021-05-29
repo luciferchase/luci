@@ -26,7 +26,7 @@ class Timezone(commands.Cog):
                 country = list_of_timezones[i]
                 break
         else:
-            await ctx.send("Uh oh! No country found 👀")
+            await ctx.send("Uh oh! Timezone not found 👀")
             await ctx.send("You can check list of timezones using `luci timezones [continent name]`")
             return
 
@@ -56,16 +56,18 @@ class Timezone(commands.Cog):
 
             if (tz_1.title() in list_of_timezones[i]):
                 tz_1 = list_of_timezones[i]
+                found_1 = True
             elif (tz_2.title() in list_of_timezones[i]):
                 tz_2 = list_of_timezones[i]
+                found_2 = True
 
         else:
             if (not found_1):
-                country_not_found = "first country"
+                country_not_found = "first timezone"
             elif (not found_2):
-                country_not_found = "second county"
+                country_not_found = "second timezone"
             else:
-                country_not_found = "both the countries"
+                country_not_found = "both the timezone"
 
             await ctx.send(f"Uh oh! Your {country_not_found} not found 👀")
             await ctx.send("You can check list of timezones using `luci timezones [continent name]`")
