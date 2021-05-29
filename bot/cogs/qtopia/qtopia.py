@@ -93,11 +93,11 @@ class Qtopia(commands.Cog):
 
             message_string = ""
             for i in range(number):
-                temp_data = data[channel][number]
+                temp_data = data[channel][i]
                 member = await self.bot.fetch_user(temp_data[0])
 
                 message_string += "{}. Author: {}\nAuthor-id: {}\nMessage: {}...\nTime: {}\n".format(i + 1, 
                     f"{member.name}#{member.discriminator}", member.id, temp_data[1], temp_data[2]) 
 
-            await ctx.send("```css\n{}```".format(message))
+            await ctx.send("```css\n{}```".format(message_string))
 
