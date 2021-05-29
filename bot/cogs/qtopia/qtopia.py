@@ -74,6 +74,10 @@ class Qtopia(commands.Cog):
 
         with open("/app/bot/cogs/qtopia/logs.json", "r") as logs:
             data = json.load(logs)
+            print(data)
+
+            if (len(data[channel]) == 0):
+                await ctx.send(f"No recent message sent to {channel}")
 
             message_string = ""
             for i in range(number):
