@@ -30,8 +30,8 @@ class Timezone(commands.Cog):
             now_utc = datetime.now(pytz.timezone("UTC"))
 
             # Convert it to appropriate timezone
-            now_asia = now_utc.astimezone(pytz.timezone(country))
-            await ctx.send(f"```css\n{country}: {now_asia.strftime('%H:%M')}```")
+            different_tz = now_utc.astimezone(pytz.timezone(country))
+            await ctx.send("```css\n{}: {}```".format(country, different_tz.strftime('%H:%M')))
 
     @commands.command()
     async def timezones(self, ctx, continent):
@@ -41,4 +41,4 @@ class Timezone(commands.Cog):
             if (continent in tz):
                 tz_list.append(tz)
 
-        await ctx.send(f"```css\n{'\n'.join(tz_list)}```")
+        await ctx.send("```css\n{}```".format('\n'.join(tz_list)))
