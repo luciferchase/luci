@@ -90,8 +90,8 @@ class Timezone(commands.Cog):
         time_in_tz2 = now_utc.astimezone(pytz.timezone(tz_2))
 
         # Stip all timezone info from datetime object
-        time_in_tz1 = datetime.strptime(time_in_tz1.strftime(fmt), fmt)
-        time_in_tz2 = datetime.strptime(time_in_tz2.strftime(fmt), fmt)
+        time_in_tz1 = datetime.strptime(time_in_tz1.strftime(self.fmt), self.fmt)
+        time_in_tz2 = datetime.strptime(time_in_tz2.strftime(self.fmt), self.fmt)
 
         if (time_in_tz2 > time_in_tz1):
             difference_in_time = time_in_tz2 - time_in_tz1
