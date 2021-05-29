@@ -31,7 +31,7 @@ class Timezone(commands.Cog):
 
             # Convert it to appropriate timezone
             now_asia = now_utc.astimezone(pytz.timezone(country))
-            await ctx.send(f"```css\n{country}: {now_asia.strftime("%H:%M")}```")
+            await ctx.send(f"```css\n{country}: {now_asia.strftime('%H:%M')}```")
 
     @commands.command()
     async def timezones(self, ctx, continent):
