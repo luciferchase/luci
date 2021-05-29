@@ -26,8 +26,8 @@ class Qtopia(commands.Cog):
                 if (len(data["vent1"]) == 10):
                     data.pop()
 
-                data["vent1"].insert(0, list(ctx.author.id, message[:50], 
-                    confirmation_message.created_at.strftime("%d-%m-%Y | %H:%M")))
+                data["vent1"].insert(0, [ctx.author.id, message[:50], 
+                    confirmation_message.created_at.strftime("%d-%m-%Y | %H:%M")])
                 json.dump(data, logs)
 
     @commands.command()
@@ -45,8 +45,8 @@ class Qtopia(commands.Cog):
                 if (len(data["vent2"]) == 10):
                     data.pop()
 
-                data["vent2"].insert(0, list(ctx.author.id, message[:50], 
-                    confirmation_message.created_at.strftime("%d-%m-%Y | %H:%M")))
+                data["vent2"].insert(0, [ctx.author.id, message[:50], 
+                    confirmation_message.created_at.strftime("%d-%m-%Y | %H:%M")])
                 json.dump(data, logs)
 
     @commands.command()
@@ -64,8 +64,8 @@ class Qtopia(commands.Cog):
                 if (len(data["ask"]) == 10):
                     data.pop()
 
-                data["ask"].insert(0, list(ctx.author.id, message[:50], 
-                    confirmation_message.created_at.strftime("%d-%m-%Y | %H:%M")))
+                data["ask"].insert(0, [ctx.author.id, message[:50], 
+                    confirmation_message.created_at.strftime("%d-%m-%Y | %H:%M")])
                 json.dump(data, logs)
 
     @commands.command()
