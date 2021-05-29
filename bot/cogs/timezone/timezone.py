@@ -9,9 +9,11 @@ class Timezone(commands.Cog):
     """Convert local time to different timezones"""
 
     @commands.command(aliases = ["tz"])
-    async def time(self, ctx, country, *, time = None):
-        """Example: luci tz america 12:56"""
+    async def time(self, ctx, *, country = None):
+        """Example: luci tz london"""
 
+        if (not country):
+            country = "UTC"
         if (country.lower() == "usa"):
             country = "america"
 
@@ -34,11 +36,12 @@ class Timezone(commands.Cog):
             await ctx.send("```css\n{}: {}```".format(country, different_tz.strftime('%H:%M')))
 
     @commands.command()
-    async def timezones(self, ctx, continent):
+    async def timezones(self, ctx, *continent):
+        continent = "_".join(continent)
         tz_list = []
 
         for tz in list(pytz.all_timezones):
-            if (continent in tz):
+            if (continent.title() in tz):
                 tz_list.append(tz)
 
         await ctx.send("```css\n{}```".format('\n'.join(tz_list)))
