@@ -26,7 +26,7 @@ class Timezone(commands.Cog):
         else:
             await ctx.send("Uh oh! No country found 👀")
             await ctx.send("You can check list of accepted timezones using `luci timezones [continent name]`")
-            break
+            return
 
         # Current time in UTC
         now_utc = datetime.now(pytz.timezone("UTC"))
@@ -45,6 +45,6 @@ class Timezone(commands.Cog):
                 tz_list.append(tz)
         else:
             await ctx.send(f'Bruh! Are you sure {" ".join(continent.split("_")).title()} is a continent? 🤦‍♂️')
-            break
+            return
 
         await ctx.send("```css\n{}```".format('\n'.join(tz_list)))
