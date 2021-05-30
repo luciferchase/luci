@@ -11,12 +11,15 @@ class Starboard(commands.Cog):
     async def format_embed(self, message):
         await message.add_reaction("✅")
 
-        channel = await self.bot.fetch_channel(847325243780366346)
+        channel = await self.bot.fetch_channel(587321519051636776)
 
-        embed = discord.Embed(colour = 0x00FFFFF)
+        embed = discord.Embed(title = message.author.name, colour = 0x00FFFFF)
         embed.add_field(name = "Source", value = f"[Jump to message]({message.jump_url})", inline = True)
         embed.add_field(name = "Channel", value = message.channel.mention, inline = True)
-        embed.set_author(name = message.author.nick, icon_url = message.author.avatar_url)
+        embed.set_author(
+            name = f"{message.author.name}#{message.author.discriminator}", 
+            icon_url = message.author.avatar_url
+        )
         embed.set_footer(text = message.created_at.strftime("%d-%m-%Y | %H:%M"))
         
         if (message.content):
@@ -28,7 +31,7 @@ class Starboard(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
-        if (payload.guild_id != 847116716646727740):
+        if (payload.guild_id != 587139618999369739):
             return
 
         message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
