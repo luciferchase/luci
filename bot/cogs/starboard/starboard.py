@@ -31,18 +31,19 @@ class Starboard(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
-        if (payload.guild_id != 587139618999369739):
+        if (payload.guild_id != 587139618999369739 and payload.channel_id != 848244705254441040):
             return
 
         message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 
         for reaction in message.reactions:
-            if (reaction.emoji == "🏆"):
+            if (reaction.emoji == "🏆" and reaction.count == 1):
                 users = await reaction.users().flatten()
 
                 for user in users:
                     if (user.guild_permissions.manage_messages):
                         await self.format_embed(message)
+                        return
 
             elif (reaction.emoji == "⭐" and reaction.count == 5):
                 await self.format_embed(message)

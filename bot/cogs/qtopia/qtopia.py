@@ -101,3 +101,23 @@ class Qtopia(commands.Cog):
 
             await ctx.send("```css\n{}```".format(message_string))
 
+    @commands.command()
+    @commands.guild_only()
+    @commands.has_permissions(ban_members = True)
+    async def unverified(self, ctx):
+        """Give unverified role to all those who doesn't have any role"""
+        guild = await self.bot.fetch_guild(587139618999369739)
+
+        for member in guild.members:
+            if (len(member.roles) == 1 and members.roles[0].name.lower() == "everyone"):
+                role = discord.utils.find(lambda m: "unverified" in m.name.lower(), ctx.message.guild.roles)
+                await member.add_roles(role)
+
+    # Check-in
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if (message.channel.id == 845817544484323349):
+            reactions = ["❤", "🧡", "💛", "🤍", "🖤", "💚", "💙", "💜", "💔"]
+
+            for reaction in reactions:
+                await message.add_reaction(reaction)
