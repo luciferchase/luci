@@ -121,4 +121,4 @@ class Timezone(commands.Cog):
             await ctx.send("```css\n{}```".format('\n'.join(tz_list)))
         except:
             await ctx.send("```css\n{}```".format('\n'.join(tz_list[30:])))
-            await ctx.send("```css\n{}```".format('\n'.join(tz_list[:30])))
+            await ctx.send("```css\n{}```".format('\n'.join(tz_list[:30])))    
