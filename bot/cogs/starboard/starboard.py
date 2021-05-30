@@ -16,7 +16,7 @@ class Starboard(commands.Cog):
         message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 
         for reaction in message.reactions:
-            if (reaction.emoji.name == ":star:" and reaction.count == 5):
+            if (reaction.emoji.name == ":trophy:" or (reaction.emoji.name == ":star:" and reaction.count == 5)):
                 await message.add_reaction("✅")
 
                 channel = await self.bot.fetch_channel(847325243780366346)
