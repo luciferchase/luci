@@ -109,10 +109,11 @@ class Qtopia(commands.Cog):
         guild = await self.bot.fetch_guild(587139618999369739)
 
         for member in guild.members:
-            if (len(member.roles) == 1 and members.roles[0].is_default()):
-                print(True)
+            for role in member.roles:
+                if (role.id in [587187354851082250, 780442815016599634, 587222807868604416, 592309523692257300]):
+                    break
+            else:
                 role = discord.utils.find(lambda m: "unverified" in m.name.lower(), guild.roles)
-                print(role)
                 await member.add_roles(role)
 
     # Check-in
