@@ -39,7 +39,7 @@ class Starboard(commands.Cog):
 
                 for user in users:
                     if (user.guild_permissions.manage_channels):
-                        await self.format_embed
+                        await self.format_embed(message)
 
             elif (reaction.emoji == "⭐" and reaction.count == 5):
-                await self.format_embed
+                await self.format_embed(message)
