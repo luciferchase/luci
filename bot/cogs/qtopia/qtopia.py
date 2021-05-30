@@ -108,7 +108,7 @@ class Qtopia(commands.Cog):
         """Give unverified role to all those who doesn't have any role"""
         guild = await self.bot.fetch_guild(587139618999369739)
 
-        for member in guild.members:
+        async for member in guild.fetch_members():
             for role in member.roles:
                 if (role.id in [587187354851082250, 780442815016599634, 587222807868604416, 592309523692257300]):
                     break
