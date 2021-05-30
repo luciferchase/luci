@@ -34,15 +34,12 @@ class Starboard(commands.Cog):
         message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 
         for reaction in message.reactions:
-            print(reaction.emoji)
-            print(payload.emoji.name)
-            if (payload.emoji.name == ":trophy:"):
+            if (reaction.emoji == "🏆"):
                 users = await reaction.users().flatten()
 
                 for user in users:
-                    if (user.guild_permissions(manage_channels = True)):
-                        print(True)
+                    if (user.guild_permissions.manage_channels):
                         await self.format_embed
 
-            elif (payload.emoji.name == ":star:" and reaction.count == 5):
+            elif (reaction.emoji == "⭐" and reaction.count == 5):
                 await self.format_embed
