@@ -9,7 +9,7 @@ class Starboard(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_raw_reaction_add(payload: discord.RawReactionActionEvent):
+    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
         if (payload.guild_id != 847116716646727740):
             return
 
