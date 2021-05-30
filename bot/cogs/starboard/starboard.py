@@ -23,7 +23,7 @@ class Starboard(commands.Cog):
         embed.set_footer(text = message.created_at.strftime("%d-%m-%Y | %H:%M"))
         
         if (message.content):
-            embed.description(message.content)
+            embed.description = message.content
         if (message.attachments):
             embed.set_image(url = message.attachments[0].url)
 
@@ -41,7 +41,7 @@ class Starboard(commands.Cog):
                 users = await reaction.users().flatten()
 
                 for user in users:
-                    if (user.guild_permissions.manage_channels):
+                    if (user.guild_permissions.manage_messages):
                         await self.format_embed(message)
 
             elif (reaction.emoji == "⭐" and reaction.count == 5):
