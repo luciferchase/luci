@@ -108,13 +108,24 @@ class Qtopia(commands.Cog):
         """Give unverified role to all those who doesn't have any role"""
         guild = await self.bot.fetch_guild(587139618999369739)
 
+        count = 0
+        message_string = ""
         async for member in guild.fetch_members():
-            for role in member.roles:
-                if (role.id in [587187354851082250, 780442815016599634, 587222807868604416, 592309523692257300]):
-                    break
+            roles = [role.name.lower() for role in member.roles]
+            if ("qtopians" in roles or "bots" in roles or "unverified" in roles):
+                pass
             else:
                 role = discord.utils.find(lambda m: "unverified" in m.name.lower(), guild.roles)
                 await member.add_roles(role)
+                count += 1
+                message_string += str(member.id) + "\n"
+
+        await ctx.send(f"{count} were given the @Unverified role. IDs are sent in DM.")
+        try:
+            await ctx.send("```css\n{}```".format(message_string))
+        except:
+            print(message_string)
+            await ctx.send("Message too long to send here. IDs are printed to console.")
 
     # Check-in
     @commands.Cog.listener()
