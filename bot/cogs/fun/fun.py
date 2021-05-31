@@ -216,7 +216,7 @@ class Fun(commands.Cog):
             await ctx.send(f"📚 Definitions for **{result['word']}**```fix\n{definition}```")
 
     @commands.command(aliases = ["saabit"])
-    async def dadjokes(self, ctx):
+    async def joke(self, ctx):
         async with self.session.get("https://icanhazdadjoke.com/", 
             headers = {"Accept": "application/json"}) as response:
             data = await response.json()
@@ -226,4 +226,4 @@ class Fun(commands.Cog):
                 return
 
             await ctx.send(f"> {data['joke']}")
-            await ctx.send("<eZZ:791575889526652949>")
+            await ctx.send("<:eZZ:791575889526652949>")
