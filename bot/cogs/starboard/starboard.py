@@ -13,7 +13,7 @@ class Starboard(commands.Cog):
 
         channel = await self.bot.fetch_channel(587321519051636776)
 
-        embed = discord.Embed(title = message.author.name, colour = 0x00FFFFF)
+        embed = discord.Embed(title = message.author.nick, colour = 0x00FFFFF)
         embed.add_field(name = "Source", value = f"[Jump to message]({message.jump_url})", inline = True)
         embed.add_field(name = "Channel", value = message.channel.mention, inline = True)
         embed.set_author(
