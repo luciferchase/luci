@@ -31,7 +31,7 @@ class Starboard(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
-        if (payload.guild_id != 587139618999369739 or payload.channel_id != 848244705254441040):
+        if (payload.guild_id != 587139618999369739 or payload.channel_id == 848244705254441040):
             return
 
         message = await bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
