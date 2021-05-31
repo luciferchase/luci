@@ -120,7 +120,30 @@ class Qtopia(commands.Cog):
                 count += 1
                 message_string += str(member.id) + "\n"
 
-        await ctx.send(f"{count} were given the @Unverified role. IDs are sent in DM.")
+        await ctx.send(f"{count} were given the @Unverified role. Here are the IDs.")
+        try:
+            await ctx.send("```css\n{}```".format(message_string))
+        except:
+            print(message_string)
+            await ctx.send("Message too long to send here. IDs are printed to console.")
+
+    @commands.command()
+    @commands.guild_only()
+    @commands.has_permissions(ban_members = True)
+    async def norole(self, ctx):
+        """Check members who don't have any roles"""
+        guild = await self.bot.fetch_guild(587139618999369739)
+
+        count = 0
+        message_string = ""
+        async for member in guild.fetch_members():
+            roles = [role.name.lower() for role in member.roles]
+            if ("qtopians" in roles or "bots" in roles or "unverified" in roles):
+                pass
+            else:
+                message_string += str(member.id) + "\n"
+
+        await ctx.send(f"{count} members don't have any role to them. Here are the IDs.")
         try:
             await ctx.send("```css\n{}```".format(message_string))
         except:
