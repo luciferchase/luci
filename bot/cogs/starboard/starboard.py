@@ -43,7 +43,7 @@ class Starboard(commands.Cog):
                     if (reaction.emoji == "🏆" and reaction.count == 1):
                         await self.format_embed(message)
                 return
-        elif (payload.emoji == "⭐"):
+        elif (payload.emoji.name == "⭐"):
             for reaction in message.reactions:
                 if (reaction.emoji == "⭐" and reaction.count == 5):
                     await self.format_embed(message)
