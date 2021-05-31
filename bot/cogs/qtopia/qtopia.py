@@ -158,3 +158,15 @@ class Qtopia(commands.Cog):
 
             for reaction in reactions:
                 await message.add_reaction(reaction)
+
+    # If the qtopia bot is down
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        if (member.guild.id != 587139618999369739):
+            return
+
+        roles = [role.name.lower() for role in member.roles]
+        if ("unverified" not in roles):
+            role = discord.utils.find(lambda m: "unverified" in m.name.lower(), guild.roles)
+            await member.add_roles(role)
+            

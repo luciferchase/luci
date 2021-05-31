@@ -37,7 +37,7 @@ class Starboard(commands.Cog):
         message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
 
         for reaction in message.reactions:
-            if (reaction.emoji == "🏆" and reaction.count == 1):
+            if (reaction.emoji == payload.emoji and payload.emoji == "🏆" and reaction.count == 1):
                 users = await reaction.users().flatten()
 
                 for user in users:
@@ -45,5 +45,5 @@ class Starboard(commands.Cog):
                         await self.format_embed(message)
                         return
 
-            elif (reaction.emoji == "⭐" and reaction.count == 5):
+            elif (reaction.emoji == payload.emoji and payload.emoji == "⭐" and reaction.count == 5):
                 await self.format_embed(message)
