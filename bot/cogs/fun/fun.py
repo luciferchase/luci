@@ -218,7 +218,7 @@ class Fun(commands.Cog):
     @commands.command(aliases = ["saabit"])
     async def dadjokes(self, ctx):
         async with self.session.get("https://icanhazdadjoke.com/", 
-            headers = "Accept": "application/json") as response:
+            headers = {"Accept": "application/json"}) as response:
             data = await response.json()
 
             if (data["status"] > 200):
