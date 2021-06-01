@@ -4,6 +4,7 @@ from discord.ext import commands
 import aiohttp
 from babel.numbers import format_decimal
 import datetime
+import typing
 from typing import Union
 
 from .menus import ArticleFormat, CovidMenu, CovidStateMenu, GenericMenu
