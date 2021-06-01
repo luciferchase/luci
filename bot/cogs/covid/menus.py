@@ -7,9 +7,7 @@ import datetime
 from typing import Any, Dict, Iterable, Optional
 import validators
 
-import menu_class
-
-menus = menu_class()
+from cogs.covid import menu_class as menus
 
 def humanize_number(self, val: Union[int, float]) -> str:
     """
