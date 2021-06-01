@@ -21,7 +21,7 @@ class Covid(commands.Cog):
             "sortBy": "publishedAt",
             "pageSize": 100,
             "country": None,
-            "apiKey": os.getenv("NEWS_API_KEY")
+            "apiKey": os.getenv("NEWS_API_KEY"),
             "page": 1
         }
         self.session = aiohttp.ClientSession()

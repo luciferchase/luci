@@ -1,6 +1,7 @@
 aiohttp
 akinator.py
 APScheduler
+babel
 bs4
 discord.py[voice]
 discord-pretty-help
