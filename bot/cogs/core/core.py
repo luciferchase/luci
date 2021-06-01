@@ -307,7 +307,7 @@ class Core(commands.Cog):
             if not user:
                 user = self.bot.get_user(int(name))
             if not user:
-                await ctx.send(self.bot.bot_prefix + 'Could not find user.')
+                await ctx.send('luci Could not find user.')
                 return
         else:
             user = ctx.message.author
