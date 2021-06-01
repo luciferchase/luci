@@ -333,7 +333,7 @@ class Covid(commands.Cog):
 
                 msg = str('**Cases**: {}\n**Deaths**: {}\n**Recovered**: {}\n**Cases Today**: {}' + 
                 '\n**Deaths Today**: {}\n**Critical**: {}').format(cases, deaths, recovered, 
-                todayCases, todayDeaths. critical)
+                todayCases, todayDeaths, critical)
 
                 embed.add_field(name  = data[i]["country"], value = msg)
             
@@ -375,7 +375,7 @@ class Covid(commands.Cog):
 
                 msg = str('**Cases**: {}\n**Deaths**: {}\n**Recovered**: {}\n**Cases Today**: {}' + 
                 '\n**Deaths Today**: {}\n**Critical**: {}').format(cases, deaths, recovered, 
-                todayCases, todayDeaths. critical)
+                todayCases, todayDeaths, critical)
                 
                 embed.add_field(name  = data[i]["country"], value = msg)
             
@@ -417,7 +417,7 @@ class Covid(commands.Cog):
 
                 msg = str('**Cases**: {}\n**Deaths**: {}\n**Recovered**: {}\n**Cases Today**: {}' + 
                 '\n**Deaths Today**: {}\n**Critical**: {}').format(cases, deaths, recovered, 
-                todayCases, todayDeaths. critical)
+                todayCases, todayDeaths, critical)
 
                 embed.add_field(name  = data[i]["country"], value = msg)
            
@@ -459,7 +459,7 @@ class Covid(commands.Cog):
 
                 msg = str('**Cases**: {}\n**Deaths**: {}\n**Recovered**: {}\n**Cases Today**: {}' + 
                 '\n**Deaths Today**: {}\n**Critical**: {}').format(cases, deaths, recovered, 
-                todayCases, todayDeaths. critical)
+                todayCases, todayDeaths, critical)
                 
                 embed.add_field(name  = data[i]["country"], value = msg)
             
