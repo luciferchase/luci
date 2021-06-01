@@ -46,9 +46,11 @@ class GenericMenu(menus.MenuPages, inherit_buttons = False):
         message: discord.Message = None,
         **kwargs: Any,
     ) -> None:
+        
         self.cog = cog
         self.ctx = ctx
         self.type = type
+        
         super().__init__(
             source,
             clear_reactions_after = clear_reactions_after,
@@ -143,7 +145,7 @@ class ArticleFormat(menus.ListPageSource):
     async def format_page(self, menu: GenericMenu, data) -> str:
         embed = discord.Embed(
             title = data["title"],
-            color = await menu.ctx.embed_colour(),
+            color = 0xf34949,
             description = f"[Click Here for Full data]({data['url']})\n\n{data['description']}",
             timestamp = datetime.datetime.fromisoformat(data["publishedAt"].replace("Z", "")),
         )
@@ -151,6 +153,7 @@ class ArticleFormat(menus.ListPageSource):
             embed.set_image(url = data["urlToImage"])
         embed.set_author(name = f"{data['author']} - {data['source']['name']}")
         embed.set_footer(text = f"Article {menu.current_page + 1 }/{menu._source.get_max_pages()}")
+        
         return embed
 
 
@@ -160,7 +163,7 @@ class CovidMenu(menus.ListPageSource):
 
     async def format_page(self, menu: GenericMenu, country) -> str:
         embed = discord.Embed(
-            color = await menu.ctx.embed_colour(),
+            color = 0xf34949,
             title = "Covid-19 | {} Statistics".format(country["country"]),
             timestamp = datetime.datetime.utcfromtimestamp(country["updated"] / 1000),
         )
@@ -177,6 +180,7 @@ class CovidMenu(menus.ListPageSource):
         embed.add_field(name = "Active", value = humanize_number(country["active"]))
         embed.add_field(name = "Total Tests", value = humanize_number(country["tests"]))
         embed.set_footer(text = f"Page {menu.current_page + 1 }/{menu._source.get_max_pages()}")
+        
         return embed
 
 
@@ -186,7 +190,7 @@ class CovidStateMenu(menus.ListPageSource):
 
     async def format_page(self, menu: GenericMenu, state) -> str:
         embed = discord.Embed(
-            color = await menu.ctx.embed_colour(),
+            color = 0xf34949,
             title = "Covid-19 | USA | {} Statistics".format(state["state"]),
         )
         embed.add_field(name = "Cases", value = humanize_number(state["cases"]))
@@ -196,4 +200,5 @@ class CovidStateMenu(menus.ListPageSource):
         embed.add_field(name = f"Active {menu.type}", value = humanize_number(state["active"]))
         embed.add_field(name = "Total Tests", value = humanize_number(state["tests"]))
         embed.set_footer(text = f"Page {menu.current_page + 1 }/{menu._source.get_max_pages()}")
+        
         return embed

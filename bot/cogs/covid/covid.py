@@ -47,7 +47,7 @@ class Covid(commands.Cog):
         """
         return format_decimal(val)
 
-    async def get(self, url, params):
+    async def get(self, url, params = None):
         async with self.session.get(url, params = params) as response:
             try:
                 data = await response.json()
@@ -68,7 +68,7 @@ class Covid(commands.Cog):
             else:
                 return {"failed": data["message"]}
 
-    @commands.command(hidden = True)
+    @commands.command()
     async def covidcountries(self, ctx):
         """Countries supported by covidnews."""
         
@@ -76,7 +76,7 @@ class Covid(commands.Cog):
         " hu id ie il in it jp kr lt lv ma mx my ng nl no nz ph pl pt ro rs ru sa se sg" + 
         " si sk th tr tw ua us ve za").split()
 
-        await ctx.send("```css\nValid County Codes are:\n{}```".format("\n".join(country_codes)))
+        await ctx.send("```css\nValid County Codes are:\n{}```".format(" ".join(country_codes)))
 
     @commands.command()
     @commands.bot_has_permissions(embed_links = True)
@@ -165,8 +165,10 @@ class Covid(commands.Cog):
         Supports multiple countries seperated by a comma.
         Example: luci covid yesterday Ireland, England
         """
+        
         async with ctx.typing():
             data = await self.get(self.api + "/countries/{}?yesterday = 1".format(country))
+            
             if isinstance(data, dict):
                 error = data.get("failed")
                 if error is not None:
@@ -184,6 +186,7 @@ class Covid(commands.Cog):
     @commands.bot_has_permissions(embed_links = True)
     async def todaycases(self, ctx):
         """Show the highest cases from countrys today."""
+
         async with ctx.typing():
             data = await self.get(self.api + "/countries?sort = todayCases")
             
@@ -212,6 +215,7 @@ class Covid(commands.Cog):
     @commands.bot_has_permissions(embed_links = True)
     async def todaydeaths(self, ctx):
         """Show the highest deaths from countrys today."""
+
         async with ctx.typing():
             data = await self.get(self.api + "/countries?sort = todayDeaths")
             
@@ -240,6 +244,7 @@ class Covid(commands.Cog):
     @commands.bot_has_permissions(embed_links = True)
     async def highestcases(self, ctx):
         """Show the highest cases from countrys overall."""
+
         async with ctx.typing():
             data = await self.get(self.api + "/countries?sort = cases")
             
