@@ -9,7 +9,7 @@ import validators
 
 from cogs.covid import menu_class as menus
 
-def humanize_number(self, val: Union[int, float]) -> str:
+def humanize_number(val: Union[int, float]) -> str:
     """
     Convert an int or float to a str with digit separators based on bot locale
 
