@@ -4,7 +4,7 @@ from discord.ext import commands
 from babel.numbers import format_decimal
 import contextlib
 import datetime
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Dict, Iterable, Optional, Union
 import validators
 
 from cogs.covid import menu_class as menus
