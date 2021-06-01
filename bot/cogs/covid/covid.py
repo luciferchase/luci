@@ -122,7 +122,7 @@ class Covid(commands.Cog):
                 return await ctx.send("No data available.")
             
             embed = discord.Embed(
-                color = await self.bot.get_embed_color(ctx.channel),
+                color = 0xf34949,
                 title= "Covid-19 Global Statistics",
                 timestamp = datetime.datetime.utcfromtimestamp(data["updated"] / 1000),
             )
@@ -165,7 +165,7 @@ class Covid(commands.Cog):
         Supports multiple countries seperated by a comma.
         Example: luci covid yesterday Ireland, England
         """
-        
+
         async with ctx.typing():
             data = await self.get(self.api + "/countries/{}?yesterday = 1".format(country))
             
@@ -198,7 +198,7 @@ class Covid(commands.Cog):
                 return await ctx.send("No data available.")
             
             embed = discord.Embed(
-                color = await self.bot.get_embed_color(ctx.channel),
+                color = 0xf34949,
                 title= "Covid-19 | Highest Cases Today | {}".format(data[0]["country"]),
                 timestamp = datetime.datetime.utcfromtimestamp(data[0]["updated"] / 1000),
             )
@@ -227,7 +227,7 @@ class Covid(commands.Cog):
                 return await ctx.send("No data available.")
             
             embed = discord.Embed(
-                color = await self.bot.get_embed_color(ctx.channel),
+                color = 0xf34949,
                 title= "Covid-19 | Highest Deaths Today | {}".format(data[0]["country"]),
                 timestamp = datetime.datetime.utcfromtimestamp(data[0]["updated"] / 1000),
             )
@@ -256,7 +256,7 @@ class Covid(commands.Cog):
                 return await ctx.send("No data available.")
             
             embed = discord.Embed(
-                color = await self.bot.get_embed_color(ctx.channel),
+                color = 0xf34949,
                 title= "Covid-19 | Highest Cases Overall | {}".format(data[0]["country"]),
                 timestamp = datetime.datetime.utcfromtimestamp(data[0]["updated"] / 1000),
             )
@@ -284,7 +284,7 @@ class Covid(commands.Cog):
                 return await ctx.send("No data available.")
             
             embed = discord.Embed(
-                color = await self.bot.get_embed_color(ctx.channel),
+                color = 0xf34949,
                 title= "Covid-19 | Highest Deaths Overall | {}".format(data[0]["country"]),
                 timestamp = datetime.datetime.utcfromtimestamp(data[0]["updated"] / 1000),
             )
@@ -319,7 +319,7 @@ class Covid(commands.Cog):
                 return await ctx.send("No data available.")
             
             embed = discord.Embed(
-                color = await self.bot.get_embed_color(ctx.channel),
+                color = 0xf34949,
                 title= "Covid-19 | Top {} Cases ".format(amount),
                 timestamp = datetime.datetime.utcfromtimestamp(data[0]["updated"] / 1000),
             )
@@ -361,7 +361,7 @@ class Covid(commands.Cog):
                 return await ctx.send("No data available.")
             
             embed = discord.Embed(
-                color = await self.bot.get_embed_color(ctx.channel),
+                color = 0xf34949,
                 title= "Covid-19 | Top {} Cases Today ".format(amount),
                 timestamp = datetime.datetime.utcfromtimestamp(data[0]["updated"] / 1000),
             )
@@ -403,7 +403,7 @@ class Covid(commands.Cog):
                 return await ctx.send("No data available.")
             
             embed = discord.Embed(
-                color = await self.bot.get_embed_color(ctx.channel),
+                color = 0xf34949,
                 title= "Covid-19 | Top {} Deaths ".format(amount),
                 timestamp = datetime.datetime.utcfromtimestamp(data[0]["updated"] / 1000),
             )
@@ -445,7 +445,7 @@ class Covid(commands.Cog):
                 return await ctx.send("No data available.")
             
             embed = discord.Embed(
-                color = await self.bot.get_embed_color(ctx.channel),
+                color = 0xf34949,
                 title= "Covid-19 | Top {} Deaths Today ".format(amount),
                 timestamp = datetime.datetime.utcfromtimestamp(data[0]["updated"] / 1000),
             )
