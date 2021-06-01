@@ -154,7 +154,7 @@ class Qtopia(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if (message.channel.id == 845817544484323349):
-            reactions = ["❤", "🧡", "💛", "🤍", "🖤", "💚", "💙", "💜", "💔"]
+            reactions = ["❤️", "🧡", "💛", "🤍", "🖤", "💚", "💙", "💜", "💔"]
 
             for reaction in reactions:
                 await message.add_reaction(reaction)

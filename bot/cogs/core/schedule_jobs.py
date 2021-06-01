@@ -134,7 +134,8 @@ class Scheduler(commands.Cog):
 		scheduler.add_job(self.schedule_meme, CronTrigger.from_crontab("30 * * * *")) # Every hour
 
 		# Because we are 05:30 hrs ahead of GMT, every cron is set 05:30 hrs behind
-		scheduler.add_job(self.schedule_wallpaper, CronTrigger.from_crontab("30 02 * * *")) # Each day at 0800 hrs
+		scheduler.add_job(self.schedule_wallpaper, CronTrigger.from_crontab("30 02 * * *")) 
+		# Each day at 0800 hrs
 		# scheduler.add_job(self.schedule_ipl, CronTrigger.from_crontab("30 02 * * *"))
 
 		# Start the scheduler

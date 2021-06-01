@@ -16,8 +16,9 @@ from cogs.avatar import avatar
 from cogs.bigmoji import bigmoji
 from cogs.botstatus import botstatus
 from cogs.comics import comics
-from cogs.core import core, schedule_jobs
 from cogs.conversationgames import conversationgames
+from cogs.core import core, schedule_jobs
+from cogs.covid import covid
 from cogs.fun import fun
 # from cogs.ipl import ipl
 from cogs.math import math
@@ -61,9 +62,9 @@ bot.add_cog(avatar.Avatar())
 bot.add_cog(bigmoji.Bigmoji(bot))
 bot.add_cog(botstatus.Botstatus(bot))
 bot.add_cog(comics.Comics(bot))
-bot.add_cog(core.Core(bot))
-# bot.add_cog(core.Help(bot))
 bot.add_cog(conversationgames.ConversationGames())
+bot.add_cog(core.Core(bot))
+bot.add_cog(covid.Covid(bot))
 bot.add_cog(fun.Fun(bot))
 # bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))

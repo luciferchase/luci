@@ -15,4 +15,5 @@ requests
 sympy
 TagScriptEngine
 timeago
+validators
 youtube_dl
