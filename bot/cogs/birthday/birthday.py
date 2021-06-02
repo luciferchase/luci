@@ -34,7 +34,7 @@ class Birthday(commands.Cog):
         If you want to edit a bday type `luci bday edit`"""
         pass
 
-    @bday.command(name = ["set"])
+    @bday.command(name = "set")
     async def setbday(self, ctx, member: discord.Member, date, tz = "UTC"):
         """Usage: luci bday set @Lucifer Chase 27/02 kolkata
         If you don't care about the timezone thing leave it blank"""
