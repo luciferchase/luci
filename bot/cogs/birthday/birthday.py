@@ -35,7 +35,7 @@ class Birthday(commands.Cog):
         pass
 
     @bday.command(name = "set")
-    async def setbday(self, ctx, member: discord.Member, date, tz = "UTC"):
+    async def setbday(self, ctx, member: discord.Member, date, tz = "GMT"):
         """Usage: luci bday set @Lucifer Chase 27/02 kolkata
         If you don't care about the timezone thing leave it blank"""
 
@@ -86,7 +86,7 @@ class Birthday(commands.Cog):
             if (date[i] == 1):
                 date[i] = "0" + date[i]
         bday_date, bday_month = date
-        
+
         list_of_timezones = list(pytz.all_timezones)
         
         for i in range(len(list_of_timezones)):
