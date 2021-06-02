@@ -36,7 +36,7 @@ class Birthday(commands.Cog):
         pass
 
     @bday.command(name = "set")
-    async def setbday(self, ctx, member: discord.Member, date, tz = "GMT"):
+    async def setbday(self, ctx, member: discord.Member, date, tz = "UTC"):
         """Usage: luci bday set @Lucifer Chase 27/02 kolkata
         If you don't care about the timezone thing leave it blank"""
 
@@ -48,16 +48,17 @@ class Birthday(commands.Cog):
                 await ctx.send("Bruh! Fill a valid date")
         bday_date, bday_month = date
 
-        list_of_timezones = list(pytz.all_timezones)
-        
-        for i in range(len(list_of_timezones)):
-            if (tz.title() in list_of_timezones[i]):
-                tz = list_of_timezones[i]
-                break
-        else:
-            await ctx.send("Uh oh! Timezone not found 👀")
-            await ctx.send("You can check list of timezones using `luci timezones [continent name]`")
-            return
+        if (tz != "UTC"):
+            list_of_timezones = list(pytz.all_timezones)
+            
+            for i in range(len(list_of_timezones)):
+                if (tz.title() in list_of_timezones[i]):
+                    tz = list_of_timezones[i]
+                    break
+            else:
+                await ctx.send("Uh oh! Timezone not found 👀")
+                await ctx.send("You can check list of timezones using `luci timezones [continent name]`")
+                return
 
         query = f"""INSERT INTO bday VALUES
                 ({member.id}, {member.guild.id}, {bday_date}, {bday_month}, '{tz}')"""
@@ -94,16 +95,17 @@ class Birthday(commands.Cog):
                 await ctx.send("Bruh! Fill a valid date")
         bday_date, bday_month = date
 
-        list_of_timezones = list(pytz.all_timezones)
-        
-        for i in range(len(list_of_timezones)):
-            if (tz.title() in list_of_timezones[i]):
-                tz = list_of_timezones[i]
-                break
-        else:
-            await ctx.send("Uh oh! Timezone not found 👀")
-            await ctx.send("You can check list of timezones using `luci timezones [continent name]`")
-            return
+        if (tz != "UTC"):
+            list_of_timezones = list(pytz.all_timezones)
+            
+            for i in range(len(list_of_timezones)):
+                if (tz.title() in list_of_timezones[i]):
+                    tz = list_of_timezones[i]
+                    break
+            else:
+                await ctx.send("Uh oh! Timezone not found 👀")
+                await ctx.send("You can check list of timezones using `luci timezones [continent name]`")
+                return
 
         query = f"DELETE FROM bday WHERE id = {member.id}"
 
