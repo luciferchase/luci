@@ -159,17 +159,18 @@ class Scheduler(commands.Cog):
 
         cursor.execute("SELECT * FROM bday")
         data = cursor.fetchall()
+        print(data)
 
-        for i in data:
-            tz_og = pytz.timezone(i[4])
-            bday = date(datetime.now().year, i[3], i[2])
+        # for i in data:
+        #     tz_og = pytz.timezone(i[4])
+        #     bday = date(datetime.now().year, i[3], i[2])
 
-            midnight = tz_og.localize(datetime.combine(bday, time()))
-            midnight_in_utc = midnight.astimezone(pytz.utc).strftime("%H:%M").split(":")
+        #     midnight = tz_og.localize(datetime.combine(bday, time()))
+        #     midnight_in_utc = midnight.astimezone(pytz.utc).strftime("%H:%M").split(":")
 
-            scheduler.add_job(
-                lambda: self.remind_bday(i), 
-                CronTrigger.from_crontab(f"{midnight_in_utc[1]} {midnight_in_utc[0]} {i[2]} {i[3]} *")
-            )
-        # # Start the scheduler
+        #     scheduler.add_job(
+        #         lambda: self.remind_bday(i), 
+        #         CronTrigger.from_crontab(f"{midnight_in_utc[1]} {midnight_in_utc[0]} {i[2]} {i[3]} *")
+        #     )
+        # Start the scheduler
         return scheduler
