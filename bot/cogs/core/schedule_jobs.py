@@ -150,6 +150,7 @@ class Scheduler(commands.Cog):
         # Each day at 0800 hrs
         # scheduler.add_job(self.schedule_ipl, CronTrigger.from_crontab("30 02 * * *"))
 
+        return
         # Bday
         # Set up database
         DATABASE_URL = os.environ["DATABASE_URL"]
