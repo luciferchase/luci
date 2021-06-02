@@ -157,7 +157,7 @@ class Scheduler(commands.Cog):
         dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
         cursor = dbcon.cursor()
 
-        data = self.cursor.execute("SELECT * FROM bday").fetchall()
+        data = cursor.execute("SELECT * FROM bday").fetchall()
 
         for i in data:
             tz_og = pytz.timezone(i[4])
