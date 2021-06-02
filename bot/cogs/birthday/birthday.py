@@ -42,7 +42,7 @@ class Birthday(commands.Cog):
 
         date = date.split("/")
         for i in range(2):
-            if (i == 0 and date[i] > 31 or date[i] < 0):
+            if (i == 0 and int(date[i]) > 31 or int(date[i]) < 0):
                 await ctx.send("Bruh! Fill a valid date")
             elif (i == 1 and date[i] > 12 or date[i] < 0):
                 await ctx.send("Bruh! Fill a valid date")
@@ -87,11 +87,9 @@ class Birthday(commands.Cog):
 
         date = date.split("/")
         for i in range(2):
-            if (date[i] == 1):
-                date[i] = "0" + date[i]
-            elif (i == 0 and date[i] > 31 or date[i] < 0):
+            if (i == 0 and int(date[i]) > 31 or int(date[i]) < 0):
                 await ctx.send("Bruh! Fill a valid date")
-            elif (i == 1 and date[i] > 12 or date[i] < 0):
+            elif (i == 1 and int(date[i]) > 12 or int(date[i]) < 0):
                 await ctx.send("Bruh! Fill a valid date")
         bday_date, bday_month = date
 
