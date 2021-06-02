@@ -43,6 +43,7 @@ class Birthday(commands.Cog):
         for i in range(2):
             if (date[i] == 1):
                 date[i] = "0" + date[i]
+        bday_date, bday_month = date
 
         list_of_timezones = list(pytz.all_timezones)
         
@@ -84,7 +85,8 @@ class Birthday(commands.Cog):
         for i in range(2):
             if (date[i] == 1):
                 date[i] = "0" + date[i]
-
+        bday_date, bday_month = date
+        
         list_of_timezones = list(pytz.all_timezones)
         
         for i in range(len(list_of_timezones)):
