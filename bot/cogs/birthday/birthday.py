@@ -79,7 +79,6 @@ class Birthday(commands.Cog):
             embed.add_field(name = "Timezone", value = tz)
 
             await ctx.send(embed = embed)
-            await ctx.send("If you want to edit, type `luci help bday set`")
 
     @bday.command(name = "edit")
     async def editbday(self, ctx, member: discord.Member, date, tz = "UTC"):
@@ -135,5 +134,3 @@ class Birthday(commands.Cog):
             embed.add_field(name = "Timezone", value = tz)
 
             await ctx.send(embed = embed)
-            await ctx.send("If you want to edit, type `luci help bday set`")
-
