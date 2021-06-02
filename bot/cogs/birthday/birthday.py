@@ -17,7 +17,7 @@ class Birthday(commands.Cog):
         self.cursor = self.dbcon.cursor()
 
         # Make a table if not already made
-        query = """CREATE TABLE bday IF NOT EXISTS (
+        query = """CREATE TABLE IF NOT EXISTS bday(
                 id          BIGINT  NOT NULL,
                 bday_date   INT     NOT NULL,
                 bday_month  INT     NOT NULL,
