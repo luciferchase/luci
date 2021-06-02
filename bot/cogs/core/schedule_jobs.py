@@ -154,24 +154,24 @@ class Scheduler(commands.Cog):
 
         # Bday
         # Set up database
-        # DATABASE_URL = os.environ["DATABASE_URL"]
+        DATABASE_URL = os.environ["DATABASE_URL"]
 
-        # dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
-        # cursor = dbcon.cursor()
+        dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
+        cursor = dbcon.cursor()
 
-        # cursor.execute("SELECT * FROM bday")
-        # data = cursor.fetchall()
+        cursor.execute("SELECT * FROM bday")
+        data = cursor.fetchall()
 
-        # for i in data:
-        #     tz_og = pytz.timezone(i[4])
-        #     bday = date(datetime.now().year, i[3], i[2])
+        for i in data:
+            tz_og = pytz.timezone(i[4])
+            bday = date(datetime.now().year, i[3], i[2])
 
-        #     midnight = tz_og.localize(datetime.combine(bday, time()))
-        #     midnight_in_utc = midnight.astimezone(pytz.utc).strftime("%H:%M").split(":")
+            midnight = tz_og.localize(datetime.combine(bday, time()))
+            midnight_in_utc = midnight.astimezone(pytz.utc).strftime("%H:%M").split(":")
 
-        #     scheduler.add_job(
-        #         lambda: self.remind_bday(i), 
-        #         CronTrigger.from_crontab(f"{midnight_in_utc[1]} {midnight_in_utc[0]} {i[2]} {i[3]} *")
-        #     )
-        # # Start the scheduler
+            scheduler.add_job(
+                lambda: self.remind_bday(i), 
+                CronTrigger.from_crontab(f"{midnight_in_utc[1]} {midnight_in_utc[0]} {i[2]} {i[3]} *")
+            )
+        # Start the scheduler
         return scheduler
