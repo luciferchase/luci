@@ -26,7 +26,6 @@ class Birthday(commands.Cog):
                 )"""
         self.cursor.execute(query)
         self.dbcon.commit()
-        print("bday Table created")
 
     @commands.guild_only()
     @commands.group(invoke_without_command = True)
