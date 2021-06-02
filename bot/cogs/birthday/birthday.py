@@ -34,9 +34,9 @@ class Birthday(commands.Cog):
         If you want to edit a bday type `luci bday edit`"""
         pass
 
-    @bday.command()
-    async def set(self, ctx, member: discord.Member, date, tz = "UTC"):
-        """Usage: luci setbday @Lucifer Chase 27/02 kolkata
+    @bday.command(name = ["set"])
+    async def setbday(self, ctx, member: discord.Member, date, tz = "UTC"):
+        """Usage: luci bday set @Lucifer Chase 27/02 kolkata
         If you don't care about the timezone thing leave it blank"""
 
         date = date.split("/")
@@ -75,9 +75,9 @@ class Birthday(commands.Cog):
             await ctx.send(embed = embed)
             await ctx.send("If you want to edit, type `luci help bday set`")
 
-    @bday.command()
-    async def set(self, ctx, member: discord.Member, date, tz = "UTC"):
-        """Usage: luci setbday @Lucifer Chase 27/02 kolkata
+    @bday.command(name = "edit")
+    async def editbday(self, ctx, member: discord.Member, date, tz = "UTC"):
+        """Usage: luci bday edit @Lucifer Chase 27/02 kolkata
         If you don't care about the timezone thing leave it blank"""
 
         date = date.split("/")
