@@ -48,16 +48,16 @@ class Fun(commands.Cog):
             await ctx.send(embed = embed)
 
     
-    # @commands.command()
-    # async def dogfact(self, ctx):
-    #     """Get a random fact about dogs. [Bit slow to run for the first time though (API limitation)]"""
-    #     async with self.session.get(
-    #         "https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=1") as response:
-    #         data = await response.json()
-    #         fact = data[0]["fact"]
+    @commands.command()
+    async def dogfact(self, ctx):
+        """Get a random fact about dogs. [Bit slow to run for the first time though (API limitation)]"""
+        async with self.session.get(
+            "https://dog-facts-api.herokuapp.com/api/v1/resources/dogs?number=1") as response:
+            data = await response.json()
+            fact = data[0]["fact"]
 
-    #         embed = discord.Embed(title = "Dogfact ❤", description = fact, color = 0x00ffff)
-    #         await ctx.send(embed = embed)
+            embed = discord.Embed(title = "Dogfact ❤", description = fact, color = 0x00ffff)
+            await ctx.send(embed = embed)
     
     
     @commands.guild_only()

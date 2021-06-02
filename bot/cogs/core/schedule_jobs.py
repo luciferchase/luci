@@ -123,6 +123,8 @@ class Scheduler(commands.Cog):
             channel = await self.bot.fetch_channel(640253357684162561)
         elif (data[1] == 738731754885480468):
             channel = await self.bot.fetch_channel(738731755342790673)
+        else:
+            channel = await self.bot.fetch_channel(847325243780366346)
         
         member = await self.bot.fetch_user(data[0])
         await channel.send(f"{member.mention} Happy Birthday! <a:nacho:839499460874862655>") 
