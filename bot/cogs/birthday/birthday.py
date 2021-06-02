@@ -19,6 +19,7 @@ class Birthday(commands.Cog):
         # Make a table if not already made
         query = """CREATE TABLE IF NOT EXISTS bday(
                 id          BIGINT  NOT NULL,
+                guild_id    BIGINT  NOT NULL,
                 bday_date   INT     NOT NULL,
                 bday_month  INT     NOT NULL,
                 tz          TEXT    NOT NULL
@@ -41,8 +42,10 @@ class Birthday(commands.Cog):
 
         date = date.split("/")
         for i in range(2):
-            if (date[i] == 1):
-                date[i] = "0" + date[i]
+            if (i == 0 and date[i] > 31 or date[i] < 0):
+                await ctx.send("Bruh! Fill a valid date")
+            elif (i == 1 and date[i] > 12 or date[i] < 0):
+                await ctx.send("Bruh! Fill a valid date")
         bday_date, bday_month = date
 
         list_of_timezones = list(pytz.all_timezones)
@@ -57,7 +60,7 @@ class Birthday(commands.Cog):
             return
 
         query = f"""INSERT INTO bday VALUES
-                ({member.id}, {bday_date}, {bday_month}, '{tz}')"""
+                ({member.id}, {member.guild.id}, {bday_date}, {bday_month}, '{tz}')"""
 
         try:
             self.cursor.execute(query)
@@ -85,6 +88,10 @@ class Birthday(commands.Cog):
         for i in range(2):
             if (date[i] == 1):
                 date[i] = "0" + date[i]
+            elif (i == 0 and date[i] > 31 or date[i] < 0):
+                await ctx.send("Bruh! Fill a valid date")
+            elif (i == 1 and date[i] > 12 or date[i] < 0):
+                await ctx.send("Bruh! Fill a valid date")
         bday_date, bday_month = date
 
         list_of_timezones = list(pytz.all_timezones)
@@ -108,7 +115,7 @@ class Birthday(commands.Cog):
             await ctx.send("Are you sure you have added your bday to the database in the first place?")
 
         query = f"""INSERT INTO bday VALUES
-                ({member.id}, {bday_date}, {bday_month}, '{tz}')"""
+                ({member.id}, {member.guild.id}, {bday_date}, {bday_month}, '{tz}')"""
 
         try:
             self.cursor.execute(query)
