@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+import asyncio
 import json
 
 
@@ -106,7 +107,7 @@ class Qtopia(commands.Cog):
     @commands.has_permissions(ban_members = True)
     async def unverified(self, ctx):
         """Give unverified role to all those who doesn't have any role"""
-        guild = await self.bot.fetch_guild(587139618999369739)
+        guild = await self.bot.fetch_guild(self.server_id)
 
         count = 0
         message_string = ""
@@ -162,8 +163,11 @@ class Qtopia(commands.Cog):
     # If the qtopia bot is down
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        if (member.guild.id != 587139618999369739):
+        if (member.guild.id != self.server_id):
             return
+
+        await asyncio.sleep(100)
+        guild = await self.bot.fetch_guild(self.server_id)
 
         roles = [role.name.lower() for role in member.roles]
         if ("unverified" not in roles):

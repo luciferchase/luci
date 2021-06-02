@@ -14,6 +14,7 @@ import psycopg2
 from cogs.aki import aki
 from cogs.avatar import avatar
 from cogs.bigmoji import bigmoji
+from cogs.birthday import birthday
 from cogs.botstatus import botstatus
 from cogs.comics import comics
 from cogs.conversationgames import conversationgames
@@ -60,6 +61,7 @@ logging.basicConfig(level = logging.WARNING)
 bot.add_cog(aki.Aki(bot))
 bot.add_cog(avatar.Avatar())
 bot.add_cog(bigmoji.Bigmoji(bot))
+bot.add_cog(birthday.Birthday())
 bot.add_cog(botstatus.Botstatus(bot))
 bot.add_cog(comics.Comics(bot))
 bot.add_cog(conversationgames.ConversationGames())

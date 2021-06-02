@@ -185,7 +185,7 @@ class Covid(commands.Cog):
     @covid.command()
     @commands.bot_has_permissions(embed_links = True)
     async def todaycases(self, ctx):
-        """Show the highest cases from countrys today."""
+        """Show the highest cases from countries today."""
 
         async with ctx.typing():
             data = await self.get(self.api + "/countries?sort = todayCases")
@@ -214,7 +214,7 @@ class Covid(commands.Cog):
     @covid.command()
     @commands.bot_has_permissions(embed_links = True)
     async def todaydeaths(self, ctx):
-        """Show the highest deaths from countrys today."""
+        """Show the highest deaths from countries today."""
 
         async with ctx.typing():
             data = await self.get(self.api + "/countries?sort = todayDeaths")
@@ -243,7 +243,7 @@ class Covid(commands.Cog):
     @covid.command()
     @commands.bot_has_permissions(embed_links = True)
     async def highestcases(self, ctx):
-        """Show the highest cases from countrys overall."""
+        """Show the highest cases from countries overall."""
 
         async with ctx.typing():
             data = await self.get(self.api + "/countries?sort = cases")
@@ -271,7 +271,7 @@ class Covid(commands.Cog):
     @covid.command()
     @commands.bot_has_permissions(embed_links = True)
     async def highestdeaths(self, ctx):
-        """Show the highest deaths from countrys overall."""
+        """Show the highest deaths from countries overall."""
         
         async with ctx.typing():
             data = await self.get(self.api + "/countries?sort = deaths")
