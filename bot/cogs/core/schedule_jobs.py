@@ -137,7 +137,7 @@ class Scheduler(commands.Cog):
         member = await self.bot.fetch_user(data[0])
         await channel.send(f"{member.mention} Happy Birthday! <a:nacho:839499460874862655>")
 
-    async def search_bday(self, scheduler):
+    async def search_bday(self):
         # Set up database
         DATABASE_URL = os.environ["DATABASE_URL"]
 
@@ -184,10 +184,7 @@ class Scheduler(commands.Cog):
         # scheduler.add_job(self.schedule_ipl, CronTrigger.from_crontab("30 02 * * *"))
 
         # Bday
-        scheduler.add_job(
-            lambda: await self.search_bday(scheduler),
-            CronTrigger.from_crontab("00 00 * * *")
-        )
+        scheduler.add_job(self.search_bday(), CronTrigger.from_crontab("00 00 * * *"))
             
         # Start the scheduler
         return scheduler
