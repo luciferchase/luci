@@ -35,6 +35,7 @@ class Scheduler(commands.Cog):
             post = None
             max_ups = 0
             for i in data:
+                i = i["data"]
                 if (i["ups"] > max_ups and not i["over_18"] \
                     and i["title"] != "REJOICE! FOR SIGN IMAGES ARE NOW BANNED"):
                     post = i
