@@ -185,7 +185,7 @@ class Scheduler(commands.Cog):
         # scheduler.add_job(self.schedule_ipl, CronTrigger.from_crontab("30 02 * * *"))
 
         # Bday
-        scheduler.add_job(self.search_bday, CronTrigger.from_crontab("00 00 * * *"))
+        scheduler.add_job(self.search_bday, CronTrigger.from_crontab("00 11 * * *"))
             
         # Start the scheduler
         return scheduler
