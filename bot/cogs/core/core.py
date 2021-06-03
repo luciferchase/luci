@@ -285,7 +285,7 @@ class Core(commands.Cog):
             user_perm = ctx.channel.permissions_for(user)
             if user_perm.kick_members or user_perm.ban_members:
                 if not user.bot:
-                    all_status[str(user.status)]["users"].append(f"**{user}**")
+                    all_status[str(user.status)]["users"].append(f"{user}")
 
         for i in all_status:
             if all_status[i]["users"]:
@@ -406,9 +406,7 @@ class Core(commands.Cog):
     # Dev commands, "owner only"
     @commands.is_owner()
     @commands.command(hidden = True)
-    async def sql(self, ctx, *query):
-        log = logging.getLogger("sql")
-        
+    async def sql(self, ctx, *query):        
         # Create a dm with me
         luci = self.bot.get_user(707557256220115035)
         dm = await luci.create_dm()
@@ -422,8 +420,8 @@ class Core(commands.Cog):
                 self.dbcon.commit()
             except:
                 pass
-        except:
-            log.error(f"{query} not executed successfully")
+        except Exception as e:
+            await ctx.send(f"```css\n{e}```")
             await ctx.send("Query not executed. Check logs.")
 
         try:
@@ -442,8 +440,8 @@ class Core(commands.Cog):
         try:
             self.dbcon.rollback()
             await ctx.send("Successfully rollbacked to last transaction")
-        except:
-            await ctx.send("Rollback not successfull. Check logs.")
+        except Exception as e:
+            await ctx.send(f"```css\n{e}```")
             return
 
     
@@ -453,12 +451,11 @@ class Core(commands.Cog):
         """Change bot name.
            Syntax: `luci botname <name>`
         """
-        log = logging.getLogger("botname")
         try:
             await self.bot.user.edit(username = name)
             await ctx.send("Bot name changed successfully")
-        except:
-            log.error("Cannot change bot name")
+        except Exception as e:
+            await ctx.send(f"```css\n{e}```")
             await ctx.send("Error. Bot name not changed. Check logs.")
 
     
@@ -467,13 +464,11 @@ class Core(commands.Cog):
     async def botavatar(self, ctx, which = ""):
         """Change bot name.
         """
-        log = logging.getLogger("botavatar")
-        
         with open(f"/app/bot/avatars/avatar{which}.png", "rb") as avatar:
             avatar_image = avatar.read()
             try:
                 await self.bot.user.edit(avatar = avatar_image)
                 await ctx.send("Bot avatar chaned successfully")
-            except:
-                log.error("Cannot change bot name")
+            except Exception as e:
+                await ctx.send(f"```css\n{e}```")
                 await ctx.send("Cannot change bot avatar. Check logs.")
