@@ -142,4 +142,5 @@ class Birthday(commands.Cog):
         self.cursor.execute("SELECT * FROM bday")
         data = self.cursor.fetchall()
 
-        await ctx.send("```css\n{}```".format(json.dumps(data, indent = 2)))
+        await ctx.send("```css\n{}```".format(json.dumps(data[len(data)//2:], indent = 2)))
+        await ctx.send("```css\n{}```".format(json.dumps(data[:len(data)//2], indent = 2)))
