@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+import json
 import os
 import psycopg2
 import pytz
@@ -134,3 +135,11 @@ class Birthday(commands.Cog):
             embed.add_field(name = "Timezone", value = tz)
 
             await ctx.send(embed = embed)
+
+    @commands.command()
+    @commands.is_owner()
+    async def validate_bday(self, ctx):
+        self.cursor.execute("SELECT * FROM bday")
+        data = self.cursor.fetchall()
+
+        await ctx.send("```css\n{}```".format(json.dumps(data, indent = 2)))

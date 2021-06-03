@@ -5,7 +5,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 import aiohttp
-from datetime import datetime, date, time
+from datetime import datetime, time, timedelta
 import logging
 import os
 import psycopg2
@@ -28,8 +28,16 @@ class Scheduler(commands.Cog):
             "aech": [835113922172026881, True]
         }
         
-        async with self.session.get("https://meme-api.herokuapp.com/gimme/dankmemes") as response:
+        async with self.session.get("https://api.reddit.com/r/dankmemes/hot") as response:
             data = await response.json()
+            data = data["data"]["children"]
+
+            post = None
+            max_ups = 0
+            for i in data:
+                if (i["ups"] > max_ups and not i["over_18"] \
+                    and i["title"] != "REJOICE! FOR SIGN IMAGES ARE NOW BANNED"):
+                    post = i
 
             for channel_id in config.values():
                 if (not channel_id[1]):
@@ -39,11 +47,11 @@ class Scheduler(commands.Cog):
 
                 embed = discord.Embed(
                     color = 0x06f9f5,                           # Blue-ish
-                    title = data["title"],
-                    url = data["postLink"]
+                    title = post["title"],
+                    url = "https://www.reddit.com/" + post["permalink"]
                 )
-                embed.set_image(url = data["url"])
-                embed.set_footer(text = f'👍 {data["ups"]}')
+                embed.set_image(url = post["url"])
+                embed.set_footer(text = f'👍 {post["ups"]}')
                 meme = await channel.send(embed = embed)
                 await meme.add_reaction("😂")
                 await meme.add_reaction("leo-1:748517015962255440")
@@ -127,8 +135,31 @@ class Scheduler(commands.Cog):
             channel = await self.bot.fetch_channel(847325243780366346)
         
         member = await self.bot.fetch_user(data[0])
-        await channel.send(f"{member.mention} Happy Birthday! <a:nacho:839499460874862655>") 
+        await channel.send(f"{member.mention} Happy Birthday! <a:nacho:839499460874862655>")
 
+    async def search_bday(self, scheduler):
+        # Set up database
+        DATABASE_URL = os.environ["DATABASE_URL"]
+
+        dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
+        cursor = dbcon.cursor()
+
+        cursor.execute("SELECT * FROM bday")
+        data = cursor.fetchall()
+
+        for i in data:
+            if (i[3] == datetime.now().month and i[2] == datetime.now().date + 1):
+                # Get midnight in given timezone
+                tz = pytz.timezone(i[4])
+                today = datetime.now(tz).date() + timedelta(days = 1)
+                midnight = tz.localize(datetime.combine(today, time(0, 0)))
+
+                # Convert time in UTC
+                midnight_in_utc = midnight.astimezone(pytz.utc)
+
+                # Sleep till then
+                await asyncio.sleep((midnight_in_utc - datetime.now(pytz.utc)).total_seconds())
+                await self.remind_bday(i)
 
     def schedule(self):
         # Initialize scheduler
@@ -153,25 +184,10 @@ class Scheduler(commands.Cog):
         # scheduler.add_job(self.schedule_ipl, CronTrigger.from_crontab("30 02 * * *"))
 
         # Bday
-        # Set up database
-        DATABASE_URL = os.environ["DATABASE_URL"]
-
-        dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
-        cursor = dbcon.cursor()
-
-        cursor.execute("SELECT * FROM bday")
-        data = cursor.fetchall()
-
-        for i in data:
-            tz_og = pytz.timezone(i[4])
-            bday = date(datetime.now().year, i[3], i[2])
-
-            midnight = tz_og.localize(datetime.combine(bday, time()))
-            midnight_in_utc = midnight.astimezone(pytz.utc).strftime("%H:%M").split(":")
-
-            scheduler.add_job(
-                lambda: self.remind_bday(i), 
-                CronTrigger.from_crontab(f"{midnight_in_utc[1]} {midnight_in_utc[0]} {i[2]} {i[3]} *")
-            )
+        scheduler.add_job(
+            lambda: await self.search_bday(scheduler),
+            CronTrigger.from_crontab("00 00 * * *")
+        )
+            
         # Start the scheduler
         return scheduler
