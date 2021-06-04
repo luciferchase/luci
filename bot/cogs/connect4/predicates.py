@@ -1,9 +1,7 @@
-"""From red"""
+from __future__ import annotations
 
 import discord
 from discord.ext import commands
-
-from __future__ import annotations
 
 import re
 from typing import Callable, ClassVar, List, Optional, Pattern, Sequence, Tuple, Union, cast
