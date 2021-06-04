@@ -1,3 +1,9 @@
+"""
+Originally: https://github.com/flaree/flare-cogs/blob/master/covid/covid.py (Thanks mate!)
+Heavily altered to fit my needs
+"""
+
+
 import discord
 from discord.ext import commands
 

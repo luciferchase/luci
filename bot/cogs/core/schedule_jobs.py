@@ -149,7 +149,7 @@ class Scheduler(commands.Cog):
         data = cursor.fetchall()
 
         for i in data:
-            if (i[3] == int(datetime.now().strftime("%d")) and i[2] == int(datetime.now().strftime("%d")) + 1):
+            if (i[3] == int(datetime.now().strftime("%m")) and i[2] == int(datetime.now().strftime("%d")) + 1):
                 # Get midnight in given timezone
                 tz = pytz.timezone(i[4])
                 today = datetime.now(tz).date() + timedelta(days = 1)
@@ -168,10 +168,10 @@ class Scheduler(commands.Cog):
         schedule_log.setLevel(logging.WARNING)
 
         job_defaults = {
-            "coalesce": True,  # Multiple missed triggers within the grace time will only fire once
-            "max_instances": 5,  # This is probably way too high, should likely only be one
-            "misfire_grace_time": 15,  # 15 seconds ain't much, but it's honest work
-            "replace_existing": True,  # Very important for persistent data
+            "coalesce": True,           # Multiple missed triggers within the grace time will only fire once
+            "max_instances": 5,         # This is probably way too high, should likely only be one
+            "misfire_grace_time": 15,   # 15 seconds ain't much, but it's honest work
+            "replace_existing": True,   # Very important for persistent data
         }
 
         scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)

@@ -85,6 +85,8 @@ class Qtopia(commands.Cog):
     @commands.has_permissions(ban_members = True)
     async def log(self, ctx, channel, number = 1):
         """See details of upto last 10 annon messages. Please don't abuse."""
+        if (ctx.guild.id not in [self.server_id]):
+            return
 
         with open("/app/bot/cogs/qtopia/logs.json", "r") as logs:
             data = json.load(logs)
@@ -133,7 +135,7 @@ class Qtopia(commands.Cog):
     @commands.has_permissions(ban_members = True)
     async def norole(self, ctx):
         """Check members who don't have any roles"""
-        guild = await self.bot.fetch_guild(587139618999369739)
+        guild = await self.bot.fetch_guild(self.server_id)
 
         count = 0
         message_string = ""

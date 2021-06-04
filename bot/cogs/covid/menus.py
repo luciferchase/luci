@@ -1,3 +1,8 @@
+"""
+Originally: https://github.com/flaree/flare-cogs/blob/master/covid/covid.py (Thanks mate!)
+Heavily altered to fit my needs
+"""
+
 import discord
 from discord.ext import commands
 
@@ -7,7 +12,7 @@ import datetime
 from typing import Any, Dict, Iterable, Optional, Union
 import validators
 
-from cogs.covid import menu_class as menus
+import bot.utils.menus as menus
 
 def humanize_number(val: Union[int, float]) -> str:
     """

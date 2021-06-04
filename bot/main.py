@@ -10,7 +10,6 @@ import requests
 import psycopg2
 
 # Install all cogs
-# from cogs.afk import afk
 from cogs.aki import aki
 from cogs.bigmoji import bigmoji
 from cogs.birthday import birthday
@@ -29,7 +28,6 @@ from cogs.photo import photo
 from cogs.starboard import starboard
 from cogs.qtopia import qtopia
 from cogs.quiz import quiz
-# from cogs.testing import testing
 from cogs.tictactoe import tictactoe
 from cogs.timezone import timezone
 
@@ -56,7 +54,6 @@ bot = commands.Bot(
 logging.basicConfig(level = logging.WARNING)
 
 # Register Cogs
-# bot.add_cog(afk.AFK(bot))
 bot.add_cog(aki.Aki(bot))
 bot.add_cog(bigmoji.Bigmoji(bot))
 bot.add_cog(birthday.Birthday())
@@ -75,7 +72,6 @@ bot.add_cog(photo.Photo())
 bot.add_cog(starboard.Starboard(bot))
 bot.add_cog(qtopia.Qtopia(bot))
 bot.add_cog(quiz.Quiz(bot))
-# bot.add_cog(testing.Testing())
 bot.add_cog(tictactoe.TTT(bot))
 bot.add_cog(timezone.Timezone())
 

@@ -96,6 +96,11 @@ class Birthday(commands.Cog):
 
             await ctx.send(embed = embed)
 
+    @bday.command(name = "delete")
+    async def bdaydelete(self, ctx):
+        self.cursor.execute("DELETE FROM bday WHERE id = {}".format(ctx.author.id))
+        self.dbcon.commit()
+
     @commands.command()
     @commands.is_owner()
     async def showbday(self, ctx):
@@ -104,3 +109,13 @@ class Birthday(commands.Cog):
 
         await ctx.send("```css\n{}```".format(json.dumps(data[len(data)//2:], indent = 1)))
         await ctx.send("```css\n{}```".format(json.dumps(data[:len(data)//2], indent = 1)))
+
+        not_redundant = []
+        redundant = []
+        for i in data:
+            if (i[0] not in not_redundant):
+                not_redundant.append(i[0])
+            else:
+                redundant.append(i[0])
+
+        await ctx.send("```css\n{}```".format(json.dumps(redundant, indent = 2)))

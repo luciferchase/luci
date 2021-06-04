@@ -350,7 +350,7 @@ class Mod(commands.Cog):
     
     @unlock.command()
     async def server(self, ctx, server: discord.Guild = None, *, reason = None):
-        """Unlock the server. Sed lyf."""
+        """Unlock the server. Not sed anymore!"""
         
         if server is None: 
             server = ctx.guild

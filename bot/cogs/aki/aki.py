@@ -1,10 +1,16 @@
+"""
+Originally: https://github.com/phenom4n4n/phen-cogs/blob/master/aki/aki.py (Thanks mate!)
+Heavily altered to fit my needs
+"""
+
+
 import akinator
 from akinator.async_aki import Akinator
 
 import discord
 from discord.ext import commands
 
-import cogs.aki.menus as menus
+import bot.utils.menus as menus
 
 
 class AkiMenu(menus.Menu):

@@ -3,6 +3,7 @@ from discord.ext import commands
 
 import aiohttp
 from datetime import datetime
+import re
 
 class Fun(commands.Cog):
     """Various fun commands"""
@@ -36,6 +37,24 @@ class Fun(commands.Cog):
 
         await ctx.send(f"```ml\n{mssg_string}```")
 
+    @commands.command(aliases = ["av"])
+    async def avatar(self, ctx, *, user: discord.Member = None):
+        """Returns user avatar URL.
+
+        User argument can be user mention, nickname, username, user ID.
+        Default to yourself when no argument is supplied.
+        """
+        author = ctx.author
+
+        if not user:
+            user = author
+
+        if user.is_avatar_animated():
+            url = user.avatar_url_as(format = "gif")
+        if not user.is_avatar_animated():
+            url = user.avatar_url_as(static_format = "png")
+
+        await ctx.send("{}'s Avatar URL : {}".format(user.name, url))
     
     @commands.command()
     async def catfact(self, ctx):
@@ -47,7 +66,6 @@ class Fun(commands.Cog):
             embed = discord.Embed(title = "Catfact ❤", description = fact, color = 0x00ffff)
             await ctx.send(embed = embed)
 
-    
     @commands.command()
     async def dogfact(self, ctx):
         """Get a random fact about dogs. [Bit slow to run for the first time though (API limitation)]"""
@@ -58,7 +76,86 @@ class Fun(commands.Cog):
 
             embed = discord.Embed(title = "Dogfact ❤", description = fact, color = 0x00ffff)
             await ctx.send(embed = embed)
-    
+
+    @commands.command(aliases = ["roast"])
+    async def insult(self, ctx, member: discord.Member = None):
+        """Insult someone. They are really evil though, take care."""
+
+        if (member is None):
+            member = ctx.author
+
+        async with self.session.get("https://evilinsult.com/generate_insult.php") as response:
+            text = await response.text()
+
+            embed = discord.Embed(
+                title = f"{ctx.author.name} insulted {member.name}",
+                description = text,
+                color = 0xf34949
+            )
+            await ctx.send(embed = embed)
+
+    async def _check_if_down(self, url_to_check):
+        re_compiled = re.compile(r"https?://(www\.)?")
+        url = re_compiled.sub("", url_to_check).strip().strip("/")
+
+        url = f"https://isitdown.site/api/v3/{url}"
+        
+        # log.debug(url)
+        async with self.session.get(url) as response:
+            assert response.status == 200
+            resp = await response.json()
+        return resp, url
+
+    @commands.command(alias=["iid"])
+    async def isitdown(self, ctx: commands.Context, url_to_check):
+        """
+        Check if the provided url is down
+        Alias: iid
+        """
+        try:
+            resp, url = await self._check_if_down(url_to_check)
+        except AssertionError:
+            await ctx.send("Invalid URL provided. Make sure not to include `https://`")
+            return
+
+        # log.debug(resp)
+        if resp["isitdown"]:
+            await ctx.send(f"{url} is DOWN!")
+        else:
+            await ctx.send(f"{url} is UP!")
+
+    @commands.command(aliases = ["saabit"])
+    async def joke(self, ctx):
+        async with self.session.get("https://icanhazdadjoke.com/", 
+            headers = {"Accept": "application/json"}) as response:
+            data = await response.json()
+
+            if (data["status"] > 200):
+                await ctx.send(f"Uh Oh! I faced some issue <a:awkward1:839499334555140157>")
+                return
+
+            await ctx.send(f"> {data['joke']}")
+            await ctx.send("<:eZZ:791575889526652949>")
+
+    @commands.guild_only()
+    @commands.command(aliases = ["n"])
+    async def nitro(self, ctx, emoji_name):
+        """Send an animated emoji even if you don't have nitro. \
+        Send just its name and the bot will send the emote.
+        Usage: `luci n nacho`"""
+
+        # # Delete original message
+        # await ctx.message.delete()
+
+        # First get all the emojies the bot has access and then Send emoji
+        emoji_found = False
+        for emoji in self.bot.emojis:
+            if (emoji.name in emoji_name):
+                await ctx.send(emoji.url)
+                emoji_found = True
+
+        if (not emoji_found):
+            await ctx.send("Emoji not found <a:awkward1:839499334555140157>")
     
     @commands.guild_only()
     @commands.command()
@@ -131,7 +228,6 @@ class Fun(commands.Cog):
             await poll_embed.add_reaction("👍")
             await poll_embed.add_reaction("👎")
 
-    
     @commands.command(aliases = ["emojify", "cry"])
     async def shout(self, ctx, *message):
         """Convert a message into emojies"""
@@ -149,45 +245,6 @@ class Fun(commands.Cog):
             final_message.append(message_string)
 
         await ctx.send(" ".join(final_message))
-
-
-    @commands.command(aliases = ["roast"])
-    async def insult(self, ctx, member: discord.Member = None):
-        """Insult someone. They are really evil though, take care."""
-
-        if (member is None):
-            member = ctx.author
-
-        async with self.session.get("https://evilinsult.com/generate_insult.php") as response:
-            text = await response.text()
-
-            embed = discord.Embed(
-                title = f"{ctx.author.name} insulted {member.name}",
-                description = text,
-                color = 0xf34949
-            )
-            await ctx.send(embed = embed)
-
-
-    @commands.guild_only()
-    @commands.command(aliases = ["n"])
-    async def nitro(self, ctx, emoji_name):
-        """Send an animated emoji even if you don't have nitro. \
-        Send just its name and the bot will send the emote.
-        Usage: `luci n nacho`"""
-
-        # # Delete original message
-        # await ctx.message.delete()
-
-        # First get all the emojies the bot has access and then Send emoji
-        emoji_found = False
-        for emoji in self.bot.emojis:
-            if (emoji.name in emoji_name):
-                await ctx.send(emoji.url)
-                emoji_found = True
-
-        if (not emoji_found):
-            await ctx.send("Emoji not found <a:awkward1:839499334555140157>")
 
     @commands.command()
     @commands.cooldown(rate=1, per=2.0, type = commands.BucketType.user)
@@ -214,35 +271,3 @@ class Fun(commands.Cog):
                 definition += "..."
 
             await ctx.send(f"📚 Definitions for **{result['word']}**```fix\n{definition}```")
-
-    @commands.command(aliases = ["saabit"])
-    async def joke(self, ctx):
-        async with self.session.get("https://icanhazdadjoke.com/", 
-            headers = {"Accept": "application/json"}) as response:
-            data = await response.json()
-
-            if (data["status"] > 200):
-                await ctx.send(f"Uh Oh! I faced some issue <a:awkward1:839499334555140157>")
-                return
-
-            await ctx.send(f"> {data['joke']}")
-            await ctx.send("<:eZZ:791575889526652949>")
-
-    @commands.command(aliases = ["av"])
-    async def avatar(self, ctx, *, user: discord.Member = None):
-        """Returns user avatar URL.
-
-        User argument can be user mention, nickname, username, user ID.
-        Default to yourself when no argument is supplied.
-        """
-        author = ctx.author
-
-        if not user:
-            user = author
-
-        if user.is_avatar_animated():
-            url = user.avatar_url_as(format = "gif")
-        if not user.is_avatar_animated():
-            url = user.avatar_url_as(static_format = "png")
-
-        await ctx.send("{}'s Avatar URL : {}".format(user.name, url))

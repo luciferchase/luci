@@ -17,6 +17,13 @@ class Botstatus(commands.Cog):
         self.dbcon = psycopg2.connect(DATABASE_URL, sslmode = "require")
         self.cursor = self.dbcon.cursor()
 
+        query = """CREATE TABLE IF NOT EXISTS botstatus(
+                status      TEXT    NOT NULL,
+                activity    TEXT,
+                name        TEXT)"""
+        self.cursor.execute(query)
+        self.dbcon.commit()
+
     async def set_botstatus_on_ready(self):
         # Change botstatus from datatbase
         try:
@@ -62,13 +69,6 @@ class Botstatus(commands.Cog):
         status, activity, *text = query
         text = " ".join(text)
 
-        query = """CREATE TABLE IF NOT EXISTS botstatus(
-                status      TEXT    NOT NULL,
-                activity    TEXT,
-                name        TEXT)"""
-        self.cursor.execute(query)
-        self.dbcon.commit()
-
         self.cursor.execute("DELETE FROM botstatus")
         self.dbcon.commit()
 
@@ -96,7 +96,6 @@ class Botstatus(commands.Cog):
 
         try:
             await self.bot.change_presence(status = status_class[status], activity = activity_type[activity])
-            print("Activity set successfully")
             await ctx.send("Activity set successfully")
         except Exception as e:
             await ctx.send(f"```css\n{e}```")
