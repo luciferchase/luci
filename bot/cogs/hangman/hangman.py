@@ -6,6 +6,7 @@ Heavily altered to fit my needs
 import discord
 from discord.ext import commands
 
+import asyncio
 from collections import defaultdict
 from random import randint
 from typing import Union

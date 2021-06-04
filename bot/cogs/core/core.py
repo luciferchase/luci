@@ -293,7 +293,7 @@ class Core(commands.Cog):
         await ctx.send(f"Mods in **{ctx.guild.name}**\n{message}")
 
     @commands.command(aliases = ["uinfo"])
-    async def userinfo(self, ctx, *, name=""):
+    async def userinfo(self, ctx, *, name = ""):
         """Get user info. Ex: luci info @user"""
 
         if name:
@@ -306,7 +306,7 @@ class Core(commands.Cog):
             if not user:
                 user = self.bot.get_user(int(name))
             if not user:
-                await ctx.send('luci Could not find user.')
+                await ctx.send("@luci Could not find user.")
                 return
         else:
             user = ctx.message.author
@@ -317,23 +317,23 @@ class Core(commands.Cog):
                 role = "N/A"
             voice_state = None if not user.voice else user.voice.channel
         
-        embed = discord.Embed(timestamp=ctx.message.created_at, colour=0xf34949)
-        embed.add_field(name='User ID', value=user.id, inline=True)
+        embed = discord.Embed(timestamp = ctx.message.created_at, colour = 0xf34949)
+        embed.add_field(name = 'User ID', value = user.id, inline = True)
         
         if isinstance(user, discord.Member):
-            embed.add_field(name='Nick', value=user.nick, inline=True)
-            embed.add_field(name='Status', value=user.status, inline=True)
-            embed.add_field(name='In Voice', value=voice_state, inline=True)
-            embed.add_field(name='Game', value=user.activity, inline=True)
-            embed.add_field(name='Highest Role', value=role, inline=True)
-        embed.add_field(name='Account Created', value=user.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
+            embed.add_field(name = 'Nick', value = user.nick, inline = True)
+            embed.add_field(name = 'Status', value = user.status, inline = True)
+            embed.add_field(name = 'In Voice', value = voice_state, inline = True)
+            embed.add_field(name = 'Game', value = user.activity, inline = True)
+            embed.add_field(name = 'Highest Role', value = role, inline = True)
+        embed.add_field(name = 'Account Created', value = user.created_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
         
         if isinstance(user, discord.Member):
-            embed.add_field(name='Join Date', value=user.joined_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
-        embed.set_thumbnail(url=user.avatar_url)
-        embed.set_author(name=user)
+            embed.add_field(name = 'Join Date', value = user.joined_at.__format__('%A, %d. %B %Y @ %H:%M:%S'))
+        embed.set_thumbnail(url = user.avatar_url)
+        embed.set_author(name = user)
         
-        await ctx.send(embed=embed)
+        await ctx.send(embed = embed)
  
     @commands.group(aliases = ["sinfo"])
     @commands.guild_only()
@@ -346,9 +346,9 @@ class Core(commands.Cog):
             embed = discord.Embed()
 
             if ctx.guild.icon:
-                embed.set_thumbnail(url=ctx.guild.icon_url)
+                embed.set_thumbnail(url = ctx.guild.icon_url)
             if ctx.guild.banner:
-                embed.set_image(url=ctx.guild.banner_url_as(format="png"))
+                embed.set_image(url = ctx.guild.banner_url_as(format = "png"))
 
             embed.add_field(name = "Server Name", value = ctx.guild.name, inline = True)
             embed.add_field(name = "Server ID", value = ctx.guild.id, inline = True)
@@ -389,9 +389,9 @@ class Core(commands.Cog):
         embed.add_field(name = "Developer", value = "luciferchase#6310")
         embed.add_field(name = "Library", value = "discord.py", inline = True)
         embed.add_field(
-            name="Servers", 
-            value=f"{len(ctx.bot.guilds)} ( avg: {avgmembers:,.2f} users/server )", 
-            inline=True
+            name = "Servers", 
+            value = f"{len(ctx.bot.guilds)} ( avg: {avgmembers:,.2f} users/server )", 
+            inline = True
         )
         embed.add_field(
             name = "Commands loaded", 

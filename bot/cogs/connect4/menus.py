@@ -9,7 +9,7 @@ from cogs.connect4.core import Connect4Game
 
 class Connect4Menu(menus.Menu):
     CANCEL_GAME_EMOJI = "🚫"
-    DIGITS = [str(digit) + "\N{combining enclosing keycap}" for digit in range(1, 8)]
+    DIGITS = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"]
     GAME_TIMEOUT_THRESHOLD = 60
 
     def __init__(self, cog, game: Connect4Game):

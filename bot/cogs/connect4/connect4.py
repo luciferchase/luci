@@ -12,9 +12,9 @@ from babel.numbers import format_decimal
 from collections import Counter
 from typing import Union
 
+from bot.utils.predicates import MessagePredicate
 from cogs.connect4.core import Connect4Game
 from cogs.connect4.menus import get_menu
-from cogs.connect4.predicates import MessagePredicate
 
 
 def humanize_number(val: Union[int, float]) -> str:
@@ -68,8 +68,8 @@ class Connect4(commands.Cog):
         )
 
         try:
-            pred = MessagePredicate.yes_or_no(ctx, user=user)
-            await ctx.bot.wait_for("message", check=pred, timeout=60)
+            pred = MessagePredicate.yes_or_no(ctx, user = user)
+            await ctx.bot.wait_for("message", check = pred, timeout = 60)
         except asyncio.TimeoutError:
             await ctx.send("Game offer declined, cancelling.")
             return False

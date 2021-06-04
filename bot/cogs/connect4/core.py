@@ -7,7 +7,7 @@ from typing import Union
 class Board(list):
     __slots__ = frozenset({"width", "height"})
 
-    def __init__(self, width, height, player1_name=None, player2_name=None):
+    def __init__(self, width, height, player1_name = None, player2_name = None):
         self.width = width
         self.height = height
         for _ in range(width):

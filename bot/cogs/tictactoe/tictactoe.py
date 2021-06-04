@@ -6,7 +6,7 @@ from discord.ext import commands
 
 import logging
 
-from cogs.tictactoe.predicates import ReactionPredicate
+from bot.utils.predicates import ReactionPredicate
 
 
 log = logging.getLogger("red.aikaterna.ttt")
@@ -23,7 +23,7 @@ class TTT(commands.Cog):
 
 	@commands.bot_has_permissions(add_reactions=True)
 	@commands.max_concurrency(1, commands.BucketType.user)
-	@commands.command()
+	@commands.command(aliases = ["tictactoe"])
 	async def ttt(self, ctx, move=""):
 		"""Play the classic Tic Tac Toe game against @luci"""
 		await self.ttt_new(ctx.author, ctx.channel)
