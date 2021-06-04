@@ -19,6 +19,7 @@ from cogs.conversationgames import conversationgames
 from cogs.core import core, schedule_jobs
 from cogs.covid import covid
 from cogs.fun import fun
+from cogs.hangman import hangman
 # from cogs.ipl import ipl
 from cogs.math import math
 from cogs.meme import meme
@@ -63,6 +64,7 @@ bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(core.Core(bot))
 bot.add_cog(covid.Covid(bot))
 bot.add_cog(fun.Fun(bot))
+bot.add_cog(hangman.Hangmen(bot))
 # bot.add_cog(ipl.IPL(bot))
 bot.add_cog(math.Math(bot))
 bot.add_cog(meme.Meme())
