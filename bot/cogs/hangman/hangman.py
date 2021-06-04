@@ -256,6 +256,7 @@ class Hangman(commands.Cog):
             letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[self.letters.index(str(emoji))]
             await self._guessletter(letter, message)
             await message.remove_reaction(emoji, user)
+            await asyncio.sleep(1)
             await message.remove_reaction(emoji, self.bot.user)
 
         if str(emoji) in self.navigate:

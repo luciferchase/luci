@@ -15,6 +15,7 @@ from cogs.bigmoji import bigmoji
 from cogs.birthday import birthday
 from cogs.botstatus import botstatus
 from cogs.comics import comics
+from cogs.connect4 import connect4
 from cogs.conversationgames import conversationgames
 from cogs.core import core, schedule_jobs
 from cogs.covid import covid
@@ -60,6 +61,7 @@ bot.add_cog(bigmoji.Bigmoji(bot))
 bot.add_cog(birthday.Birthday())
 bot.add_cog(botstatus.Botstatus(bot))
 bot.add_cog(comics.Comics(bot))
+bot.add_cog(connect4.Connect4(bot))
 bot.add_cog(conversationgames.ConversationGames())
 bot.add_cog(core.Core(bot))
 bot.add_cog(covid.Covid(bot))
