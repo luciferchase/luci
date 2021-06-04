@@ -149,7 +149,7 @@ class Scheduler(commands.Cog):
         data = cursor.fetchall()
 
         for i in data:
-            if (i[3] == datetime.now().month and i[2] == datetime.now().date + 1):
+            if (i[3] == int(datetime.now().strftime("%d")) and i[2] == int(datetime.now().strftime("%d")) + 1):
                 # Get midnight in given timezone
                 tz = pytz.timezone(i[4])
                 today = datetime.now(tz).date() + timedelta(days = 1)
@@ -185,7 +185,7 @@ class Scheduler(commands.Cog):
         # scheduler.add_job(self.schedule_ipl, CronTrigger.from_crontab("30 02 * * *"))
 
         # Bday
-        scheduler.add_job(self.search_bday, CronTrigger.from_crontab("00 11 * * *"))
+        scheduler.add_job(self.search_bday, CronTrigger.from_crontab("00 00 * * *"))
             
         # Start the scheduler
         return scheduler

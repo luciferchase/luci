@@ -181,7 +181,7 @@ class Fun(commands.Cog):
 
         # First get all the emojies the bot has access and then Send emoji
         emoji_found = False
-        for emoji in ctx.guild.emojis:
+        for emoji in self.bot.emojis:
             if (emoji.name in emoji_name):
                 await ctx.send(emoji.url)
                 emoji_found = True
@@ -227,3 +227,22 @@ class Fun(commands.Cog):
 
             await ctx.send(f"> {data['joke']}")
             await ctx.send("<:eZZ:791575889526652949>")
+
+    @commands.command(aliases = ["av"])
+    async def avatar(self, ctx, *, user: discord.Member = None):
+        """Returns user avatar URL.
+
+        User argument can be user mention, nickname, username, user ID.
+        Default to yourself when no argument is supplied.
+        """
+        author = ctx.author
+
+        if not user:
+            user = author
+
+        if user.is_avatar_animated():
+            url = user.avatar_url_as(format = "gif")
+        if not user.is_avatar_animated():
+            url = user.avatar_url_as(static_format = "png")
+
+        await ctx.send("{}'s Avatar URL : {}".format(user.name, url))
