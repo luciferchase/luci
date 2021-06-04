@@ -1,3 +1,8 @@
+"""
+Originally: https://github.com/bobloy/Fox-V3/blob/master/hangman/hangman.py (Thanks mate!)
+Heavily altered to fit my needs
+"""
+
 import discord
 from discord.ext import commands
 
