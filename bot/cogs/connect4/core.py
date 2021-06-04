@@ -151,10 +151,7 @@ class Connect4Game:
         return status + "\n"
 
     def _get_instructions(self):
-        instructions = "".join(
-            str(i) + "\N{combining enclosing keycap}" for i in range(1, self.board.width + 1)
-        )
-
+        instructions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"]
         return instructions + "\n"
 
     def _format_row(self, y):
