@@ -24,8 +24,8 @@ class Scheduler(commands.Cog):
     # Scheduled events
     async def schedule_meme(self):
         config = {
-            "qtopia": [587164191710773268, True],
-            "aech": [835113922172026881, True]
+            "qtopia": [587164191710773268, True]
+            # "aech": [835113922172026881, True]
         }
         
         async with self.session.get("https://api.reddit.com/r/dankmemes/hot") as response:
@@ -59,8 +59,8 @@ class Scheduler(commands.Cog):
 
     async def schedule_wallpaper(self):
         config = {
-            "qtopia": [587156041716727848, True],
-            "aech": [738731755569414197, True]
+            "qtopia": [587156041716727848, True]
+            # "aech": [738731755569414197, True]
         }
 
         api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US"
@@ -130,10 +130,10 @@ class Scheduler(commands.Cog):
     async def remind_bday(self, data):
         if (data[1] == 587139618999369739):
             channel = await self.bot.fetch_channel(640253357684162561)
-        elif (data[1] == 738731754885480468):
-            channel = await self.bot.fetch_channel(738731755342790673)
-        else:
-            channel = await self.bot.fetch_channel(847325243780366346)
+        # elif (data[1] == 738731754885480468):
+        #     channel = await self.bot.fetch_channel(738731755342790673)
+        # else:
+        #     channel = await self.bot.fetch_channel(847325243780366346)
         
         member = await self.bot.fetch_user(data[0])
         await channel.send(f"{member.mention} Happy Birthday! <a:nacho:839499460874862655>")

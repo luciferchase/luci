@@ -38,63 +38,63 @@ class Core(commands.Cog):
         # Sync slash commands
         # await slash.sync_all_commands(self.bot)
 
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
-        if (member.guild.id != 738731754885480468):
-            return
+    # @commands.Cog.listener()
+    # async def on_member_join(self, member):
+    #     if (member.guild.id != 738731754885480468):
+    #         return
 
-        channel = member.guild.system_channel
+    #     channel = member.guild.system_channel
             
-        if channel is not None:
-            await channel.send(member.mention)
+    #     if channel is not None:
+    #         await channel.send(member.mention)
             
-            embed = discord.Embed(
-                title = f"Welcome {member.name}", 
-                description = f"Aap aayen hai {member.guild.name} ki bagiyaaan mein \n"
-                                "phool khile hai gulshan gulshan \n"
-                                "Phulllll khile hai gulshan gulshaannnnnnnnn \n"
-                                "Phool khile hai iss bagiyaan mein \n"
-                                "Aap aayein hai gulshan gulshan",
-                color = 0xf34949
-            ) 
-            embed.set_thumbnail(url = member.guild.icon_url)
-            embed.set_image(url = member.avatar_url)
-            await channel.send(embed = embed)
+    #         embed = discord.Embed(
+    #             title = f"Welcome {member.name}", 
+    #             description = f"Aap aayen hai {member.guild.name} ki bagiyaaan mein \n"
+    #                             "phool khile hai gulshan gulshan \n"
+    #                             "Phulllll khile hai gulshan gulshaannnnnnnnn \n"
+    #                             "Phool khile hai iss bagiyaan mein \n"
+    #                             "Aap aayein hai gulshan gulshan",
+    #             color = 0xf34949
+    #         ) 
+    #         embed.set_thumbnail(url = member.guild.icon_url)
+    #         embed.set_image(url = member.avatar_url)
+    #         await channel.send(embed = embed)
 
-    @commands.Cog.listener()
-    async def on_member_remove(self, member):
-        if (member.guild.id != 738731754885480468):
-            return
+    # @commands.Cog.listener()
+    # async def on_member_remove(self, member):
+    #     if (member.guild.id != 738731754885480468):
+    #         return
         
-        channel = member.guild.system_channel
+    #     channel = member.guild.system_channel
             
-        if channel is not None:
-            embed = discord.Embed(
-                title = "Sed lyf",
-                description = f"{member.name} has left {member.guild.name} 🥺",
-                color = 0xf34949
-            )
-            embed.set_thumbnail(url = member.guild.icon_url)
-            embed.set_image(url = member.avatar_url)
-            await channel.send(embed = embed)
+    #     if channel is not None:
+    #         embed = discord.Embed(
+    #             title = "Sed lyf",
+    #             description = f"{member.name} has left {member.guild.name} 🥺",
+    #             color = 0xf34949
+    #         )
+    #         embed.set_thumbnail(url = member.guild.icon_url)
+    #         embed.set_image(url = member.avatar_url)
+    #         await channel.send(embed = embed)
 
-    @commands.Cog.listener()
-    async def on_invite_create(self, invite):
-        for guild in self.bot.guilds:
-            if (guild.id not in [738731754885480468]):
-                return
+    # @commands.Cog.listener()
+    # async def on_invite_create(self, invite):
+    #     for guild in self.bot.guilds:
+    #         if (guild.id not in [738731754885480468]):
+    #             return
 
-        # Create a dm with me
-        luci = self.bot.get_user(707557256220115035)
-        dm = await luci.create_dm()
+    #     # Create a dm with me
+    #     luci = self.bot.get_user(707557256220115035)
+    #     dm = await luci.create_dm()
 
-        embed = discord.Embed(
-            title = f"Invite Created by {invite.inviter}",
-            description = f"Channel: {invite.channel}",
-            color = 0xf34949
-        )
-        embed.add_footer(text = invite.created_at)
-        await dm.send(embed = embed)
+    #     embed = discord.Embed(
+    #         title = f"Invite Created by {invite.inviter}",
+    #         description = f"Channel: {invite.channel}",
+    #         color = 0xf34949
+    #     )
+    #     embed.add_footer(text = invite.created_at)
+    #     await dm.send(embed = embed)
 
     # @commands.Cog.listener()
     # async def on_message(self, message):
@@ -124,55 +124,55 @@ class Core(commands.Cog):
     #         await message.channel.send(f"Message sent to {luci.name}")
 
     # Add last 5 deleted message to database
-    @commands.Cog.listener()
-    async def on_message_delete(self, message):
-        if (message.guild.id != 738731754885480468):
-            return
+    # @commands.Cog.listener()
+    # async def on_message_delete(self, message):
+    #     if (message.guild.id != 738731754885480468):
+    #         return
         
-        # Check if the message was a poll or shout which was automatically deleted by the bot
-        # Check the message is deleted by an actual user and not by a bot
-        if (message.author.bot == True or \
-            "luci poll" in message.content.lower() or "luci shout" in message.content.lower()):
-            return
+    #     # Check if the message was a poll or shout which was automatically deleted by the bot
+    #     # Check the message is deleted by an actual user and not by a bot
+    #     if (message.author.bot == True or \
+    #         "luci poll" in message.content.lower() or "luci shout" in message.content.lower()):
+    #         return
 
-        # Create table
-        query = """CREATE TABLE IF NOT EXISTS snipe(
-                mssg_id     TEXT    NOT NULL,
-                author_id   BIGINT  NOT NULL,
-                channel_id  BIGINT  NOT NULL,
-                deleted_on  TEXT    NOT NULL,
-                deleted_at  TEXT    NOT NULL)"""
-        self.cursor.execute(query)
-        self.dbcon.commit()
+    #     # Create table
+    #     query = """CREATE TABLE IF NOT EXISTS snipe(
+    #             mssg_id     TEXT    NOT NULL,
+    #             author_id   BIGINT  NOT NULL,
+    #             channel_id  BIGINT  NOT NULL,
+    #             deleted_on  TEXT    NOT NULL,
+    #             deleted_at  TEXT    NOT NULL)"""
+    #     self.cursor.execute(query)
+    #     self.dbcon.commit()
 
-        # Fetch data from the table according to channel id
-        self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {message.channel.id}")
-        data = self.cursor.fetchall()
+    #     # Fetch data from the table according to channel id
+    #     self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {message.channel.id}")
+    #     data = self.cursor.fetchall()
 
-        # Configure date, time
-        deleted_on = datetime.now().strftime("%m/%d/%Y")
+    #     # Configure date, time
+    #     deleted_on = datetime.now().strftime("%m/%d/%Y")
 
-        # Add 5:30 hours to GMT
-        deleted_at = (datetime.now() + timedelta(hours = 5, minutes = 30)).strftime("%H:%M:%S")
+    #     # Add 5:30 hours to GMT
+    #     deleted_at = (datetime.now() + timedelta(hours = 5, minutes = 30)).strftime("%H:%M:%S")
         
-        # Check if there are more than 5 messages in the database
-        if (len(data) >= 5):
-            # Remove the oldest message
-            del data[0]
+    #     # Check if there are more than 5 messages in the database
+    #     if (len(data) >= 5):
+    #         # Remove the oldest message
+    #         del data[0]
 
-            # Add new message to the top of the stack
-            mssg, author, channel= message.content, message.author.id, message.channel.id
-            data.append((mssg, author, channel, deleted_on, deleted_at))
+    #         # Add new message to the top of the stack
+    #         mssg, author, channel= message.content, message.author.id, message.channel.id
+    #         data.append((mssg, author, channel, deleted_on, deleted_at))
         
-        else:
-            mssg, author, channel= message.content, message.author.id, message.channel.id
-            data.append((mssg, author, channel, deleted_on, deleted_at))
+    #     else:
+    #         mssg, author, channel= message.content, message.author.id, message.channel.id
+    #         data.append((mssg, author, channel, deleted_on, deleted_at))
             
-        # Update database
-        self.cursor.execute(f"DELETE FROM snipe WHERE channel_id = {message.channel.id}")
+    #     # Update database
+    #     self.cursor.execute(f"DELETE FROM snipe WHERE channel_id = {message.channel.id}")
 
-        for i in data:
-            self.cursor.execute("INSERT INTO snipe VALUES {}".format(i))
+    #     for i in data:
+    #         self.cursor.execute("INSERT INTO snipe VALUES {}".format(i))
 
     # Fun, "for all" commands
     @commands.command()
@@ -213,60 +213,60 @@ class Core(commands.Cog):
             # await ctx.invoke(self.bot.get_command("help"), "dm")
 
 
-    @commands.guild_only()
-    @commands.command()
-    async def snipe(self, ctx, number = 1):
-        for guild in self.bot.guilds:
-            if (guild.id not in [738731754885480468]):
-                return
+    # @commands.guild_only()
+    # @commands.command()
+    # async def snipe(self, ctx, number = 1):
+    #     for guild in self.bot.guilds:
+    #         if (guild.id not in [738731754885480468]):
+    #             return
         
-        """See upto 5 last deleted message
-        For eg: `luci snipe` gets the last deleted message
-        Also:  `luci snipe 2` gets the second last deleted message and so on."""
+    #     """See upto 5 last deleted message
+    #     For eg: `luci snipe` gets the last deleted message
+    #     Also:  `luci snipe 2` gets the second last deleted message and so on."""
         
-        # Check if number is not more 5
-        if (number > 5):
-            await ctx.send("Bruh! Can get last 5 messages only. Get a life bro 🤦‍♂️")
-            return
+    #     # Check if number is not more 5
+    #     if (number > 5):
+    #         await ctx.send("Bruh! Can get last 5 messages only. Get a life bro 🤦‍♂️")
+    #         return
 
-        # Fetch last deleted message from database
-        self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {ctx.channel.id}")
-        data = self.cursor.fetchall()
+    #     # Fetch last deleted message from database
+    #     self.cursor.execute(f"SELECT * FROM snipe WHERE channel_id = {ctx.channel.id}")
+    #     data = self.cursor.fetchall()
 
-        # If there are no messages deleted in this channel
-        if (data == []):
-            await ctx.send(
-                mbed = discord.Embed(title = "No messages deleted in this channel", color = 0xf34949))
-            return
+    #     # If there are no messages deleted in this channel
+    #     if (data == []):
+    #         await ctx.send(
+    #             mbed = discord.Embed(title = "No messages deleted in this channel", color = 0xf34949))
+    #         return
 
-        # Configure channel where message was deleted
-        channel = self.bot.get_channel(data[-number][2])
+    #     # Configure channel where message was deleted
+    #     channel = self.bot.get_channel(data[-number][2])
 
-        # Fetch deleted message author
-        author = self.bot.get_user(data[-number][1])
+    #     # Fetch deleted message author
+    #     author = self.bot.get_user(data[-number][1])
 
-        embed = discord.Embed(title = data[-number][0], color = 0xf34949)
-        embed.add_field(
-            name = "Deleted on:",
-            value = f"{data[-number][3]} | {data[-number][4]}",
-            inline = True
-        )
-        embed.add_field(
-            name = "In:",
-            value = channel.mention,
-            inline = True
-        )
-        embed.add_field(
-            name = "By:",
-            value = author.mention,
-            inline = True
-        )
-        embed.set_footer(
-            text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
-            icon_url = ctx.author.avatar_url
-        )
-        embed.set_author(name = f"Author: {author.name}", icon_url = author.avatar_url)
-        await ctx.send(embed = embed)
+    #     embed = discord.Embed(title = data[-number][0], color = 0xf34949)
+    #     embed.add_field(
+    #         name = "Deleted on:",
+    #         value = f"{data[-number][3]} | {data[-number][4]}",
+    #         inline = True
+    #     )
+    #     embed.add_field(
+    #         name = "In:",
+    #         value = channel.mention,
+    #         inline = True
+    #     )
+    #     embed.add_field(
+    #         name = "By:",
+    #         value = author.mention,
+    #         inline = True
+    #     )
+    #     embed.set_footer(
+    #         text = f"Asked by {ctx.author.name}#{ctx.author.discriminator}", 
+    #         icon_url = ctx.author.avatar_url
+    #     )
+    #     embed.set_author(name = f"Author: {author.name}", icon_url = author.avatar_url)
+    #     await ctx.send(embed = embed)
 
     @commands.command()
     @commands.guild_only()
