@@ -3,36 +3,22 @@ from discord.ext import commands
 
 import random
 
+from cogs.conversationgames.dares import dares
+from cogs.conversationgames.nhie import nhie
+from cogs.conversationgames.topic import topic
+from cogs.conversationgames.truths import truths
+from cogs.conversationgames.wyr import wyr
+
 
 class ConversationGames(commands.Cog):
     """Conversation Games"""
 
     def __init__(self):
-        with open(f"/app/bot/cogs/conversationgames/dares.txt", "r", encoding = "utf-8") as f:
-            self.dares = f.readlines()
-            for i in range(len(self.dares)):
-                    self.dares[i] = " ".join([j for j in self.dares[i].split() if j.isalnum()])
-
-        with open(f"/app/bot/cogs/conversationgames/nhie.txt", "r", encoding = "utf-8") as f:
-            self.nhie = f.readlines()
-            for i in range(len(self.nhie)):
-                    self.nhie[i] = " ".join([j for j in self.nhie[i].split() if j.isalnum()])
-
-        with open(f"/app/bot/cogs/conversationgames/topic.txt", "r", encoding = "utf-8") as f:
-            self.topic = f.readlines()
-            for i in range(len(self.topic)):
-                    self.topic[i] = " ".join([j for j in self.topic[i].split() if j.isalnum()])
-
-        with open(f"/app/bot/cogs/conversationgames/truths.txt", "r", encoding = "utf-8") as f:
-            self.truths = f.readlines()
-            for i in range(len(self.truths)):
-                    self.truths[i] = " ".join([j for j in self.truths[i].split() if j.isalnum()])
-
-        with open(f"/app/bot/cogs/conversationgames/wyr.txt", "r", encoding = "utf-8") as f:
-            self.wyr = f.readlines()
-            for i in range(len(self.wyr)):
-                    self.wyr[i] = " ".join([j for j in self.wyr[i].split() if j.isalnum()])
-
+        self.dares = dares
+        self.nhie = nhie
+        self.topic = topic
+        self.truths = truths
+        self.wyr = wyr
         
     @commands.command(aliases = ["aliven"])
     @commands.bot_has_permissions(embed_links = True)

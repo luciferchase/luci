@@ -128,10 +128,6 @@ class AkiMenu(menus.Menu):
         except akinator.AkiNoQuestions:
             await self.win()
         except Exception as error:
-            log.exception(
-                f"Encountered an exception while answering with {message} during Akinator session",
-                exc_info = True,
-            )
             await self.edit_or_send(content = f"Akinator game errored out:\n`{error}`", embed = None)
             self.stop()
 
