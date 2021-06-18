@@ -16,7 +16,7 @@ class Qtopia(commands.Cog):
     async def vent1(self, ctx, *message):
         """Send anonymous question to #vent-1. DM only Command."""
         
-        if isinstance(ctx.channel, discord.channel.DMChannel):
+        if ( (isinstance(ctx.channel, discord.channel.DMChannel)) and ("Qtopians" in ctx.author.roles) ):
             message = " ".join(message)
             channel = await self.bot.fetch_channel(739150769722228806)
             
@@ -39,7 +39,7 @@ class Qtopia(commands.Cog):
     async def vent2(self, ctx, *message):
         """Send anonymous question to #vent-2. DM only Command."""
         
-        if isinstance(ctx.channel, discord.channel.DMChannel):
+        if ( (isinstance(ctx.channel, discord.channel.DMChannel)) and ("Qtopians" in ctx.author.roles) ):
             message = " ".join(message)
             channel = await self.bot.fetch_channel(793407631066005554)
             
@@ -175,4 +175,3 @@ class Qtopia(commands.Cog):
         if ("unverified" not in roles):
             role = discord.utils.find(lambda m: "unverified" in m.name.lower(), guild.roles)
             await member.add_roles(role)
-            
