@@ -13,6 +13,7 @@ class Qtopia(commands.Cog):
         self.server_id = 587139618999369739
 
     @commands.command()
+    @commands.has_role("Qtopians")
     async def vent1(self, ctx, *message):
         """Send anonymous question to #vent-1. DM only Command."""
         
@@ -36,6 +37,7 @@ class Qtopia(commands.Cog):
                 json.dump(data, logs)
 
     @commands.command()
+    @commands.has_role("Qtopians")
     async def vent2(self, ctx, *message):
         """Send anonymous question to #vent-2. DM only Command."""
         
@@ -175,4 +177,3 @@ class Qtopia(commands.Cog):
         if ("unverified" not in roles):
             role = discord.utils.find(lambda m: "unverified" in m.name.lower(), guild.roles)
             await member.add_roles(role)
-            
