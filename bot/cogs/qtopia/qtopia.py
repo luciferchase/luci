@@ -18,6 +18,12 @@ class Qtopia(commands.Cog):
         
         if isinstance(ctx.channel, discord.channel.DMChannel):
             guild = await self.bot.fetch_guild(self.server_id)
+            bans = await guild.bans()
+
+            for ban in bans:
+                if (ban.user.id == ctx.author.id):
+                    await ctx.send("You are banned in Qtopia 😡")
+                    return
 
             flag = True
             async for member in guild.fetch_members():
@@ -58,6 +64,12 @@ class Qtopia(commands.Cog):
         
         if isinstance(ctx.channel, discord.channel.DMChannel):
             guild = await self.bot.fetch_guild(self.server_id)
+            bans = await guild.bans()
+
+            for ban in bans:
+                if (ban.user.id == ctx.author.id):
+                    await ctx.send("You are banned in Qtopia 😡")
+                    return
 
             flag = True
             async for member in guild.fetch_members():
@@ -98,6 +110,12 @@ class Qtopia(commands.Cog):
         
         if isinstance(ctx.channel, discord.channel.DMChannel):
             guild = await self.bot.fetch_guild(self.server_id)
+            bans = await guild.bans()
+
+            for ban in bans:
+                if (ban.user.id == ctx.author.id):
+                    await ctx.send("You are banned in Qtopia 😡")
+                    return
 
             flag = True
             async for member in guild.fetch_members():
