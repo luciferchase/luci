@@ -40,6 +40,10 @@ class Qtopia(commands.Cog):
                 await ctx.send("Bruh you are not even in Qtopia!")
                 return
 
+            for i in range(len(message)):
+                if ("@" in message[i]):
+                    message[i] = f"`{message[i]}`"
+
             message = " ".join(message)
             channel = await self.bot.fetch_channel(739150769722228806)
             
@@ -86,6 +90,10 @@ class Qtopia(commands.Cog):
                 await ctx.send("Bruh you are not even in Qtopia!")
                 return
 
+            for i in range(len(message)):
+                if ("@" in message[i]):
+                    message[i] = f"`{message[i]}`"
+
             message = " ".join(message)
             channel = await self.bot.fetch_channel(793407631066005554)
             
@@ -131,6 +139,10 @@ class Qtopia(commands.Cog):
             if flag:
                 await ctx.send("Bruh you are not even in Qtopia!")
                 return
+
+            for i in range(len(message)):
+                if ("@" in message[i]):
+                    message[i] = f"`{message[i]}`"
 
             message = " ".join(message)
             channel = await self.bot.fetch_channel(639902815849938975)
