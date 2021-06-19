@@ -24,7 +24,9 @@ class Qtopia(commands.Cog):
                 if (member.id == ctx.author.id):
                     flag = False
 
-                    if ("Qtopians" not in member.roles):
+                    roles = [roles.name.lower() for roles in member.roles]
+
+                    if ("qtopians" not in roles):
                         await ctx.send("You are not verified yet")
                         return
 
@@ -62,7 +64,9 @@ class Qtopia(commands.Cog):
                 if (member.id == ctx.author.id):
                     flag = False
 
-                    if ("Qtopians" not in member.roles):
+                    roles = [roles.name.lower() for roles in member.roles]
+
+                    if ("qtopians" not in roles):
                         await ctx.send("You are not verified yet")
                         return
 
@@ -100,14 +104,16 @@ class Qtopia(commands.Cog):
                 if (member.id == ctx.author.id):
                     flag = False
 
-                    if ("Qtopians" not in member.roles):
+                    roles = [roles.name.lower() for roles in member.roles]
+
+                    if ("qtopians" not in roles):
                         await ctx.send("You are not verified yet")
                         return
 
             if flag:
                 await ctx.send("Bruh you are not even in Qtopia!")
                 return
-            
+
             message = " ".join(message)
             channel = await self.bot.fetch_channel(639902815849938975)
             
