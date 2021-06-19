@@ -19,11 +19,18 @@ class Qtopia(commands.Cog):
         if isinstance(ctx.channel, discord.channel.DMChannel):
             guild = await self.bot.fetch_guild(self.server_id)
 
+            flag = True
             async for member in guild.fetch_members():
                 if (member.id == ctx.author.id):
+                    flag = False
+
                     if ("Qtopians" not in member.roles):
                         await ctx.send("You are not verified yet")
                         return
+
+            if flag:
+                await ctx.send("Bruh you are not even in Qtopia!")
+                return
 
             message = " ".join(message)
             channel = await self.bot.fetch_channel(739150769722228806)
@@ -50,11 +57,18 @@ class Qtopia(commands.Cog):
         if isinstance(ctx.channel, discord.channel.DMChannel):
             guild = await self.bot.fetch_guild(self.server_id)
 
+            flag = True
             async for member in guild.fetch_members():
                 if (member.id == ctx.author.id):
+                    flag = False
+
                     if ("Qtopians" not in member.roles):
                         await ctx.send("You are not verified yet")
                         return
+
+            if flag:
+                await ctx.send("Bruh you are not even in Qtopia!")
+                return
 
             message = " ".join(message)
             channel = await self.bot.fetch_channel(793407631066005554)
@@ -81,11 +95,18 @@ class Qtopia(commands.Cog):
         if isinstance(ctx.channel, discord.channel.DMChannel):
             guild = await self.bot.fetch_guild(self.server_id)
 
+            flag = True
             async for member in guild.fetch_members():
                 if (member.id == ctx.author.id):
+                    flag = False
+
                     if ("Qtopians" not in member.roles):
                         await ctx.send("You are not verified yet")
                         return
+
+            if flag:
+                await ctx.send("Bruh you are not even in Qtopia!")
+                return
             
             message = " ".join(message)
             channel = await self.bot.fetch_channel(639902815849938975)
