@@ -12,7 +12,7 @@ import psycopg2
 # Install all cogs
 from cogs.aki import aki
 from cogs.bigmoji import bigmoji
-from cogs.birthday import birthday
+# from cogs.birthday import birthday
 from cogs.botstatus import botstatus
 from cogs.comics import comics
 from cogs.connect4 import connect4
@@ -47,7 +47,7 @@ bot = commands.Bot(
 	strip_after_prefix = False, 
 	intents = intents, 
 	self_bot = False, 
-	owner_id = 707557256220115035,  
+	owner_id = 563416794329514006,  
 	help_command = PrettyHelp(color = 0xf34949, sort_commands = True),
 	description = "A General-Purpose Discord Bot Created by luciferchase#6310"
 )
@@ -58,7 +58,7 @@ logging.basicConfig(level = logging.WARNING)
 # Register Cogs
 bot.add_cog(aki.Aki(bot))
 bot.add_cog(bigmoji.Bigmoji(bot))
-bot.add_cog(birthday.Birthday())
+# bot.add_cog(birthday.Birthday())
 bot.add_cog(botstatus.Botstatus(bot))
 bot.add_cog(comics.Comics(bot))
 bot.add_cog(connect4.Connect4(bot))

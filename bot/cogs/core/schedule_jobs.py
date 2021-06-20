@@ -25,7 +25,6 @@ class Scheduler(commands.Cog):
     async def schedule_meme(self):
         config = {
             "qtopia": [587164191710773268, True]
-            # "aech": [835113922172026881, True]
         }
         
         async with self.session.get("https://api.reddit.com/r/dankmemes/hot") as response:
@@ -55,12 +54,10 @@ class Scheduler(commands.Cog):
                 embed.set_footer(text = f'👍 {post["ups"]}')
                 meme = await channel.send(embed = embed)
                 await meme.add_reaction("😂")
-                await meme.add_reaction("leo-1:748517015962255440")
 
     async def schedule_wallpaper(self):
         config = {
             "qtopia": [587156041716727848, True]
-            # "aech": [738731755569414197, True]
         }
 
         api = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US"
@@ -185,7 +182,7 @@ class Scheduler(commands.Cog):
         # scheduler.add_job(self.schedule_ipl, CronTrigger.from_crontab("30 02 * * *"))
 
         # Bday
-        scheduler.add_job(self.search_bday, CronTrigger.from_crontab("00 00 * * *"))
+        # scheduler.add_job(self.search_bday, CronTrigger.from_crontab("00 00 * * *"))
             
         # Start the scheduler
         return scheduler

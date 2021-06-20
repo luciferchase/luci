@@ -53,7 +53,7 @@ class Connect4(commands.Cog):
         await ctx.send("Game cancelled.")
         return False
 
-    @commands.command()
+    @commands.command(aliases = ["c4"])
     async def connect4(self, ctx: commands.Context, member: discord.Member):
         """
         Play Connect 4 with another player.
