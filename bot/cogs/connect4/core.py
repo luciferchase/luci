@@ -152,7 +152,7 @@ class Connect4Game:
 
     def _get_instructions(self):
         instructions = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣"]
-        return instructions + "\n"
+        return "".join(instructions) + "\n"
 
     def _format_row(self, y):
         return "".join(self[x, y] for x in range(self.board.width))
