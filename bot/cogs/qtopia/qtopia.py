@@ -257,3 +257,7 @@ class Qtopia(commands.Cog):
             role = discord.utils.find(lambda m: "unverified" in m.name.lower(), guild.roles)
             await member.add_roles(role)
             
+    @client.command()
+    @commands.has_permissions(kick_members = True)
+    async def role_kick(ctx, role: discord.Role):
+        [await member.kick() for member in ctx.guild.members if role in member.roles]
