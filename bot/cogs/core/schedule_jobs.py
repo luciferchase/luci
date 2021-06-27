@@ -22,41 +22,9 @@ class Scheduler(commands.Cog):
         self.session = aiohttp.ClientSession()
     
     # Scheduled events
-    async def schedule_meme(self):
-        config = {
-            "qtopia": [587164191710773268, True]
-            # "aech": [835113922172026881, True]
-        }
+ 
         
-        async with self.session.get("https://api.reddit.com/r/dankmemes/hot") as response:
-            data = await response.json()
-            data = data["data"]["children"]
-
-            post = None
-            max_ups = 0
-            for i in data:
-                i = i["data"]
-                if (i["ups"] > max_ups and not i["over_18"] \
-                    and i["title"] != "REJOICE! FOR SIGN IMAGES ARE NOW BANNED"):
-                    post = i
-
-            for channel_id in config.values():
-                if (not channel_id[1]):
-                    return
-
-                channel = self.bot.get_channel(channel_id[0])
-
-                embed = discord.Embed(
-                    color = 0x06f9f5,                           # Blue-ish
-                    title = post["title"],
-                    url = "https://www.reddit.com/" + post["permalink"]
-                )
-                embed.set_image(url = post["url"])
-                embed.set_footer(text = f'👍 {post["ups"]}')
-                meme = await channel.send(embed = embed)
-                await meme.add_reaction("😂")
-                await meme.add_reaction("leo-1:748517015962255440")
-
+        
     async def schedule_wallpaper(self):
         config = {
             "qtopia": [587156041716727848, True]
@@ -177,7 +145,7 @@ class Scheduler(commands.Cog):
         scheduler = AsyncIOScheduler(job_defaults = job_defaults, logger = schedule_log)
 
         # Add jobs to scheduler
-        scheduler.add_job(self.schedule_meme, CronTrigger.from_crontab("30 * * * *")) # Every hour
+        #scheduler.add_job(self.schedule_meme, CronTrigger.from_crontab("30 * * * *")) # Every hour
 
         # Because we are 05:30 hrs ahead of GMT, every cron is set 05:30 hrs behind
         scheduler.add_job(self.schedule_wallpaper, CronTrigger.from_crontab("30 02 * * *")) 
